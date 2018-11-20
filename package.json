@@ -1,0 +1,17 @@
+{
+  "name": "csgdatabot",
+  "version": "1.0.0",
+  "description": "My First Discord Bot",
+  "main": "bot.js",
+  "author": "David Oakley",
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "config": "^2.0.1",
+    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+    "flat": "^4.1.0",
+    "redis": "^2.8.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "winston": "^3.1.0"
+  }
+}
