@@ -1,5 +1,5 @@
 // https://discordapp.com/oauth2/authorize?&client_id=512352639107858432&scope=bot&permissions=8
-var Discord = require('discord.io');
+var Discord = require('discord.js');
 var logger = require('winston');
 // var auth = require('./auth.json');
 var config = require('config');
@@ -79,16 +79,13 @@ function getSystemSummary(systemName, systemData) {
 	return response;
 }
 
-function showSystemInfo(bot, channelID, args) {
+function showSystemInfo(message, args) {
 	var systemName = args.join(' ');
 
 	data.getSystem(systemName).then(function(systemObject) {
 		var response = getSystemSummary(systemName, systemObject);
 
-		bot.sendMessage({
-			to: channelID,
-			message: response
-		});
+		message.channel.send(response);
 	}, function(err) {
         console.log(err);
 	});
@@ -102,13 +99,11 @@ logger.add(new logger.transports.Console, {
 logger.level = 'debug';
 
 // Initialize Discord Bot
-var bot = new Discord.Client({
-   token: config.get('botToken'),
-   autorun: true
-});
-bot.on('ready', function (evt) {
+var client = new Discord.Client();
+
+client.once('ready', () => {
 //     logger.info('Connected');
-	logger.info('Logged in as: ' + bot.username + ' - (' + bot.id + ')');
+	logger.info('Logged in as: ' + client.user.username + ' - (' + client.user.id + ')');
 	
 	// bot.sendMessage({
 	// 	to: '78955103381360640',
@@ -117,24 +112,26 @@ bot.on('ready', function (evt) {
 	
 	//users.get("Nightstorm#9647").send("Started up!");
 });
-bot.on('message', function (user, userID, channelID, message, evt) {
+client.on('message', message => {
     // Our bot needs to know if it will execute a command
     // It will listen for messages that will start with `!`
-    if (message.substring(0, 1) == '!') {
-        var args = message.substring(1).split(' ');
+    if (message.content.substring(0, 1) == '!') {
+        var args = message.content.substring(1).split(' ');
         var cmd = args[0];
         args = args.splice(1);
         
         switch(cmd) {
 		case 'edload':
-			console.log('Load request from user ID ' + userID);
+			console.log('Load request from user ' + message.author.username);
 			data.loadRedis();
 			break;
 		case 'edsystem':
-			console.log('Message from user ID ' + userID);
-           	showSystemInfo(bot, channelID, args);
+			console.log('Message from user ID ' + message.author.username);
+           	showSystemInfo(message, args);
            	break;
             // Just add any case commands if you want to..
          }
      }
 });
+
+client.login(config.get('botToken'));
