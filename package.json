@@ -1,18 +1,27 @@
 {
-  "name": "csgdatabot",
+  "name": "edbot",
   "version": "1.0.0",
-  "description": "My First Discord Bot",
+  "description": "A Discord bot to provide information to Elite Dangerous commanders",
+  "license": "MIT",
   "main": "bot.js",
   "author": "David Oakley",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidoakley/edbot.git"
+  },
   "dependencies": {
+    "@types/zeromq": "^4.2.0",
     "bluebird": "^3.5.3",
-    "config": "^2.0.1",
+    "config": "^2.0.2",
     "discord.js": "^11.4.2",
+    "erlpack": "github:discordapp/erlpack",
     "flat": "^4.1.0",
     "redis": "^2.8.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "uws": "^99.0.0",
-    "winston": "^3.1.0"
+    "uws": "^9.14.0",
+    "winston": "^3.1.0",
+    "zeromq": "^4.2.0",
+    "zlib": "^1.0.5"
   }
 }

@@ -5,7 +5,8 @@ const Discord = require('discord.js');
 const logger = require('winston');
 // var auth = require('./auth.json');
 const config = require('config');
-const data = require('./data');
+// const data = require('./data');
+const eddn = require('./eddn');
 const prefix = '!';
 
 // Configure logger settings
@@ -52,4 +53,6 @@ client.login(config.get('botToken'));
 process.on('SIGTERM', () => {
 	console.info('SIGTERM signal received.');
 	process.exit(0);
-  });
+});
+
+eddn.connect();

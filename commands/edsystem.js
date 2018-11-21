@@ -25,7 +25,7 @@ function getSystemSummary(systemName, systemData) {
 		return "Sorry, EDSM doesn't know about the system *" + systemName + "* 😕";
 	}
 
-	var controllingFactionName = systemData['controllingFaction']['name']
+	var controllingFactionName = systemData['controllingFaction']
 	var date = new Date(systemData['lastUpdate']*1000);
 	var niceDate = date.toISOString();
 	response += "Data obtained from EDSM at " + niceDate + "\n";
@@ -37,7 +37,7 @@ function getSystemSummary(systemName, systemData) {
 		var factionData = factionsData[factionIndex];
 		var factionName = factionData['name'];
 		var percent = (factionData['influence'] * 100).toFixed(1) + "%";
-		response += (factionName == controllingFactionName) ? "⦿ " : "◦ "
+		response += (factionName == controllingFactionName) ? "★ " : "◦ "
 		var displayName = factionName.toUpperCase();
 		if (factionData['isPlayer']) {
 			displayName += "†";
@@ -49,9 +49,6 @@ function getSystemSummary(systemName, systemData) {
 		
 		var states = [];
 		states = parseStates(factionData['activeStates']);
-		if (states.length == 0) {
-			states.push(factionData['state']);
-		}
  		if (states.length > 0) {
 			response += "\xa0\xa0∙ Active:     " + states.join(' ');
 			response += "\n";

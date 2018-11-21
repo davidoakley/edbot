@@ -1,1 +1,1474 @@
-{"Lugh":{"id":11288,"id64":83919639258,"name":"Lugh","url":"https:\/\/www.edsm.net\/en\/system\/id\/11288\/name\/Lugh","controllingFaction":{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.493,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":true,"lastUpdate":1542660336},{"id":33515,"name":"Dominion of Lugh","allegiance":"Independent","government":"Dictatorship","influence":0.134,"state":"None","activeStates":[],"recoveringStates":[{"state":"Boom","trend":0}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542660336},{"id":9095,"name":"Lugh for Equality","allegiance":"Federation","government":"Democracy","influence":0.101,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1},{"state":"Civil war","trend":0}],"isPlayer":false,"lastUpdate":1542660336},{"id":33516,"name":"Lugh Defence Force","allegiance":"Independent","government":"Dictatorship","influence":0.101,"state":"None","activeStates":[],"recoveringStates":[{"state":"Famine","trend":0}],"pendingStates":[{"state":"Civil war","trend":0}],"isPlayer":false,"lastUpdate":1542660336},{"id":78507,"name":"German War Gaming","allegiance":"Independent","government":"Dictatorship","influence":0.067,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":true,"lastUpdate":1542660336},{"id":113,"name":"LHS 332 Coalition","allegiance":"Federation","government":"Confederacy","influence":0.062,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1},{"state":"Famine","trend":0}],"isPlayer":false,"lastUpdate":1542660336},{"id":12826,"name":"Lugh Silver Natural Ltd","allegiance":"Federation","government":"Corporate","influence":0.042,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542660336}],"lastUpdate":1542664801},"Sesuang":{"id":16789,"id64":11666607646129,"name":"Sesuang","url":"https:\/\/www.edsm.net\/en\/system\/id\/16789\/name\/Sesuang","controllingFaction":{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.441584,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542626908},{"id":2035,"name":"Minutemen","allegiance":"Federation","government":"Corporate","influence":0.288119,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Expansion","trend":0}],"isPlayer":true,"lastUpdate":1542626908},{"id":5896,"name":"Sesuang Republic Party","allegiance":"Federation","government":"Democracy","influence":0.085149,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542626908},{"id":7858,"name":"Sesuang Group","allegiance":"Federation","government":"Corporate","influence":0.074257,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542626908},{"id":6418,"name":"Sesuang Co","allegiance":"Independent","government":"Corporate","influence":0.062376,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542626908},{"id":7844,"name":"Official Sesuang Constitution Party","allegiance":"Independent","government":"Dictatorship","influence":0.038614,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542626908},{"id":33366,"name":"Sesuang Purple Mob","allegiance":"Independent","government":"Anarchy","influence":0.009901,"state":"Bust","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542626908},{"id":10089,"name":"Labour of Convoumia","allegiance":"Federation","government":"Democracy","influence":0,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542626908}],"lastUpdate":1542664812},"LTT 4846":{"id":1798,"id64":7268561069489,"name":"LTT 4846","url":"https:\/\/www.edsm.net\/en\/system\/id\/1798\/name\/LTT+4846","controllingFaction":{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.548,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542646530},{"id":39382,"name":"LTT 4846 Gold Camorra","allegiance":"Independent","government":"Anarchy","influence":0.186,"state":"None","activeStates":[],"recoveringStates":[{"state":"Famine","trend":0}],"pendingStates":[{"state":"Boom","trend":0},{"state":"War","trend":0}],"isPlayer":false,"lastUpdate":1542646530},{"id":81016,"name":"The Lucky Rocket Privateers","allegiance":"Independent","government":"Patronage","influence":0.186,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Civil unrest","trend":1},{"state":"Lockdown","trend":1},{"state":"War","trend":0}],"isPlayer":true,"lastUpdate":1542646530},{"id":15420,"name":"LTT 4846 Universal & Co","allegiance":"Federation","government":"Corporate","influence":0.024,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542646530},{"id":39381,"name":"Freedom Party of LTT 4846","allegiance":"Independent","government":"Dictatorship","influence":0.023,"state":"None","activeStates":[],"recoveringStates":[{"state":"Boom","trend":0}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542646530},{"id":9100,"name":"Progressive Party of LTT 4846","allegiance":"Federation","government":"Democracy","influence":0.017,"state":"None","activeStates":[],"recoveringStates":[{"state":"Boom","trend":0}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542646530},{"id":39380,"name":"Bureau of LTT 4846 Party","allegiance":"Independent","government":"Dictatorship","influence":0.016,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542646530},{"id":5782,"name":"Eta Crucis Future","allegiance":"Federation","government":"Democracy","influence":0,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542646530}],"lastUpdate":1542664822},"Heveri":{"id":6211,"id64":9467852891569,"name":"Heveri","url":"https:\/\/www.edsm.net\/en\/system\/id\/6211\/name\/Heveri","controllingFaction":{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.37,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542623467},{"id":1574,"name":"Logoni Network","allegiance":"Federation","government":"Corporate","influence":0.201,"state":"None","activeStates":[],"recoveringStates":[{"state":"Outbreak","trend":0}],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":false,"lastUpdate":1542623467},{"id":35717,"name":"Heveri Pride","allegiance":"Independent","government":"Dictatorship","influence":0.109,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542623467},{"id":847,"name":"Heveri Legal Solutions","allegiance":"Federation","government":"Corporate","influence":0.102,"state":"None","activeStates":[],"recoveringStates":[{"state":"Boom","trend":0}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542623467},{"id":35718,"name":"Heveri Bureau","allegiance":"Independent","government":"Dictatorship","influence":0.096,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542623467},{"id":38903,"name":"League of Logoni","allegiance":"Federation","government":"Confederacy","influence":0.082,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542623467},{"id":940,"name":"People's Heveri Values Party","allegiance":"Federation","government":"Democracy","influence":0.04,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":false,"lastUpdate":1542623467}],"lastUpdate":1542664872},"Logoni":{"id":8839,"id64":11666876147121,"name":"Logoni","url":"https:\/\/www.edsm.net\/en\/system\/id\/8839\/name\/Logoni","controllingFaction":{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.459325,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542636315},{"id":38904,"name":"Dragons of Logoni","allegiance":"Independent","government":"Anarchy","influence":0.210317,"state":"Civil war","activeStates":[],"recoveringStates":[{"state":"Bust","trend":1}],"pendingStates":[{"state":"Boom","trend":0}],"isPlayer":false,"lastUpdate":1542636315},{"id":1574,"name":"Logoni Network","allegiance":"Federation","government":"Corporate","influence":0.200397,"state":"None","activeStates":[],"recoveringStates":[{"state":"Outbreak","trend":0}],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":false,"lastUpdate":1542636315},{"id":38903,"name":"League of Logoni","allegiance":"Federation","government":"Confederacy","influence":0.12004,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542636315},{"id":847,"name":"Heveri Legal Solutions","allegiance":"Federation","government":"Corporate","influence":0.009921,"state":"None","activeStates":[],"recoveringStates":[{"state":"Boom","trend":0}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542636315}],"lastUpdate":1542664882},"Paitina":{"id":20014,"id64":11666876147113,"name":"Paitina","url":"https:\/\/www.edsm.net\/en\/system\/id\/20014\/name\/Paitina","controllingFaction":{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.521,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542639056},{"id":35676,"name":"Paitina Interstellar","allegiance":"Federation","government":"Corporate","influence":0.234,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542639056},{"id":35634,"name":"LP 465-14 Blue United & Co","allegiance":"Federation","government":"Corporate","influence":0.103,"state":"Election","activeStates":[],"recoveringStates":[{"state":"Boom","trend":0}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542639056},{"id":847,"name":"Heveri Legal Solutions","allegiance":"Federation","government":"Corporate","influence":0.066,"state":"Election","activeStates":[],"recoveringStates":[{"state":"Boom","trend":0}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542639056},{"id":35675,"name":"Coalition of Paitina","allegiance":"Federation","government":"Confederacy","influence":0.038,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542639056},{"id":35677,"name":"Paitina Blue Rats","allegiance":"Independent","government":"Anarchy","influence":0.038,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Famine","trend":0}],"isPlayer":false,"lastUpdate":1542639056},{"id":498,"name":"People's LP 465-14 Liberals","allegiance":"Federation","government":"Democracy","influence":0,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542639056},{"id":1574,"name":"Logoni Network","allegiance":"Federation","government":"Corporate","influence":0,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542639056}],"lastUpdate":1542664892},"Zeaex":{"id":7729,"id64":633675453146,"name":"Zeaex","url":"https:\/\/www.edsm.net\/en\/system\/id\/7729\/name\/Zeaex","controllingFaction":{"id":2112,"name":"Collective of Independent Agents","allegiance":"Federation","government":"Corporate"},"factions":[{"id":2112,"name":"Collective of Independent Agents","allegiance":"Federation","government":"Corporate","influence":0.54046,"state":"None","activeStates":[],"recoveringStates":[{"state":"Boom","trend":1}],"pendingStates":[],"isPlayer":true,"lastUpdate":1542640298},{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.183816,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542640298},{"id":30371,"name":"Zeaex Values Party","allegiance":"Federation","government":"Democracy","influence":0.083916,"state":"Civil war","activeStates":[],"recoveringStates":[{"state":"Boom","trend":-1}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542640298},{"id":42612,"name":"Zeaex Defence Force","allegiance":"Independent","government":"Dictatorship","influence":0.074925,"state":"Civil war","activeStates":[],"recoveringStates":[{"state":"Boom","trend":0}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542640298},{"id":10425,"name":"Zeaex Flag","allegiance":"Independent","government":"Dictatorship","influence":0.05994,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542640298},{"id":32714,"name":"Zeaex Corp.","allegiance":"Federation","government":"Corporate","influence":0.037962,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542640298},{"id":42611,"name":"Zeaex Posse","allegiance":"Independent","government":"Anarchy","influence":0.018981,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Outbreak","trend":0}],"isPlayer":false,"lastUpdate":1542640298}],"lastUpdate":1542664923},"LP 104-2":{"id":13543,"id64":4756844057306,"name":"LP 104-2","url":"https:\/\/www.edsm.net\/en\/system\/id\/13543\/name\/LP+104-2","controllingFaction":{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.475,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542625634},{"id":7428,"name":"LP 104-2 Silver State Comms","allegiance":"Federation","government":"Corporate","influence":0.221,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542625634},{"id":34403,"name":"LP 104-2 Independents","allegiance":"Federation","government":"Democracy","influence":0.096,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":0}],"isPlayer":false,"lastUpdate":1542625634},{"id":32714,"name":"Zeaex Corp.","allegiance":"Federation","government":"Corporate","influence":0.084,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542625634},{"id":34406,"name":"New LP 104-2 Defence Party","allegiance":"Independent","government":"Dictatorship","influence":0.078,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542625634},{"id":34404,"name":"LP 104-2 Industries","allegiance":"Federation","government":"Corporate","influence":0.023,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542625634},{"id":34405,"name":"Nationals of LP 104-2","allegiance":"Independent","government":"Dictatorship","influence":0.023,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542625634}],"lastUpdate":1542664832},"Hill Pa Hsi":{"id":13984,"id64":9467315955121,"name":"Hill Pa Hsi","url":"https:\/\/www.edsm.net\/en\/system\/id\/13984\/name\/Hill+Pa+Hsi","controllingFaction":{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.688,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542653265},{"id":35799,"name":"Hill Pa Hsi Crimson Major Ex","allegiance":"Federation","government":"Corporate","influence":0.103,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542653265},{"id":7538,"name":"Hill Pa Hsi Silver Natural","allegiance":"Federation","government":"Corporate","influence":0.072,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542653265},{"id":35800,"name":"Law Party of Hill Pa Hsi","allegiance":"Independent","government":"Dictatorship","influence":0.062,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542653265},{"id":35798,"name":"United Hill Pa Hsi Liberty Party","allegiance":"Independent","government":"Dictatorship","influence":0.043,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542653265},{"id":1962,"name":"Hill Pa Hsi Liberals","allegiance":"Federation","government":"Democracy","influence":0.032,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542653265},{"id":32714,"name":"Zeaex Corp.","allegiance":"Federation","government":"Corporate","influence":0,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542653265}],"lastUpdate":1542664842},"Khepri":{"id":12758,"id64":5031721964250,"name":"Khepri","url":"https:\/\/www.edsm.net\/en\/system\/id\/12758\/name\/Khepri","controllingFaction":{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.362,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542644643},{"id":2837,"name":"Khepri Jet Public Ltd","allegiance":"Federation","government":"Corporate","influence":0.223,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542644643},{"id":1918,"name":"ARMADA Corp","allegiance":"Federation","government":"Corporate","influence":0.147,"state":"None","activeStates":[],"recoveringStates":[{"state":"Boom","trend":0}],"pendingStates":[],"isPlayer":true,"lastUpdate":1542644643},{"id":10515,"name":"Khepri Autocracy","allegiance":"Independent","government":"Dictatorship","influence":0.079,"state":"Outbreak","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Famine","trend":0}],"isPlayer":false,"lastUpdate":1542644643},{"id":33904,"name":"Khepri Incorporated","allegiance":"Independent","government":"Corporate","influence":0.069,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542644643},{"id":33905,"name":"Khepri Law Party","allegiance":"Independent","government":"Dictatorship","influence":0.063,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542644643},{"id":2283,"name":"Independents of Khepri","allegiance":"Federation","government":"Democracy","influence":0.057,"state":"Civil war","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542644643}],"lastUpdate":1542664852},"Alpha Chamaelontis":{"id":17414,"id64":285372057963,"name":"Alpha Chamaelontis","url":"https:\/\/www.edsm.net\/en\/system\/id\/17414\/name\/Alpha+Chamaelontis","controllingFaction":{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.385,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542642801},{"id":1236,"name":"Pi Mensae Brotherhood","allegiance":"Independent","government":"Theocracy","influence":0.267,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542642801},{"id":40824,"name":"Alpha Chamaelontis Systems","allegiance":"Federation","government":"Corporate","influence":0.123,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542642801},{"id":7323,"name":"Earls of Velabri","allegiance":"Empire","government":"Feudal","influence":0.087,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542642801},{"id":40822,"name":"People's Alpha Chamaelontis Future","allegiance":"Federation","government":"Democracy","influence":0.053,"state":"Outbreak","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542642801},{"id":41067,"name":"Nationalists of Alpha Chamaelontis","allegiance":"Independent","government":"Dictatorship","influence":0.045,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542642801},{"id":40823,"name":"Alpha Chamaelontis Power Ind","allegiance":"Independent","government":"Corporate","influence":0.04,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542642801},{"id":15675,"name":"Dukes of Pi Mensae","allegiance":"Independent","government":"Feudal","influence":0,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542616856},{"id":248,"name":"Mazahuanses Commodities","allegiance":"Federation","government":"Corporate","influence":0,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542616856}],"lastUpdate":1542664862},"Mata":{"id":19325,"id64":2557820801754,"name":"Mata","url":"https:\/\/www.edsm.net\/en\/system\/id\/19325\/name\/Mata","controllingFaction":{"id":2035,"name":"Minutemen","allegiance":"Federation","government":"Corporate"},"factions":[{"id":2035,"name":"Minutemen","allegiance":"Federation","government":"Corporate","influence":0.374374,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Expansion","trend":0}],"isPlayer":true,"lastUpdate":1542649506},{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.167167,"state":"None","activeStates":[],"recoveringStates":[{"state":"Election","trend":0}],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":true,"lastUpdate":1542649506},{"id":37210,"name":"Movement for Mata for Equality","allegiance":"Independent","government":"Democracy","influence":0.14014,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542649506},{"id":7404,"name":"Mata & Co","allegiance":"Independent","government":"Corporate","influence":0.099099,"state":"None","activeStates":[],"recoveringStates":[{"state":"Election","trend":0}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542649506},{"id":37212,"name":"Mata Holdings","allegiance":"Federation","government":"Corporate","influence":0.089089,"state":"Civil war","activeStates":[],"recoveringStates":[{"state":"Boom","trend":0}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542649506},{"id":37213,"name":"Mata Citizens of Tradition","allegiance":"Empire","government":"Patronage","influence":0.083083,"state":"Civil war","activeStates":[],"recoveringStates":[{"state":"Boom","trend":-1}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542649506},{"id":37211,"name":"Mata Defence Party","allegiance":"Independent","government":"Dictatorship","influence":0.047047,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542649506}],"lastUpdate":1542664903},"LHS 2477":{"id":7041,"id64":671759869361,"name":"LHS 2477","url":"https:\/\/www.edsm.net\/en\/system\/id\/7041\/name\/LHS+2477","controllingFaction":{"id":434,"name":"LTT 4487 Industry","allegiance":"Federation","government":"Corporate"},"factions":[{"id":1592,"name":"Crimson State Group","allegiance":"Independent","government":"Corporate","influence":0.569431,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":true,"lastUpdate":1542660222},{"id":542,"name":"Solati Galactic Services","allegiance":"Federation","government":"Corporate","influence":0.198801,"state":"Boom","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542660222},{"id":434,"name":"LTT 4487 Industry","allegiance":"Federation","government":"Corporate","influence":0.101898,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":false,"lastUpdate":1542660222},{"id":33049,"name":"Lords of LHS 2477","allegiance":"Independent","government":"Feudal","influence":0.070929,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542660222},{"id":33048,"name":"LHS 2477 Purple Raiders","allegiance":"Independent","government":"Anarchy","influence":0.048951,"state":"None","activeStates":[],"recoveringStates":[{"state":"Boom","trend":1}],"pendingStates":[],"isPlayer":false,"lastUpdate":1542660222},{"id":11754,"name":"LHS 2477 Jet Fortune Corp.","allegiance":"Federation","government":"Corporate","influence":0.00999,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[{"state":"Boom","trend":1}],"isPlayer":false,"lastUpdate":1542660222},{"id":1574,"name":"Logoni Network","allegiance":"Federation","government":"Corporate","influence":0,"state":"None","activeStates":[],"recoveringStates":[],"pendingStates":[],"isPlayer":false,"lastUpdate":1542656657}],"lastUpdate":1542664913}}
+{
+	"Lugh": {
+		"id": 11288,
+		"id64": 83919639258,
+		"name": "Lugh",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/11288\/name\/Lugh",
+		"controllingFaction": {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.493,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": true,
+			"lastUpdate": 1542660336
+		}, {
+			"id": 33515,
+			"name": "Dominion of Lugh",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.134,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542660336
+		}, {
+			"id": 9095,
+			"name": "Lugh for Equality",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0.101,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}, {
+				"state": "Civil war",
+				"trend": 0
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542660336
+		}, {
+			"id": 33516,
+			"name": "Lugh Defence Force",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.101,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Famine",
+				"trend": 0
+			}],
+			"pendingStates": [{
+				"state": "Civil war",
+				"trend": 0
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542660336
+		}, {
+			"id": 78507,
+			"name": "German War Gaming",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.067,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": true,
+			"lastUpdate": 1542660336
+		}, {
+			"id": 113,
+			"name": "LHS 332 Coalition",
+			"allegiance": "Federation",
+			"government": "Confederacy",
+			"influence": 0.062,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}, {
+				"state": "Famine",
+				"trend": 0
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542660336
+		}, {
+			"id": 12826,
+			"name": "Lugh Silver Natural Ltd",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.042,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542660336
+		}],
+		"lastUpdate": 1542664801
+	},
+	"Sesuang": {
+		"id": 16789,
+		"id64": 11666607646129,
+		"name": "Sesuang",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/16789\/name\/Sesuang",
+		"controllingFaction": {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.441584,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542626908
+		}, {
+			"id": 2035,
+			"name": "Minutemen",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.288119,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Expansion",
+				"trend": 0
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542626908
+		}, {
+			"id": 5896,
+			"name": "Sesuang Republic Party",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0.085149,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542626908
+		}, {
+			"id": 7858,
+			"name": "Sesuang Group",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.074257,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542626908
+		}, {
+			"id": 6418,
+			"name": "Sesuang Co",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.062376,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542626908
+		}, {
+			"id": 7844,
+			"name": "Official Sesuang Constitution Party",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.038614,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542626908
+		}, {
+			"id": 33366,
+			"name": "Sesuang Purple Mob",
+			"allegiance": "Independent",
+			"government": "Anarchy",
+			"influence": 0.009901,
+			"state": "Bust",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542626908
+		}, {
+			"id": 10089,
+			"name": "Labour of Convoumia",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542626908
+		}],
+		"lastUpdate": 1542664812
+	},
+	"LTT 4846": {
+		"id": 1798,
+		"id64": 7268561069489,
+		"name": "LTT 4846",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/1798\/name\/LTT+4846",
+		"controllingFaction": {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.548,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542646530
+		}, {
+			"id": 39382,
+			"name": "LTT 4846 Gold Camorra",
+			"allegiance": "Independent",
+			"government": "Anarchy",
+			"influence": 0.186,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Famine",
+				"trend": 0
+			}],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 0
+			}, {
+				"state": "War",
+				"trend": 0
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542646530
+		}, {
+			"id": 81016,
+			"name": "The Lucky Rocket Privateers",
+			"allegiance": "Independent",
+			"government": "Patronage",
+			"influence": 0.186,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Civil unrest",
+				"trend": 1
+			}, {
+				"state": "Lockdown",
+				"trend": 1
+			}, {
+				"state": "War",
+				"trend": 0
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542646530
+		}, {
+			"id": 15420,
+			"name": "LTT 4846 Universal & Co",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.024,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542646530
+		}, {
+			"id": 39381,
+			"name": "Freedom Party of LTT 4846",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.023,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542646530
+		}, {
+			"id": 9100,
+			"name": "Progressive Party of LTT 4846",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0.017,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542646530
+		}, {
+			"id": 39380,
+			"name": "Bureau of LTT 4846 Party",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.016,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542646530
+		}, {
+			"id": 5782,
+			"name": "Eta Crucis Future",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542646530
+		}],
+		"lastUpdate": 1542664822
+	},
+	"Heveri": {
+		"id": 6211,
+		"id64": 9467852891569,
+		"name": "Heveri",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/6211\/name\/Heveri",
+		"controllingFaction": {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.37,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542623467
+		}, {
+			"id": 1574,
+			"name": "Logoni Network",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.201,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Outbreak",
+				"trend": 0
+			}],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542623467
+		}, {
+			"id": 35717,
+			"name": "Heveri Pride",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.109,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542623467
+		}, {
+			"id": 847,
+			"name": "Heveri Legal Solutions",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.102,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542623467
+		}, {
+			"id": 35718,
+			"name": "Heveri Bureau",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.096,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542623467
+		}, {
+			"id": 38903,
+			"name": "League of Logoni",
+			"allegiance": "Federation",
+			"government": "Confederacy",
+			"influence": 0.082,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542623467
+		}, {
+			"id": 940,
+			"name": "People's Heveri Values Party",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0.04,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542623467
+		}],
+		"lastUpdate": 1542664872
+	},
+	"Logoni": {
+		"id": 8839,
+		"id64": 11666876147121,
+		"name": "Logoni",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/8839\/name\/Logoni",
+		"controllingFaction": {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.459325,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542636315
+		}, {
+			"id": 38904,
+			"name": "Dragons of Logoni",
+			"allegiance": "Independent",
+			"government": "Anarchy",
+			"influence": 0.210317,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Bust",
+				"trend": 1
+			}],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542636315
+		}, {
+			"id": 1574,
+			"name": "Logoni Network",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.200397,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Outbreak",
+				"trend": 0
+			}],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542636315
+		}, {
+			"id": 38903,
+			"name": "League of Logoni",
+			"allegiance": "Federation",
+			"government": "Confederacy",
+			"influence": 0.12004,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542636315
+		}, {
+			"id": 847,
+			"name": "Heveri Legal Solutions",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.009921,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542636315
+		}],
+		"lastUpdate": 1542664882
+	},
+	"Paitina": {
+		"id": 20014,
+		"id64": 11666876147113,
+		"name": "Paitina",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/20014\/name\/Paitina",
+		"controllingFaction": {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.521,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542639056
+		}, {
+			"id": 35676,
+			"name": "Paitina Interstellar",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.234,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542639056
+		}, {
+			"id": 35634,
+			"name": "LP 465-14 Blue United & Co",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.103,
+			"state": "Election",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542639056
+		}, {
+			"id": 847,
+			"name": "Heveri Legal Solutions",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.066,
+			"state": "Election",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542639056
+		}, {
+			"id": 35675,
+			"name": "Coalition of Paitina",
+			"allegiance": "Federation",
+			"government": "Confederacy",
+			"influence": 0.038,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542639056
+		}, {
+			"id": 35677,
+			"name": "Paitina Blue Rats",
+			"allegiance": "Independent",
+			"government": "Anarchy",
+			"influence": 0.038,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Famine",
+				"trend": 0
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542639056
+		}, {
+			"id": 498,
+			"name": "People's LP 465-14 Liberals",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542639056
+		}, {
+			"id": 1574,
+			"name": "Logoni Network",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542639056
+		}],
+		"lastUpdate": 1542664892
+	},
+	"Zeaex": {
+		"id": 7729,
+		"id64": 633675453146,
+		"name": "Zeaex",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/7729\/name\/Zeaex",
+		"controllingFaction": {
+			"id": 2112,
+			"name": "Collective of Independent Agents",
+			"allegiance": "Federation",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 2112,
+			"name": "Collective of Independent Agents",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.54046,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"pendingStates": [],
+			"isPlayer": true,
+			"lastUpdate": 1542640298
+		}, {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.183816,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542640298
+		}, {
+			"id": 30371,
+			"name": "Zeaex Values Party",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0.083916,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": -1
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542640298
+		}, {
+			"id": 42612,
+			"name": "Zeaex Defence Force",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.074925,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542640298
+		}, {
+			"id": 10425,
+			"name": "Zeaex Flag",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.05994,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542640298
+		}, {
+			"id": 32714,
+			"name": "Zeaex Corp.",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.037962,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542640298
+		}, {
+			"id": 42611,
+			"name": "Zeaex Posse",
+			"allegiance": "Independent",
+			"government": "Anarchy",
+			"influence": 0.018981,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Outbreak",
+				"trend": 0
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542640298
+		}],
+		"lastUpdate": 1542664923
+	},
+	"LP 104-2": {
+		"id": 13543,
+		"id64": 4756844057306,
+		"name": "LP 104-2",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/13543\/name\/LP+104-2",
+		"controllingFaction": {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.475,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542625634
+		}, {
+			"id": 7428,
+			"name": "LP 104-2 Silver State Comms",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.221,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542625634
+		}, {
+			"id": 34403,
+			"name": "LP 104-2 Independents",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0.096,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542625634
+		}, {
+			"id": 32714,
+			"name": "Zeaex Corp.",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.084,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542625634
+		}, {
+			"id": 34406,
+			"name": "New LP 104-2 Defence Party",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.078,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542625634
+		}, {
+			"id": 34404,
+			"name": "LP 104-2 Industries",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.023,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542625634
+		}, {
+			"id": 34405,
+			"name": "Nationals of LP 104-2",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.023,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542625634
+		}],
+		"lastUpdate": 1542664832
+	},
+	"Hill Pa Hsi": {
+		"id": 13984,
+		"id64": 9467315955121,
+		"name": "Hill Pa Hsi",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/13984\/name\/Hill+Pa+Hsi",
+		"controllingFaction": {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.688,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542653265
+		}, {
+			"id": 35799,
+			"name": "Hill Pa Hsi Crimson Major Ex",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.103,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542653265
+		}, {
+			"id": 7538,
+			"name": "Hill Pa Hsi Silver Natural",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.072,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542653265
+		}, {
+			"id": 35800,
+			"name": "Law Party of Hill Pa Hsi",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.062,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542653265
+		}, {
+			"id": 35798,
+			"name": "United Hill Pa Hsi Liberty Party",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.043,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542653265
+		}, {
+			"id": 1962,
+			"name": "Hill Pa Hsi Liberals",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0.032,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542653265
+		}, {
+			"id": 32714,
+			"name": "Zeaex Corp.",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542653265
+		}],
+		"lastUpdate": 1542664842
+	},
+	"Khepri": {
+		"id": 12758,
+		"id64": 5031721964250,
+		"name": "Khepri",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/12758\/name\/Khepri",
+		"controllingFaction": {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.362,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542644643
+		}, {
+			"id": 2837,
+			"name": "Khepri Jet Public Ltd",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.223,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542644643
+		}, {
+			"id": 1918,
+			"name": "ARMADA Corp",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.147,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": true,
+			"lastUpdate": 1542644643
+		}, {
+			"id": 10515,
+			"name": "Khepri Autocracy",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.079,
+			"state": "Outbreak",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Famine",
+				"trend": 0
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542644643
+		}, {
+			"id": 33904,
+			"name": "Khepri Incorporated",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.069,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542644643
+		}, {
+			"id": 33905,
+			"name": "Khepri Law Party",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.063,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542644643
+		}, {
+			"id": 2283,
+			"name": "Independents of Khepri",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0.057,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542644643
+		}],
+		"lastUpdate": 1542664852
+	},
+	"Alpha Chamaelontis": {
+		"id": 17414,
+		"id64": 285372057963,
+		"name": "Alpha Chamaelontis",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/17414\/name\/Alpha+Chamaelontis",
+		"controllingFaction": {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.385,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542642801
+		}, {
+			"id": 1236,
+			"name": "Pi Mensae Brotherhood",
+			"allegiance": "Independent",
+			"government": "Theocracy",
+			"influence": 0.267,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542642801
+		}, {
+			"id": 40824,
+			"name": "Alpha Chamaelontis Systems",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.123,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542642801
+		}, {
+			"id": 7323,
+			"name": "Earls of Velabri",
+			"allegiance": "Empire",
+			"government": "Feudal",
+			"influence": 0.087,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542642801
+		}, {
+			"id": 40822,
+			"name": "People's Alpha Chamaelontis Future",
+			"allegiance": "Federation",
+			"government": "Democracy",
+			"influence": 0.053,
+			"state": "Outbreak",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542642801
+		}, {
+			"id": 41067,
+			"name": "Nationalists of Alpha Chamaelontis",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.045,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542642801
+		}, {
+			"id": 40823,
+			"name": "Alpha Chamaelontis Power Ind",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.04,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542642801
+		}, {
+			"id": 15675,
+			"name": "Dukes of Pi Mensae",
+			"allegiance": "Independent",
+			"government": "Feudal",
+			"influence": 0,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542616856
+		}, {
+			"id": 248,
+			"name": "Mazahuanses Commodities",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542616856
+		}],
+		"lastUpdate": 1542664862
+	},
+	"Mata": {
+		"id": 19325,
+		"id64": 2557820801754,
+		"name": "Mata",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/19325\/name\/Mata",
+		"controllingFaction": {
+			"id": 2035,
+			"name": "Minutemen",
+			"allegiance": "Federation",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 2035,
+			"name": "Minutemen",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.374374,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Expansion",
+				"trend": 0
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542649506
+		}, {
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.167167,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Election",
+				"trend": 0
+			}],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": true,
+			"lastUpdate": 1542649506
+		}, {
+			"id": 37210,
+			"name": "Movement for Mata for Equality",
+			"allegiance": "Independent",
+			"government": "Democracy",
+			"influence": 0.14014,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542649506
+		}, {
+			"id": 7404,
+			"name": "Mata & Co",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.099099,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Election",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542649506
+		}, {
+			"id": 37212,
+			"name": "Mata Holdings",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.089089,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 0
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542649506
+		}, {
+			"id": 37213,
+			"name": "Mata Citizens of Tradition",
+			"allegiance": "Empire",
+			"government": "Patronage",
+			"influence": 0.083083,
+			"state": "Civil war",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": -1
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542649506
+		}, {
+			"id": 37211,
+			"name": "Mata Defence Party",
+			"allegiance": "Independent",
+			"government": "Dictatorship",
+			"influence": 0.047047,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542649506
+		}],
+		"lastUpdate": 1542664903
+	},
+	"LHS 2477": {
+		"id": 7041,
+		"id64": 671759869361,
+		"name": "LHS 2477",
+		"url": "https:\/\/www.edsm.net\/en\/system\/id\/7041\/name\/LHS+2477",
+		"controllingFaction": {
+			"id": 434,
+			"name": "LTT 4487 Industry",
+			"allegiance": "Federation",
+			"government": "Corporate"
+		},
+		"factions": [{
+			"id": 1592,
+			"name": "Crimson State Group",
+			"allegiance": "Independent",
+			"government": "Corporate",
+			"influence": 0.569431,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": true,
+			"lastUpdate": 1542660222
+		}, {
+			"id": 542,
+			"name": "Solati Galactic Services",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.198801,
+			"state": "Boom",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542660222
+		}, {
+			"id": 434,
+			"name": "LTT 4487 Industry",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.101898,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542660222
+		}, {
+			"id": 33049,
+			"name": "Lords of LHS 2477",
+			"allegiance": "Independent",
+			"government": "Feudal",
+			"influence": 0.070929,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542660222
+		}, {
+			"id": 33048,
+			"name": "LHS 2477 Purple Raiders",
+			"allegiance": "Independent",
+			"government": "Anarchy",
+			"influence": 0.048951,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542660222
+		}, {
+			"id": 11754,
+			"name": "LHS 2477 Jet Fortune Corp.",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0.00999,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [{
+				"state": "Boom",
+				"trend": 1
+			}],
+			"isPlayer": false,
+			"lastUpdate": 1542660222
+		}, {
+			"id": 1574,
+			"name": "Logoni Network",
+			"allegiance": "Federation",
+			"government": "Corporate",
+			"influence": 0,
+			"state": "None",
+			"activeStates": [],
+			"recoveringStates": [],
+			"pendingStates": [],
+			"isPlayer": false,
+			"lastUpdate": 1542656657
+		}],
+		"lastUpdate": 1542664913
+	}
+}

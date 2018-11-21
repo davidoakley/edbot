@@ -20,7 +20,7 @@ redisClient.on('connect', function() {
 });
 
 function hsetPackedObject(multi, keyName, obj) {
-    //multi.del(keyName);
+    multi.del(keyName);
     var flatData = flatten(obj);
     for (var attr in flatData) {
         if (Array.isArray(flatData[attr])) {
@@ -42,15 +42,71 @@ function unpackObject(flatData) {
 }
 
 function getKeyName(objType, objName) {
-    return objType + ':' + objName.replace(/ /g, '_');
+    if (objName !== undefined) {
+        return objType + ':' + objName.replace(/ /g, '_');
+    } else {
+        return objType.replace(/ /g, '_');
+    }
+}
+
+function convertEDSMSystem(edsmObj) {
+    var systemObj = {};
+    const systemName = edsmObj['name'];
+
+    var now = Date.now() / 1000;
+    systemObj['lastUpdate'] = now;
+
+    systemObj['name'] = systemName;
+    systemObj['controllingFaction'] = edsmObj['controllingFaction']['name'];
+    systemObj['factions'] = {};
+
+    for (var factionIndex in edsmObj['factions']) {
+        const edsmFaction = edsmObj['factions'][factionIndex];
+        const factionName = edsmFaction['name'];
+        var outFaction = {};
+
+        outFaction['name'] = factionName;
+        outFaction['allegiance'] = edsmFaction['allegiance'];
+        outFaction['government'] = edsmFaction['government'];
+        outFaction['influence'] = edsmFaction['influence'];
+
+        if ('pendingStates' in edsmFaction && edsmFaction['pendingStates'].length > 0) {
+            outFaction['pendingStates'] = edsmFaction['pendingStates'];
+        }
+
+        if ('recoveringStates' in edsmFaction && edsmFaction['recoveringStates'].length > 0) {
+            outFaction['recoveringStates'] = edsmFaction['recoveringStates'];
+        }
+
+        if ('activeStates' in edsmFaction && edsmFaction['activeStates'].length > 0) {
+            outFaction['activeStates'] = edsmFaction['activeStates'];
+        }
+        else if ('state' in edsmFaction && edsmFaction['state'] != 'None') {
+            outFaction['activeStates'] = [ { 'state': edsmFaction['state']} ];
+        }
+
+        systemObj['factions'][getKeyName(factionName)] = outFaction;
+    }
+
+    return systemObj;
+}
+
+function storeSystem(systemName, systemObj) {
+    var multi = redisClient.multi();
+    hsetPackedObject(multi, getKeyName('system', systemName), systemObj);
+    multi.exec(function (err, replies) {
+        console.log(systemName + ": MULTI got " + replies.length + " replies");
+    });
 }
 
 module.exports = {
-    loadRedis: function () {
-        var systemsData = JSON.parse(fs.readFileSync(dataDir + '/edsm_systems.json', 'utf8'));
+    loadFromFile: function () {
+        var edsmData = JSON.parse(fs.readFileSync(dataDir + '/edsm_systems.json', 'utf8'));
         var multi = redisClient.multi();
-        for (var sn in systemsData) {
-            hsetPackedObject(multi, getKeyName('system', sn), systemsData[sn]);
+        for (var sn in edsmData) {
+            const edsmObj = edsmData[sn];
+            const systemObj = convertEDSMSystem(edsmObj);
+            hsetPackedObject(multi, getKeyName('system', sn), systemObj);
         }
         multi.exec(function (err, replies) {
             console.log("MULTI got " + replies.length + " replies");
@@ -58,7 +114,17 @@ module.exports = {
             //     console.log("Reply " + index + ": " + reply.toString());
             // });
         });
+
+        return edsmData.keys().length;
     },
+
+    storeSystem: storeSystem/*function (systemName, systemObj) {
+        var multi = redisClient.multi();
+        hsetPackedObject(multi, getKeyName('system', systemName), systemObj);
+        multi.exec(function (err, replies) {
+            console.log(systemName + ": MULTI got " + replies.length + " replies");
+        });
+    }*/,
 
     getSystem: function (systemName) {
         var systemKeyName = getKeyName('system', systemName);
@@ -68,6 +134,7 @@ module.exports = {
                     var systemObj = unpackObject(flatData);
                     resolve(systemObj);
                 } else {
+                    /*
                     // Fetch from edsm
                     var uri = 'https://www.edsm.net/api-system-v1/factions?systemName=' + encodeURIComponent(systemName) + '&showHistory=0';
                     request({
@@ -77,11 +144,9 @@ module.exports = {
                         "headers": {
                           "User-Agent": "edbot/0.1"
                         }
-                    }).then(function (systemObj) {
+                    }).then(function (edsmObj) {
+                        var systemObj = convertEDSMSystem(edsmObj)
                         console.dir(systemObj);
-
-                        var now = Date.now() / 1000;
-                        systemObj['lastUpdate'] = now;
 
                         // Cache this system
                         var multi = redisClient.multi();
@@ -95,6 +160,8 @@ module.exports = {
                         
                         resolve(systemObj);
                     });
+                    */
+                    resolve({});
                 }
             }, function(err) {
                 reject(err); // Pass the error to our caller
