@@ -21,7 +21,7 @@ redisClient.on('connect', function() {
 
 function hsetPackedObject(multi, keyName, obj) {
     multi.del(keyName);
-    var flatData = flatten(obj);
+    const flatData = flatten(obj);
     for (var attr in flatData) {
         if (Array.isArray(flatData[attr])) {
             multi.hset(keyName, attr, "∅");
@@ -91,15 +91,51 @@ function convertEDSMSystem(edsmObj) {
     return systemObj;
 }
 
-function storeSystem(systemName, systemObj) {
-    var multi = redisClient.multi();
+function storeSystem(multi, systemName, systemObj) {
+    // var multi = redisClient.multi();
     hsetPackedObject(multi, getKeyName('system', systemName), systemObj);
-    multi.exec(function (err, replies) {
-        console.log(systemName + ": MULTI got " + replies.length + " replies");
-    });
+    // multi.exec(function (err, replies) {
+    //     console.log(systemName + ": MULTI got " + replies.length + " replies");
+    // });
+}
+
+function storeFactionDetails(multi, factionName, factionAllegiance, factionGovernment) {
+    const keyName = getKeyName('faction', factionName);
+    if (factionAllegiance !== undefined) {
+        multi.hset(keyName, 'allegiance', factionAllegiance);
+    }
+    if (factionGovernment !== undefined) {
+        multi.hset(keyName, 'government', factionGovernment);
+    }
+}
+
+function storeFactionSystem(multi, factionName, systemName, factionSystemObj) {
+    const keyName = getKeyName('faction', factionName);
+    const flatData = flatten(factionSystemObj);
+    const attrPrefix = 'systems.' + systemName.replace(/ /g, '_') + '.';
+    for (var attr in flatData) {
+        if (Array.isArray(flatData[attr])) {
+            multi.hset(keyName, attrPrefix + attr, "∅");
+        } else {
+            multi.hset(keyName, attrPrefix + attr, flatData[attr]);
+        }
+    }
+
 }
 
 module.exports = {
+    getRedisClient: function() {
+        return redisClient;
+    },
+
+    hsetPackedObject: hsetPackedObject,
+
+    getKeyName: getKeyName,
+    storeSystem: storeSystem,
+    storeFactionDetails: storeFactionDetails,
+    storeFactionSystem: storeFactionSystem,
+
+
     loadFromFile: function () {
         var edsmData = JSON.parse(fs.readFileSync(dataDir + '/edsm_systems.json', 'utf8'));
         var multi = redisClient.multi();
@@ -117,14 +153,6 @@ module.exports = {
 
         return edsmData.keys().length;
     },
-
-    storeSystem: storeSystem/*function (systemName, systemObj) {
-        var multi = redisClient.multi();
-        hsetPackedObject(multi, getKeyName('system', systemName), systemObj);
-        multi.exec(function (err, replies) {
-            console.log(systemName + ": MULTI got " + replies.length + " replies");
-        });
-    }*/,
 
     getSystem: function (systemName) {
         var systemKeyName = getKeyName('system', systemName);

@@ -12,12 +12,17 @@ module.exports = {
         sock.subscribe('');
         
         sock.on('message', topic => {
-            var inData = JSON.parse(zlib.inflateSync(topic));
-            // console.log(JSON.stringify(JSON.parse(zlib.inflateSync(topic)), null, 2));
+            try {
+                var inData = JSON.parse(zlib.inflateSync(topic));
         
-            if (inData["$schemaRef"] == "https://eddn.edcd.io/schemas/journal/1") {
-                parseJournal(inData);
+                if (inData["$schemaRef"] == "https://eddn.edcd.io/schemas/journal/1") {
+                    parseJournal(inData);
+                }
             }
+            catch (error) {
+                console.error(error);
+                // message.reply('there was an error trying to execute that command!');
+            }       
           });
     }
 }
@@ -44,6 +49,7 @@ function parseJournal(inData) {
     const msgData = inData["message"];
     const systemName = msgData['StarSystem'];
     const event = msgData['event'];
+    const multi = data.getRedisClient().multi();
 
     if ("Factions" in msgData && event == "FSDJump") {
         console.log("Message for "+systemName + " with factions");
@@ -58,53 +64,75 @@ function parseJournal(inData) {
         if ('SystemFaction' in msgData) {
             systemObj['controllingFaction'] = msgData['SystemFaction'];
         }
+
+        var factionSystemMapObj = {};
     
         systemObj['factions'] = {};
         for (var index in inFactionsData) {
             const inFaction = inFactionsData[index];
-            var outFaction = {};
-            outFaction['name'] = inFaction['Name'];
-            if ('Allegiance' in inFaction) {
-                outFaction['allegiance'] = inFaction['Allegiance'];
-            }
-            if ('Government' in inFaction) {
-                outFaction['government'] = inFaction['Government'];
-            }
-            if ('Influence' in inFaction) {
-                outFaction['influence'] = inFaction['Influence'];
+            const factionName = inFaction['Name'];
+
+            if (factionName == 'Pilots Federation Local Branch' && (!('Influence' in inFaction) || inFaction['Influence'] == 0)) {
+                continue;
             }
 
-            // outFaction['state'] = inFaction['FactionState'];
-            if ('PendingStates' in inFaction && inFaction['PendingStates'].length > 0) {
-                outFaction['pendingStates'] = convertStates(inFaction['PendingStates']);
+            var factionObj = {};
+
+            var factionSystemObj = {};
+            var factionAllegiance = undefined;
+            var factionGovernment = undefined;
+
+            factionObj['name'] = factionName;
+            factionSystemObj['lastUpdate'] = now;
+
+            if ('Allegiance' in inFaction) {
+                factionObj['allegiance'] = inFaction['Allegiance'];
+                factionAllegiance = inFaction['Allegiance'];
+            }
+            if ('Government' in inFaction) {
+                factionObj['government'] = inFaction['Government'];
+                factionGovernment = inFaction['Government'];
+            }
+            if ('Influence' in inFaction) {
+                factionObj['influence'] = inFaction['Influence'];
+                factionSystemObj['influence'] = inFaction['Influence'];
+            }
+
+            if ('PendingStates' in inFaction && Array.isArray(inFaction['PendingStates']) && inFaction['PendingStates'].length > 0) {
+                factionObj['pendingStates'] = convertStates(inFaction['PendingStates']);
+                factionSystemObj['pendingStates'] = factionObj['pendingStates'];
             }
     
-            if ('RecoveringStates' in inFaction && inFaction['RecoveringStates'].length > 0) {
-                outFaction['RecoveringStates'] = convertStates(inFaction['RecoveringStates']);
+            if ('RecoveringStates' in inFaction && Array.isArray(inFaction['RecoveringStates']) && inFaction['RecoveringStates'].length > 0) {
+                factionObj['recoveringStates'] = convertStates(inFaction['RecoveringStates']);
+                factionSystemObj['recoveringStates'] = factionObj['recoveringStates'];
             }
     
-            if ('ActiveStates' in inFaction && inFaction['ActiveStates'].length > 0) {
-                outFaction['activeStates'] = convertStates(inFaction['ActiveStates']);
+            if ('ActiveStates' in inFaction && Array.isArray(inFaction['ActiveStates']) && inFaction['ActiveStates'].length > 0) {
+                factionObj['activeStates'] = convertStates(inFaction['ActiveStates']);
+                factionSystemObj['activeStates'] = factionObj['activeStates'];
             }
             else if ('State' in inFaction && inFaction['State'] != 'None') {
-                outFaction['activeStates'] = [ { 'state': inFaction['State']} ];
+                factionObj['activeStates'] = [ { 'state': inFaction['State']} ];
+                factionSystemObj['activeStates'] = factionObj['activeStates'];
             }
     
             const factionKeyName = inFaction['Name'].replace(/ /g, '_');
-            systemObj['factions'][factionKeyName] = outFaction;
-        }
-        console.dir(systemObj);
+            systemObj['factions'][factionKeyName] = factionObj;
 
-        /*
-        var multi = redisClient.multi();
-        hsetPackedObject(multi, getKeyName('system', systemName), systemObj);
+            data.storeFactionDetails(multi, factionName, factionAllegiance, factionGovernment);
+            data.storeFactionSystem(multi, factionName, systemName, factionSystemObj);
+        }
+
+        data.storeSystem(multi, systemName, systemObj)
+
         multi.exec(function (err, replies) {
-            console.log(systemName + ": MULTI got " + replies.length + " replies");
-            // replies.forEach(function (reply, index) {
-            //     console.log("Reply " + index + ": " + reply.toString());
-            // });
+            if (err == null) {
+                console.log(systemName + ": MULTI got " + replies.length + " replies");
+            } else {
+                console.error(systemName + ": MULTI error: " + err);
+            }
         });
-        */
-       data.storeSystem(systemName, systemObj);
+   
     }
 }
