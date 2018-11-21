@@ -7,9 +7,18 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch edbot",
             "program": "${workspaceFolder}/bot.js",
-            "outputCapture": "std"
+            "outputCapture": "std",
+            "env": {"NODE_ENV":"dev"}
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch loadsystems",
+            "program": "${workspaceFolder}/loadsystems.js",
+            "outputCapture": "std",
+            "env": {"NODE_ENV":"dev"}
         }
     ]
 }

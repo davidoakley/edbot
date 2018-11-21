@@ -1,95 +1,12 @@
 // https://discordapp.com/oauth2/authorize?&client_id=512352639107858432&scope=bot&permissions=8
-var Discord = require('discord.js');
-var logger = require('winston');
+// Nightstorm is user ID 78955103381360640
+const fs = require('fs');
+const Discord = require('discord.js');
+const logger = require('winston');
 // var auth = require('./auth.json');
-var config = require('config');
-var data = require('./data');
-
-function parseStates(inList) {
-	var outList = [];
-	
-	for (var index in inList) {
-		var inObj = inList[index];
-		var elt = inObj["state"];
-		if (inObj['trend'] > 0) {
-			elt += "˄";
-		} else if (inObj['trend'] < 0) {
-			elt += "˅";
-		}
-		outList.push(elt);
-	}
-	
-	return outList;
-}
-
-function getSystemSummary(systemName, systemData) {
-	var response = "";
-	var sn = systemData['name'];
-
-	if (sn === undefined) {
-		return "Sorry, EDSM doesn't know about the system *" + systemName + "* 😕";
-	}
-
-	var controllingFactionName = systemData['controllingFaction']['name']
-	var date = new Date(systemData['lastUpdate']*1000);
-	var niceDate = date.toISOString();
-	response += "Data obtained from EDSM at " + niceDate + "\n";
-	response += "**System " + sn + "**:\n";
-	
-	response += '```';
-	var factionsData = systemData['factions'];
-	for (var factionIndex in factionsData) {
-		var factionData = factionsData[factionIndex];
-		var factionName = factionData['name'];
-		var percent = (factionData['influence'] * 100).toFixed(1) + "%";
-		response += (factionName == controllingFactionName) ? "⦿ " : "◦ "
-		var displayName = factionName.toUpperCase();
-		if (factionData['isPlayer']) {
-			displayName += "†";
-		}		
-		response += (displayName + ": ").padEnd(40 - percent.length);
-		response += percent;
-		
-		response += "\n";
-		
-		var states = [];
-		states = parseStates(factionData['activeStates']);
-		if (states.length == 0) {
-			states.push(factionData['state']);
-		}
- 		if (states.length > 0) {
-			response += "\xa0\xa0∙ Active:     " + states.join(' ');
-			response += "\n";
- 		}
- 		
- 		var recoveringStates = parseStates(factionData['recoveringStates']);
- 		if (recoveringStates.length > 0) {
-			response += "\xa0\xa0∙ Recovering: " + recoveringStates.join(' ');
-			response += "\n";
- 		}
- 		
- 		var pendingStates = parseStates(factionData['pendingStates']);
- 		if (pendingStates.length > 0) {
-			response += "\xa0\xa0∙ Pending:    " + pendingStates.join(' ');
-			response += "\n";
- 		}
-	}
-	response += '```';
-	
-	return response;
-}
-
-function showSystemInfo(message, args) {
-	var systemName = args.join(' ');
-
-	data.getSystem(systemName).then(function(systemObject) {
-		var response = getSystemSummary(systemName, systemObject);
-
-		message.channel.send(response);
-	}, function(err) {
-        console.log(err);
-	});
-}
+const config = require('config');
+const data = require('./data');
+const prefix = '!';
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -100,38 +17,39 @@ logger.level = 'debug';
 
 // Initialize Discord Bot
 var client = new Discord.Client();
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	client.commands.set(command.name, command);
+}
+
 
 client.once('ready', () => {
-//     logger.info('Connected');
 	logger.info('Logged in as: ' + client.user.username + ' - (' + client.user.id + ')');
-	
-	// bot.sendMessage({
-	// 	to: '78955103381360640',
-	// 	message: 'Started up'
-	// });
-	
-	//users.get("Nightstorm#9647").send("Started up!");
 });
+
 client.on('message', message => {
-    // Our bot needs to know if it will execute a command
-    // It will listen for messages that will start with `!`
-    if (message.content.substring(0, 1) == '!') {
-        var args = message.content.substring(1).split(' ');
-        var cmd = args[0];
-        args = args.splice(1);
-        
-        switch(cmd) {
-		case 'edload':
-			console.log('Load request from user ' + message.author.username);
-			data.loadRedis();
-			break;
-		case 'edsystem':
-			console.log('Message from user ID ' + message.author.username);
-           	showSystemInfo(message, args);
-           	break;
-            // Just add any case commands if you want to..
-         }
-     }
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+	const args = message.content.slice(prefix.length).split(/ +/);
+	const command = args.shift().toLowerCase();
+
+	if (!client.commands.has(command)) return;
+
+	try {
+		client.commands.get(command).execute(message, args);
+	}
+	catch (error) {
+		console.error(error);
+		message.reply('there was an error trying to execute that command!');
+	}
 });
 
 client.login(config.get('botToken'));
+
+process.on('SIGTERM', () => {
+	console.info('SIGTERM signal received.');
+	process.exit(0);
+  });

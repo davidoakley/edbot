@@ -20,7 +20,7 @@ redisClient.on('connect', function() {
 });
 
 function hsetPackedObject(multi, keyName, obj) {
-    multi.del(keyName);
+    //multi.del(keyName);
     var flatData = flatten(obj);
     for (var attr in flatData) {
         if (Array.isArray(flatData[attr])) {
@@ -47,7 +47,6 @@ function getKeyName(objType, objName) {
 
 module.exports = {
     loadRedis: function () {
-        console.log("Redis connected");
         var systemsData = JSON.parse(fs.readFileSync(dataDir + '/edsm_systems.json', 'utf8'));
         var multi = redisClient.multi();
         for (var sn in systemsData) {
