@@ -4,6 +4,7 @@ var fs = require('fs');
 // var flatten = require('flat')
 var bluebird = require('bluebird');
 // var request = require('request-promise');
+const tools = require('./modules/tools');
 
 bluebird.promisifyAll(redis);
 
@@ -20,10 +21,6 @@ redisClient.on('connect', function() {
     loadData();
 });
 
-function getKeyName(objType, objName) {
-    return objType + ':' + objName.replace(/ /g, '_');
-}
-
 function loadData() {
     console.log("Loading data...");
 
@@ -37,7 +34,7 @@ function loadData() {
         if (systemName === null) {
             console.log("NULL");
         }
-        var keyName = getKeyName("system", systemName);
+        var keyName = tools.getKeyName("system", systemName);
 
         multi.hset(keyName, 'name', systemName);
         if ('population' in systemsData[i] && systemsData[i]['population'] !== null) {

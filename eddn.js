@@ -10,6 +10,7 @@ io.init({
 
 const zlib = require('zlib');
 const zmq = require('zeromq');
+const tools = require('./modules/tools');
 const data = require('./modules/data');
 
 const eventsProcessedCounter = io.counter({
@@ -130,7 +131,7 @@ function parseFSDJump(msgData) {
             factionSystemObj['activeStates'] = factionObj['activeStates'];
         }
 
-        const factionKeyName = inFaction['Name'].replace(/ /g, '_');
+        const factionKeyName = tools.getKeyName(inFaction['Name']);
         systemObj['factions'][factionKeyName] = factionObj;
 
         data.storeFactionDetails(multi, factionName, factionAllegiance, factionGovernment);

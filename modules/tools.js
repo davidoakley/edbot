@@ -17,9 +17,9 @@ function parseStates(inList) {
 
 function getKeyName(objType, objName) {
     if (objName !== undefined) {
-        return objType + ':' + objName.replace(/ /g, '_');
+        return objType + ':' + objName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
     } else {
-        return objType.replace(/ /g, '_');
+        return objType.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
     }
 }
 

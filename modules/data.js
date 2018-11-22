@@ -3,6 +3,7 @@ var config = require('config');
 var fs = require('fs');
 var flatten = require('flat')
 var bluebird = require('bluebird');
+var tools = require('./tools');
 // var request = require('request-promise');
 
 bluebird.promisifyAll(redis);
@@ -41,14 +42,6 @@ function unpackObject(flatData) {
     return unflatten(flatData);
 }
 
-function getKeyName(objType, objName) {
-    if (objName !== undefined) {
-        return objType + ':' + objName.replace(/ /g, '_');
-    } else {
-        return objType.replace(/ /g, '_');
-    }
-}
-
 function convertEDSMSystem(edsmObj) {
     var systemObj = {};
     const systemName = edsmObj['name'];
@@ -85,7 +78,7 @@ function convertEDSMSystem(edsmObj) {
             outFaction['activeStates'] = [ { 'state': edsmFaction['state']} ];
         }
 
-        systemObj['factions'][getKeyName(factionName)] = outFaction;
+        systemObj['factions'][tools.getKeyName(factionName)] = outFaction;
     }
 
     return systemObj;
@@ -93,14 +86,14 @@ function convertEDSMSystem(edsmObj) {
 
 function storeSystem(multi, systemName, systemObj) {
     // var multi = redisClient.multi();
-    hsetPackedObject(multi, getKeyName('system', systemName), systemObj);
+    hsetPackedObject(multi, tools.getKeyName('system', systemName), systemObj);
     // multi.exec(function (err, replies) {
     //     console.log(systemName + ": MULTI got " + replies.length + " replies");
     // });
 }
 
 function storeFactionDetails(multi, factionName, factionAllegiance, factionGovernment) {
-    const keyName = getKeyName('faction', factionName);
+    const keyName = tools.getKeyName('faction', factionName);
     if (factionAllegiance !== undefined) {
         multi.hset(keyName, 'allegiance', factionAllegiance);
     }
@@ -110,9 +103,9 @@ function storeFactionDetails(multi, factionName, factionAllegiance, factionGover
 }
 
 function storeFactionSystem(multi, factionName, systemName, factionSystemObj) {
-    const keyName = getKeyName('faction', factionName);
+    const keyName = tools.getKeyName('faction', factionName);
     const flatData = flatten(factionSystemObj);
-    const attrPrefix = 'systems.' + systemName.replace(/ /g, '_') + '.';
+    const attrPrefix = 'systems.' + tools.getKeyName(systemName) + '.';
     for (var attr in flatData) {
         if (Array.isArray(flatData[attr])) {
             multi.hset(keyName, attrPrefix + attr, "∅");
@@ -130,7 +123,6 @@ module.exports = {
 
     hsetPackedObject: hsetPackedObject,
 
-    getKeyName: getKeyName,
     storeSystem: storeSystem,
     storeFactionDetails: storeFactionDetails,
     storeFactionSystem: storeFactionSystem,
@@ -142,7 +134,7 @@ module.exports = {
         for (var sn in edsmData) {
             const edsmObj = edsmData[sn];
             const systemObj = convertEDSMSystem(edsmObj);
-            hsetPackedObject(multi, getKeyName('system', sn), systemObj);
+            hsetPackedObject(multi, tools.getKeyName('system', sn), systemObj);
         }
         multi.exec(function (err, replies) {
             console.log("MULTI got " + replies.length + " replies");
@@ -155,7 +147,7 @@ module.exports = {
     },
 
     getSystem: function (systemName) {
-        var systemKeyName = getKeyName('system', systemName);
+        var systemKeyName = tools.getKeyName('system', systemName);
         return new Promise(function (resolve, reject) {
             redisClient.hgetallAsync(systemKeyName).then(function (flatData) {
                 if (flatData != null) {
