@@ -23,8 +23,20 @@ function getKeyName(objType, objName) {
     }
 }
 
+function orderByInfluence(a, b) {
+	return Math.sign(b.influence - a.influence); //(a.influence > b.influence) ? 1 : ((b.influence > a.influence) ? -1 : 0);
+}
+
+function sortByInfluence(factions) {
+	var factionList = Array.isArray(factionList) ? factions : Object.values(factions);
+
+	factionList.sort(orderByInfluence);
+
+	return factionList;
+}
 
 module.exports = {
     parseStates: parseStates,
-    getKeyName: getKeyName
+	getKeyName: getKeyName,
+	sortByInfluence: sortByInfluence
 }

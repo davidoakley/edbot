@@ -16,7 +16,7 @@ function getSystemSummary(systemName, systemData) {
 	response += "**System " + sn + "**:\n";
 	
 	response += '```';
-	var factionsData = systemData['factions'];
+	var factionsData = tools.sortByInfluence(systemData['factions']);
 	for (var factionIndex in factionsData) {
 		var factionData = factionsData[factionIndex];
 		var factionName = factionData['name'];
