@@ -1,6 +1,21 @@
+const io = require('@pm2/io')
+
+io.init({
+  metrics: {
+    network: {
+      ports: true
+    }
+  }
+});
+
 const zlib = require('zlib');
 const zmq = require('zeromq');
 const data = require('./modules/data');
+
+const eventsProcessedCounter = io.counter({
+    name: 'Events processed',
+    type: 'counter',
+});
 
 const sock = zmq.socket('sub');
 
@@ -138,6 +153,7 @@ function parseFSDJump(msgData) {
                 }
             }
             console.log(systemName + ": " + inserts + " inserts, " + updates + " updates");
+            eventsProcessedCounter.inc(1);
         } else {
             console.error(systemName + ": MULTI error: " + err);
         }
