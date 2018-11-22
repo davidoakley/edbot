@@ -10,6 +10,7 @@
     "url": "https://github.com/davidoakley/edbot.git"
   },
   "dependencies": {
+    "@pm2/io": "^2.4.7",
     "@types/zeromq": "^4.2.0",
     "bluebird": "^3.5.3",
     "config": "^2.0.2",
