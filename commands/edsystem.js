@@ -76,9 +76,6 @@ module.exports = {
 	name: 'edsystem',
 	description: 'Get faction influences within a system',
 	execute(message, args) {
-        // var args = message.content.substring(1).split(' ');
-        args = args.splice(1);
-
         var systemName = args.join(' ');
 
         data.getSystem(systemName).then(function(systemObject) {
