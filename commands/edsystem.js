@@ -1,4 +1,5 @@
-const data = require('../data');
+const data = require('../modules/data');
+const tools = require('../modules/tools');
 
 function parseStates(inList) {
 	var outList = [];
@@ -74,8 +75,8 @@ function getSystemSummary(systemName, systemData) {
 module.exports = {
 	name: 'edsystem',
 	description: 'Get faction influences within a system',
-	execute(message) {
-        var args = message.content.substring(1).split(' ');
+	execute(message, args) {
+        // var args = message.content.substring(1).split(' ');
         args = args.splice(1);
 
         var systemName = args.join(' ');
@@ -87,6 +88,5 @@ module.exports = {
         }, function(err) {
             console.log(err);
         });
-    
-	},
+	}
 };

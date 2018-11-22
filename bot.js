@@ -6,7 +6,7 @@ const logger = require('winston');
 // var auth = require('./auth.json');
 const config = require('config');
 // const data = require('./data');
-const eddn = require('./eddn');
+// const eddn = require('./eddn');
 const prefix = '!';
 
 // Configure logger settings
@@ -55,4 +55,4 @@ process.on('SIGTERM', () => {
 	process.exit(0);
 });
 
-eddn.connect();
+// eddn.connect();

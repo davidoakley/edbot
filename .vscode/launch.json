@@ -15,6 +15,14 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch eddn",
+            "program": "${workspaceFolder}/eddn.js",
+            "outputCapture": "std",
+            "env": {"NODE_ENV":"dev"}
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch loadsystems",
             "program": "${workspaceFolder}/loadsystems.js",
             "outputCapture": "std",
