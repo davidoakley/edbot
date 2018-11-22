@@ -3,13 +3,13 @@ var config = require('config');
 var fs = require('fs');
 // var flatten = require('flat')
 var bluebird = require('bluebird');
-var request = require('request-promise');
+// var request = require('request-promise');
 
 bluebird.promisifyAll(redis);
 
 var dataDir = config.get('dataDir');
 var redisClient = redis.createClient();
-var unflatten = require('flat').unflatten
+// var unflatten = require('flat').unflatten
 
 redisClient.on("error", function (err) {
     console.log("Error " + err);

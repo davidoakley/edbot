@@ -80,8 +80,6 @@ function parseFSDJump(msgData) {
         systemObj['controllingFaction'] = msgData['SystemFaction'];
     }
 
-    var factionSystemMapObj = {};
-
     systemObj['factions'] = {};
     for (var index in inFactionsData) {
         const inFaction = inFactionsData[index];

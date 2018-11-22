@@ -3,7 +3,7 @@ var config = require('config');
 var fs = require('fs');
 var flatten = require('flat')
 var bluebird = require('bluebird');
-var request = require('request-promise');
+// var request = require('request-promise');
 
 bluebird.promisifyAll(redis);
 
