@@ -25,6 +25,6 @@ function getKeyName(objType, objName) {
 
 
 module.exports = {
-    parseStates = parseStates,
-    getKeyName = getKeyName
+    parseStates: parseStates,
+    getKeyName: getKeyName
 }
