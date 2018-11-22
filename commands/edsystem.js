@@ -6,7 +6,7 @@ function getSystemSummary(systemName, systemData) {
 	var sn = systemData['name'];
 
 	if (sn === undefined) {
-		return "Sorry, EDSM doesn't know about the system *" + systemName + "* 😕";
+		return "Sorry, I don't know about *" + systemName + "* system 😕";
 	}
 
 	var controllingFactionName = systemData['controllingFaction']
@@ -59,6 +59,11 @@ module.exports = {
 	name: 'edsystem',
 	description: 'Get faction influences within a system',
 	execute(message, args) {
+		if (args.length < 1) {
+			message.channel.send("The !edsystem command needs to be followed by a system name, such as `edsystem shinrarta dezhra`");
+			return;
+		}
+
 		var systemName = args.join(' ');
 
 		data.getSystem(systemName).then(function(systemObject) {
