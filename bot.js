@@ -55,7 +55,7 @@ client.on('message', message => {
 	if (!client.commands.has(command)) return;
 
 	try {
-		client.commands.get(command).execute(message, args);
+		client.commands.get(command).execute(message, command, args);
 		commandsProcessedCounter.inc(1);
 	}
 	catch (error) {

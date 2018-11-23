@@ -46,7 +46,7 @@ function convertEDSMSystem(edsmObj) {
     var systemObj = {};
     const systemName = edsmObj['name'];
 
-    var now = Date.now() / 1000;
+    var now = Date.now();
     systemObj['lastUpdate'] = now;
 
     systemObj['name'] = systemName;
@@ -94,6 +94,8 @@ function storeSystem(multi, systemName, systemObj) {
 
 function storeFactionDetails(multi, factionName, factionAllegiance, factionGovernment) {
     const keyName = tools.getKeyName('faction', factionName);
+    multi.hset(keyName, 'name', factionName);
+    multi.hset(keyName, 'lastUpdate', Date.now());
     if (factionAllegiance !== undefined) {
         multi.hset(keyName, 'allegiance', factionAllegiance);
     }
@@ -154,33 +156,22 @@ module.exports = {
                     var systemObj = unpackObject(flatData);
                     resolve(systemObj);
                 } else {
-                    /*
-                    // Fetch from edsm
-                    var uri = 'https://www.edsm.net/api-system-v1/factions?systemName=' + encodeURIComponent(systemName) + '&showHistory=0';
-                    request({
-                        "method":"GET", 
-                        "uri": uri,
-                        "json": true,
-                        "headers": {
-                          "User-Agent": "edbot/0.1"
-                        }
-                    }).then(function (edsmObj) {
-                        var systemObj = convertEDSMSystem(edsmObj)
-                        console.dir(systemObj);
+                    resolve({});
+                }
+            }, function(err) {
+                reject(err); // Pass the error to our caller
+            });
+        });
+    },
 
-                        // Cache this system
-                        var multi = redisClient.multi();
-                        hsetPackedObject(multi, systemKeyName, systemObj);
-                        multi.exec(function (err, replies) {
-                            console.log("MULTI got " + replies.length + " replies");
-                            // replies.forEach(function (reply, index) {
-                            //     console.log("Reply " + index + ": " + reply.toString());
-                            // });
-                        });
-                        
-                        resolve(systemObj);
-                    });
-                    */
+    getFaction: function (factionName) {
+        var factionKeyName = tools.getKeyName('faction', factionName);
+        return new Promise(function (resolve, reject) {
+            redisClient.hgetallAsync(factionKeyName).then(function (flatData) {
+                if (flatData != null) {
+                    var factionObj = unpackObject(flatData);
+                    resolve(factionObj);
+                } else {
                     resolve({});
                 }
             }, function(err) {

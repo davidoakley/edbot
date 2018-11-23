@@ -74,7 +74,7 @@ function parseFSDJump(msgData) {
     var systemObj = {};
     systemObj['name'] = systemName;
     
-    var now = Date.now() / 1000;
+    var now = Date.now();
     systemObj['lastUpdate'] = now;
 
     if ('SystemFaction' in msgData) {
@@ -97,6 +97,7 @@ function parseFSDJump(msgData) {
         var factionGovernment = undefined;
 
         factionObj['name'] = factionName;
+        factionObj['lastUpdate'] = now;
         factionSystemObj['lastUpdate'] = now;
 
         if ('Allegiance' in inFaction) {

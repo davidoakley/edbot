@@ -1,21 +1,24 @@
 const data = require('../modules/data');
 const tools = require('../modules/tools');
 
-function getSystemSummary(systemName, systemData) {
+function getFactionSummary(givenFactionName, factionObject) {
 	var response = "";
-	var sn = systemData['name'];
+	var factionName = factionObject['name'];
 
-	if (sn === undefined) {
-		return "Sorry, I don't know about *" + systemName + "* system 😕";
+	if (factionName === undefined) {
+		return "Sorry, I don't know about the *" + givenFactionName + "* faction 😕";
 	}
 
+	var date = new Date(parseInt(factionObject['lastUpdate'], 10));
+	var niceDate = tools.getEliteDate(date);
+
+    response += "Data obtained from EDSM at " + niceDate + "\n";
+    response += "**Faction " + factionName + "**:\n";
+
+    response += '```';
+    /*
 	var controllingFactionName = systemData['controllingFaction']
-	var date = new Date(systemData['lastUpdate']*1000);
-	var niceDate = date.toISOString();
-	response += "Data obtained from EDSM at " + niceDate + "\n";
-	response += "**System " + sn + "**:\n";
 	
-	response += '```';
 	var factionsData = tools.sortByInfluence(systemData['factions']);
 	for (var factionIndex in factionsData) {
 		var factionData = factionsData[factionIndex];
@@ -50,24 +53,25 @@ function getSystemSummary(systemName, systemData) {
 			response += "\n";
 		}
 	}
-	response += '```';
+    */
+    response += '```';
 	
 	return response;
 }
 
 module.exports = {
-	name: 'edsystem',
-	description: 'Get faction influences within a system',
-	execute(message, args) {
+	name: 'faction',
+	description: 'Get minor faction information',
+	execute(message, command, args) {
 		if (args.length < 1) {
-			message.channel.send("The !edsystem command needs to be followed by a system name, such as `edsystem shinrarta dezhra`");
+			message.channel.send("The !system command needs to be followed by a system name, such as `edsystem shinrarta dezhra`");
 			return;
 		}
 
-		var systemName = args.join(' ');
+		var factionName = args.join(' ');
 
-		data.getSystem(systemName).then(function(systemObject) {
-			var response = getSystemSummary(systemName, systemObject);
+		data.getFaction(factionName).then(function(factionObject) {
+			var response = getFactionSummary(factionName, factionObject);
 	
 			message.channel.send(response);
 		}, function(err) {

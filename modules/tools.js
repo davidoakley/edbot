@@ -1,3 +1,5 @@
+var dateFormat = require('dateformat');
+
 function parseStates(inList) {
 	var outList = [];
 	
@@ -35,8 +37,13 @@ function sortByInfluence(factions) {
 	return factionList;
 }
 
+function getEliteDate(date) {
+	return dateFormat(date, "UTC:HH:MM:ss") + " on " + dateFormat(date, "d mmm") + " " + (parseInt(dateFormat(date, "UTC:yyyy"), 10) + 1286);
+}
+
 module.exports = {
     parseStates: parseStates,
 	getKeyName: getKeyName,
-	sortByInfluence: sortByInfluence
+	sortByInfluence: sortByInfluence,
+	getEliteDate: getEliteDate
 }
