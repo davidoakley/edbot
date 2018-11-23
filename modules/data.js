@@ -118,6 +118,46 @@ function storeFactionSystem(multi, factionName, systemName, factionSystemObj) {
 
 }
 
+async function getSystemCount() {
+    var cursor = 0;
+    var systemCount = 0;
+
+    try {
+        do {
+            var result = await redisClient.scanAsync(cursor, 'COUNT', 1000, 'MATCH', 'system:*'); // eslint-disable-line no-await-in-loop
+            cursor = result.shift();
+            const keyList = result.shift();
+            systemCount += keyList.length;
+            // console.log('keys:' + keyList.length + ', total:' + systemCount + 'newCursor:' + cursor);
+        } while (cursor != 0);
+
+        return systemCount;
+    } catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
+async function getFactionCount() {
+    var cursor = 0;
+    var factionCount = 0;
+
+    try {
+        do {
+            var result = await redisClient.scanAsync(cursor, 'COUNT', 1000, 'MATCH', 'faction:*'); // eslint-disable-line no-await-in-loop
+            cursor = result.shift();
+            const keyList = result.shift();
+            factionCount += keyList.length;
+            // console.log('keys:' + keyList.length + ', total:' + factionCount + 'newCursor:' + cursor);
+        } while (cursor != 0);
+
+        return factionCount;
+    } catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
 module.exports = {
     getRedisClient: function() {
         return redisClient;
@@ -129,6 +169,8 @@ module.exports = {
     storeFactionDetails: storeFactionDetails,
     storeFactionSystem: storeFactionSystem,
 
+    getSystemCount: getSystemCount,
+    getFactionCount: getFactionCount,
 
     loadFromFile: function () {
         var edsmData = JSON.parse(fs.readFileSync(dataDir + '/edsm_systems.json', 'utf8'));
