@@ -1,5 +1,7 @@
 var dateFormat = require('dateformat');
 
+var discordClient = undefined;
+
 function parseStates(inList) {
 	var outList = [];
 	
@@ -41,9 +43,32 @@ function getEliteDate(date) {
 	return dateFormat(date, "UTC:HH:MM:ss") + " on " + dateFormat(date, "d mmm") + " " + (parseInt(dateFormat(date, "UTC:yyyy"), 10) + 1286);
 }
 
+function getMonospacedPercentage(percent, decimals, width) {
+	const numberString = String(Number(percent).toFixed(decimals));
+	const spaces = width - numberString.length - 1;
+	var result = String.fromCodePoint(0x3000).repeat(spaces);
+
+	for (var i in numberString) {
+		if (numberString[i] >= '0' && numberString[i] <= '9') {
+			result += String.fromCodePoint(0xFF00 + numberString.codePointAt(i) - 0x20);
+		} else {
+			result += numberString[i];
+		}
+	}
+
+	result += String.fromCodePoint(0xFF05); // %
+
+	return result;
+}
+
 module.exports = {
     parseStates: parseStates,
 	getKeyName: getKeyName,
 	sortByInfluence: sortByInfluence,
-	getEliteDate: getEliteDate
+	getEliteDate: getEliteDate,
+	getMonospacedPercentage: getMonospacedPercentage,
+	setDiscordClient: function(client) { discordClient = client; },
+	getDiscordClient: function() { return discordClient; },
+	getMyAvatar: function() { return discordClient.user.avatar; },
+	getMyUserId: function() { return discordClient.user.id; }
 }
