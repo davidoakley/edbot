@@ -60,3 +60,5 @@ typings/
 # next.js build output
 .next
 data/output.json
+data/factions.jsonl
+data/systems_populated.jsonl
