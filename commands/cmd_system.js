@@ -83,7 +83,7 @@ function getSystemSummary(enteredSystemName, systemData) {
 		var factionData = factionsData[factionIndex];
 		var factionName = factionData['name'];
 		var percent = (factionData['influence'] * 100).toFixed(1) + "%";
-		var displayName = factionName.toUpperCase();
+		var displayName = factionName; //.toUpperCase();
 		if (factionData['isPlayer']) {
 			displayName += "†";
 		}

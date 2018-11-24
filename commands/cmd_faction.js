@@ -28,7 +28,7 @@ function getFactionSummary(givenFactionName, factionObject) {
 		var systemData = systemsData[systemIndex];
 		var systemName = ('name' in systemData) ? systemData['name'] : systemIndex;
 		var percent = (systemData['influence'] * 100).toFixed(1) + "%";
-		var displayName = systemName.toUpperCase();
+		var displayName = systemName; //.toUpperCase();
 
 		// description += (factionName == controllingFactionName) ? "\uFF0A " : "\uFF0D "
 		description += '`';
