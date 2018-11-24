@@ -1,30 +1,28 @@
-var redis = require("redis");
-var config = require('config');
-var fs = require('fs');
-// var flatten = require('flat')
-var bluebird = require('bluebird');
-// var request = require('request-promise');
-const tools = require('./modules/tools');
+const bluebird = require('bluebird');
+const redis = require("redis");
+const argv = require('yargs').argv; // https://github.com/yargs/yargs/blob/master/docs/examples.md
+// const config = require('config');
+// const fs = require('fs');
+// const tools = require('./modules/tools');
+
 
 bluebird.promisifyAll(redis);
 
-var dataDir = config.get('dataDir');
-var redisClient = redis.createClient();
-// var unflatten = require('flat').unflatten
+const redisClient = redis.createClient();
+// const unflatten = require('flat').unflatten
 
 redisClient.on("error", function (err) {
     console.log("Error " + err);
 });
 
-redisClient.on('connect', function() {
-    console.log("Redis connected");
-    loadData();
-});
-
-function loadData() {
-    console.log("Loading data...");
+async function loadEDSMSystemsPopulatedData() {
+    console.log("Loading EDSM systemsPopulatedData data...");
 
     var multi = redisClient.multi();
+
+    multi.set("foo", "bar");
+    /*
+    var dataDir = config.get('dataDir');
     var systemsData = JSON.parse(fs.readFileSync(dataDir + '/systemsPopulated.json', 'utf8'));
 
     console.log("Entering data...");
@@ -43,14 +41,31 @@ function loadData() {
 
         // console.log("> " + i + ": " + keyName + ", " + systemName + ", " + systemsData[i]['population']);
     }
+*/
 
-    multi.exec(function (err, replies) {
-        console.log("MULTI got " + replies.length + " replies");
+    const result = await multi.execAsync();
+
+    // multi.exec(function (err, replies) {
+        console.log("MULTI got " + result.length + " replies");
         // replies.forEach(function (reply, index) {
         //     console.log("Reply " + index + ": " + reply.toString());
         // });
-        process.exit(0);
-    });
+        // process.exit(0);
+    // });
 
     console.log("Done.");
 }
+
+async function run() {
+    // await redisClient.onAsync('connect');
+    // console.log("Redis connected");
+
+    if (argv.systemsPopulated) {
+        await loadEDSMSystemsPopulatedData();
+    }
+
+    console.log("Exiting");
+    process.exit(0);
+}
+
+run();

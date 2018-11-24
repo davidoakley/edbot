@@ -10,7 +10,7 @@
             "name": "Launch edbot",
             "program": "${workspaceFolder}/bot.js",
             "outputCapture": "std",
-            "env": {"NODE_ENV":"dev"}
+            "env": {"NODE_ENV":"development"}
         },
         {
             "type": "node",
@@ -18,15 +18,16 @@
             "name": "Launch eddn",
             "program": "${workspaceFolder}/eddn.js",
             "outputCapture": "std",
-            "env": {"NODE_ENV":"dev"}
+            "env": {"NODE_ENV":"development"}
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch loadsystems",
-            "program": "${workspaceFolder}/loadsystems.js",
+            "name": "Launch load --systemsPopulated",
+            "program": "${workspaceFolder}/load.js",
+            "args": ["--systemsPopulated"],
             "outputCapture": "std",
-            "env": {"NODE_ENV":"dev"}
+            "env": {"NODE_ENV":"development"}
         }
     ]
 }
