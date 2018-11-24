@@ -17,7 +17,8 @@ const logger = require('winston');
 const config = require('config');
 // const data = require('./data');
 // const eddn = require('./eddn');
-const prefix = '!';
+const tools = require('./modules/tools');
+const prefix = config.get('defaultPrefix');
 
 const commandsProcessedCounter = io.counter({
     name: 'Commands processed',
@@ -44,18 +45,32 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
 	logger.info('Logged in as: ' + client.user.username + ' - (' + client.user.id + ')');
+	tools.setDiscordClient(client);
 });
 
 client.on('message', message => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
 	const args = message.content.slice(prefix.length).split(/ +/);
-	const command = args.shift().toLowerCase();
+	const commandName = args.shift().toLowerCase();
+	var command = undefined;
 
-	if (!client.commands.has(command)) return;
+	if (client.commands.has(commandName)) {
+		command = client.commands.get(commandName);
+	}
+
+	client.commands.forEach(function (value) {
+		if ("aliases" in value && value.aliases.indexOf(commandName) > -1) {
+			command = value;
+		}
+	});
+
+	if (command === undefined) {
+		return;
+	}
 
 	try {
-		client.commands.get(command).execute(message, command, args);
+		command.execute(message, commandName, args);
 		commandsProcessedCounter.inc(1);
 	}
 	catch (error) {
