@@ -65,6 +65,28 @@ function parseJournal(inData) {
     }
 }
 
+function addFactionStatesAndInfluence(destObj, inFaction) {
+    if ('Influence' in inFaction) {
+        destObj['influence'] = inFaction['Influence'];
+    }
+
+    if ('PendingStates' in inFaction && Array.isArray(inFaction['PendingStates']) && inFaction['PendingStates'].length > 0) {
+        destObj['pendingStates'] = convertStates(inFaction['PendingStates']);
+    }
+
+    if ('RecoveringStates' in inFaction && Array.isArray(inFaction['RecoveringStates']) && inFaction['RecoveringStates'].length > 0) {
+        destObj['recoveringStates'] = convertStates(inFaction['RecoveringStates']);
+    }
+
+    if ('ActiveStates' in inFaction && Array.isArray(inFaction['ActiveStates']) && inFaction['ActiveStates'].length > 0) {
+        destObj['activeStates'] = convertStates(inFaction['ActiveStates']);
+    }
+    else if ('State' in inFaction && inFaction['State'] != 'None') {
+        destObj['activeStates'] = [ { 'state': inFaction['State']} ];
+    }
+
+}
+
 function parseFSDJump(msgData) {
     const systemName = msgData['StarSystem'];
     const multi = data.getRedisClient().multi();
@@ -90,52 +112,34 @@ function parseFSDJump(msgData) {
             continue;
         }
 
-        var factionObj = {};
+        var factionObj = {
+            'name': factionName,
+            'lastUpdate': now
+        };
 
-        var factionSystemObj = {};
-        var factionAllegiance = undefined;
-        var factionGovernment = undefined;
-
-        factionObj['name'] = factionName;
-        factionObj['lastUpdate'] = now;
-        factionSystemObj['lastUpdate'] = now;
+        var factionSystemObj = {
+            'name': systemName,
+            'lastUpdate': now
+        };
 
         if ('Allegiance' in inFaction) {
             factionObj['allegiance'] = inFaction['Allegiance'];
-            factionAllegiance = inFaction['Allegiance'];
         }
         if ('Government' in inFaction) {
             factionObj['government'] = inFaction['Government'];
-            factionGovernment = inFaction['Government'];
-        }
-        if ('Influence' in inFaction) {
-            factionObj['influence'] = inFaction['Influence'];
-            factionSystemObj['influence'] = inFaction['Influence'];
         }
 
-        if ('PendingStates' in inFaction && Array.isArray(inFaction['PendingStates']) && inFaction['PendingStates'].length > 0) {
-            factionObj['pendingStates'] = convertStates(inFaction['PendingStates']);
-            factionSystemObj['pendingStates'] = factionObj['pendingStates'];
-        }
+        addFactionStatesAndInfluence(factionObj, inFaction);
+        addFactionStatesAndInfluence(factionSystemObj, inFaction);
 
-        if ('RecoveringStates' in inFaction && Array.isArray(inFaction['RecoveringStates']) && inFaction['RecoveringStates'].length > 0) {
-            factionObj['recoveringStates'] = convertStates(inFaction['RecoveringStates']);
-            factionSystemObj['recoveringStates'] = factionObj['recoveringStates'];
-        }
-
-        if ('ActiveStates' in inFaction && Array.isArray(inFaction['ActiveStates']) && inFaction['ActiveStates'].length > 0) {
-            factionObj['activeStates'] = convertStates(inFaction['ActiveStates']);
-            factionSystemObj['activeStates'] = factionObj['activeStates'];
-        }
-        else if ('State' in inFaction && inFaction['State'] != 'None') {
-            factionObj['activeStates'] = [ { 'state': inFaction['State']} ];
-            factionSystemObj['activeStates'] = factionObj['activeStates'];
+        if (factionName == systemObj['controllingFaction']) {
+            factionSystemObj['controllingFaction'] = true;
         }
 
         const factionKeyName = tools.getKeyName(inFaction['Name']);
         systemObj['factions'][factionKeyName] = factionObj;
 
-        data.storeFactionDetails(multi, factionName, factionAllegiance, factionGovernment);
+        data.storeFactionDetails(multi, factionName, factionObj['allegiance'], factionObj['government']);
         data.storeFactionSystem(multi, factionName, systemName, factionSystemObj);
     }
 
