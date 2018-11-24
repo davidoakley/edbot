@@ -61,6 +61,7 @@ function getFactionSummary(givenFactionName, factionObject) {
 
 module.exports = {
 	name: 'faction',
+	aliases: [ 'fac' ],
 	description: 'Get minor faction information',
 	execute(message, command, args) {
 		if (args.length < 1) {

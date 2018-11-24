@@ -57,6 +57,7 @@ function getSystemSummary(systemName, systemData) {
 
 module.exports = {
 	name: 'system',
+	aliases: [ 'sys' ],
 	description: 'Get faction influences within a system',
 	execute(message, command, args) {
 		if (args.length < 1) {
