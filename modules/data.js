@@ -3,6 +3,7 @@ var config = require('config');
 var fs = require('fs');
 var flatten = require('flat')
 var tools = require('./tools');
+var dateFormat = require('dateformat');
 // var request = require('request-promise');
 
 // var bluebird = require('bluebird');
@@ -163,6 +164,20 @@ async function getFactionCount() {
     }
 }
 
+function incrementVisitCounts(multi, systemName) {
+
+    const baseKeyName = tools.getKeyName('visitCount', systemName);
+
+    const hourlyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd_HH");
+    multi.incr(hourlyKeyName);
+    multi.expire(hourlyKeyName, 60*60*24*7); // Keep this value for 7 days
+
+    const dailyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd");
+	multi.incr(dailyKeyName);
+    multi.expire(dailyKeyName, 60*60*24*31); // Keep this value for 31 days
+}
+
+
 module.exports = {
     setRedisClient: setRedisClient,
     getRedisClient: function() {
@@ -177,6 +192,8 @@ module.exports = {
 
     getSystemCount: getSystemCount,
     getFactionCount: getFactionCount,
+
+    incrementVisitCounts: incrementVisitCounts,
 
     loadFromFile: function () {
         var edsmData = JSON.parse(fs.readFileSync(dataDir + '/edsm_systems.json', 'utf8'));

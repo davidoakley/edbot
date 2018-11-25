@@ -240,7 +240,8 @@ async function parseFSDJump(msgData) {
 
 	addSystemProperties(systemObj, msgData);
 
-	data.storeSystem(multi, systemName, systemObj)
+	data.storeSystem(multi, systemName, systemObj);
+	data.incrementVisitCounts(multi, systemName);
 
 	try {
 		const replies = await multi.execAsync();
