@@ -59,6 +59,7 @@ const typeMap = {
 	"$government_Imperial;": "Imperial",
 	"$government_None;": "None",
 	"$government_Patronage;": "Patronage",
+	"$government_Prison;": "Prison",
 	"$government_PrisonColony;": "Prison Colony",
 	"$government_Theocracy;": "Theocracy",
 	"$government_Workshop;": "Workshop",
