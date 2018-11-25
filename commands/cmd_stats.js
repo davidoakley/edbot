@@ -25,10 +25,10 @@ module.exports = {
 
         // var response = getStats();
         data.getSystemCount().then(function (count) {
-            message.channel.send("◦ Systems: " + count);
+            message.channel.send("I know about " + count + " star systems");
         });
         data.getFactionCount().then(function (count) {
-            message.channel.send("◦ Factions: " + count);
+            message.channel.send("I know about " + count + " minor factions");
         });
 	}
 };
