@@ -6,7 +6,10 @@ function getSystemSummary(enteredSystemName, systemData) {
 	var systemName = systemData['name'];
 
 	if (systemName === undefined) {
-		return "Sorry, I don't know about the *" + enteredSystemName + "* system 😕";
+		return {
+			content: "Sorry, I don't know about the *" + enteredSystemName + "* system 😕",
+			embed: embed
+		};
 	}
 
 	var controllingFactionName = systemData['controllingFaction']

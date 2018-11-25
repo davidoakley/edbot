@@ -79,7 +79,10 @@ function getFactionSummary(givenFactionName, factionObject) {
 	var factionName = factionObject['name'];
 
 	if (factionName === undefined) {
-		return "Sorry, I don't know about the *" + givenFactionName + "* faction 😕";
+		return {
+			content: "Sorry, I don't know about the *" + givenFactionName + "* faction 😕",
+			embed: embed
+		};
 	}
 
 	var date = new Date(parseInt(factionObject['lastUpdate'], 10));
