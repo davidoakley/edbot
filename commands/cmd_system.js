@@ -1,61 +1,6 @@
 const data = require('../modules/data');
 const tools = require('../modules/tools');
 
-/*
-function getOldSystemSummary(systemName, systemData) {
-	var response = "";
-	var sn = systemData['name'];
-
-	if (sn === undefined) {
-		return "Sorry, I don't know about the *" + systemName + "* system 😕";
-	}
-
-	var controllingFactionName = systemData['controllingFaction']
-	var date = new Date(parseInt(systemData['lastUpdate'], 10));
-	var niceDate = tools.getEliteDate(date); //date.toISOString();
-	response += `Here's data on the **${systemName}** system, obtained from EDDN at ${niceDate}\n`;
-	
-	response += '```';
-	var factionsData = tools.sortByInfluence(systemData['factions']);
-	for (var factionIndex in factionsData) {
-		var factionData = factionsData[factionIndex];
-		var factionName = factionData['name'];
-		var percent = (factionData['influence'] * 100).toFixed(1) + "%";
-		response += (factionName == controllingFactionName) ? "⦿ " : "◦ "
-		var displayName = factionName.toUpperCase();
-		if (factionData['isPlayer']) {
-			displayName += "†";
-		}		
-		response += (displayName + ": ").padEnd(40 - percent.length);
-		response += percent;
-		
-		response += "\n";
-		
-		var states = [];
-		states = tools.parseStates(factionData['activeStates']);
-		if (states.length > 0) {
-			response += "\xa0\xa0∙ Active:     " + states.join(' ');
-			response += "\n";
-		}
-
-		var recoveringStates = tools.parseStates(factionData['recoveringStates']);
-		if (recoveringStates.length > 0) {
-			response += "\xa0\xa0∙ Recovering: " + recoveringStates.join(' ');
-			response += "\n";
-		}
-
-		var pendingStates = tools.parseStates(factionData['pendingStates']);
-		if (pendingStates.length > 0) {
-			response += "\xa0\xa0∙ Pending:    " + pendingStates.join(' ');
-			response += "\n";
-		}
-	}
-	response += '```';
-	
-	return response;
-}
-*/
-
 function getSystemSummary(enteredSystemName, systemData) {
 	// var response = {};
 	var systemName = systemData['name'];
@@ -67,12 +12,10 @@ function getSystemSummary(enteredSystemName, systemData) {
 	var controllingFactionName = systemData['controllingFaction']
 	var date = new Date(parseInt(systemData['lastUpdate'], 10));
 	// var niceDate = tools.getEliteDate(date); //date.toISOString();
-	var description = "";
+	var factionsText = "";
 	var content = `Here's data on the **${systemName}** system`; //, obtained from EDDN at ${niceDate}`;
 	
 	// https://leovoel.github.io/embed-visualizer/
-	//response += '```';
-	var embed = {};
 	// var description = "";
 	var factionsData = tools.sortByInfluence(systemData['factions']);
 	// const indent = '` ` ` ` ` ` ` `'; //'`.' + (" ".repeat(7)) + '.` ';
@@ -89,50 +32,97 @@ function getSystemSummary(enteredSystemName, systemData) {
 		}
 
 		// description += (factionName == controllingFactionName) ? "\uFF0A " : "\uFF0D "
-		description += '`';
-		description += "∙ "; //(factionName == controllingFactionName) ? "⦿ " : "∙ "
+		factionsText += '`';
+		factionsText += "∙ "; //(factionName == controllingFactionName) ? "⦿ " : "∙ "
 
 		// description += tools.getMonospacedPercentage(factionData['influence'] * 100, 1, 6) + ": ";
 
-		description += "\u3000".repeat(6 - percent.length) + percent + " :` ";
+		factionsText += "\u3000".repeat(6 - percent.length) + percent + " :` ";
 		// description += (displayName + ": ").padEnd(40 - percent.length);
 		// description += percent;
 		
-		description += "**" + displayName + "** "
+		factionsText += "**" + displayName + "** "
 
 		if (factionName == controllingFactionName) {
-			description += "👑";
+			factionsText += "👑";
 		}
 
-		description += "\n";
+		factionsText += "\n";
 		
 		var states = [];
 		states = tools.parseStates(factionData['activeStates']);
 		if (states.length > 0) {
-			description += indent + "Active: " + states.join(' ');
-			description += "\n";
+			factionsText += indent + "Active: " + states.join(' ');
+			factionsText += "\n";
 		}
 
 		var recoveringStates = tools.parseStates(factionData['recoveringStates']);
 		if (recoveringStates.length > 0) {
-			description += indent + "Recovering: " + recoveringStates.join(' ');
-			description += "\n";
+			factionsText += indent + "Recovering: " + recoveringStates.join(' ');
+			factionsText += "\n";
 		}
 
 		var pendingStates = tools.parseStates(factionData['pendingStates']);
 		if (pendingStates.length > 0) {
-			description += indent + "Pending: " + pendingStates.join(' ');
-			description += "\n";
+			factionsText += indent + "Pending: " + pendingStates.join(' ');
+			factionsText += "\n";
 		}
 	}
 
-	embed.description = description;
-	embed.timestamp = date.toISOString();
-	embed.footer = {
+	var governanceList = [];
+	if ('allegiance' in systemData) {
+		governanceList.push(systemData['allegiance'])
+	}
+
+	if ('government' in systemData) {
+		governanceList.push(systemData['government'])
+	}
+
+	var embed = {
+		"fields": [],
+		timestamp: date.toISOString(),
+		footer: {
 			"icon_url": "https://cdn.discordapp.com/avatars/" + tools.getMyUserId() + "/" + tools.getMyAvatar() + ".png",
-			"text": "Data obtained by edbot from EDDN"
+			text: "Data obtained by edbot from EDDN"
+		},
+		"color": 16747520,
 	};
-	
+
+	if ('economies' in systemData) {
+		embed.fields.push({
+			name: "Economy",
+			value: systemData['economies'].join(', ')
+		});
+	}
+
+	if (governanceList.length > 0) {
+		embed.fields.push({
+			name: "Governance",
+			value: governanceList.join(' ')
+		});
+	}
+
+	if ('population' in systemData) {
+		embed.fields.splice(1, 0, {
+			name: "Population",
+			value: tools.niceNumber(systemData['population'])
+		});
+	}
+
+	if (factionsText != '') {
+		embed.fields.push({
+			name: "Minor Factions",
+			value: factionsText
+		});
+	}
+
+	if ('security' in systemData) {
+		embed.fields.push({
+			name: "Security",
+			value: systemData['security']
+		});
+	}
+
 	return {
 		content: content,
 		embed: embed

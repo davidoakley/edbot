@@ -61,12 +61,25 @@ function getMonospacedPercentage(percent, decimals, width) {
 	return result;
 }
 
+function niceNumber(number) {
+	if (number > 995000000) {
+		return (number / 1000000000).toFixed(1).toString() + " billion";
+	} else if (number > 995000) {
+		return (number / 1000000).toFixed(1).toString() + " million";
+	} else if (number >= 1000) {
+		return Math.round(number / 1000).toString() + ",000";
+	} else {
+		return number.toString();
+	}
+}
+
 module.exports = {
     parseStates: parseStates,
 	getKeyName: getKeyName,
 	sortByInfluence: sortByInfluence,
 	getEliteDate: getEliteDate,
 	getMonospacedPercentage: getMonospacedPercentage,
+	niceNumber: niceNumber,
 	setDiscordClient: function(client) { discordClient = client; },
 	getDiscordClient: function() { return discordClient; },
 	getMyAvatar: function() { return discordClient.user.avatar; },
