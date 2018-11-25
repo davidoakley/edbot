@@ -23,9 +23,46 @@ data.setRedisClient(redisClient);
 // const publishClient = redisClient.duplicate();
 
 const eventsProcessedCounter = io.counter({
-    name: 'Events processed',
-    type: 'counter',
+	name: 'Events processed',
+	type: 'counter',
 });
+
+const typeMap = {
+	"$Faction_HappinessBand2;": "-",
+
+	"$GAlAXY_MAP_INFO_state_anarchy;": "Anarchy",
+	"$SYSTEM_SECURITY_low;": "Low",
+	"$SYSTEM_SECURITY_medium;": "Medium",
+	"$SYSTEM_SECURITY_high;": "High",
+
+	"$economy_Agri;": "Agriculture",
+	"$economy_Colony;": "Colony",
+	"$economy_Extraction;": "Extraction",
+	"$economy_HighTech;": "High Tech",
+	"$economy_Industrial;": "Industrial",
+	"$economy_Military;": "Military",
+	"$economy_None;": "None",
+	"$economy_Refinery;": "Refinery",
+	"$economy_Service;": "Service",
+	"$economy_Terraforming;": "Terraforming",
+	"$economy_Tourism;": "Tourism",
+
+	"$government_Anarchy;": "Anarchy",
+	"$government_Communism;": "Communism",
+	"$government_Confederacy;": "Confederacy",
+	"$government_Cooperative;": "Co-operative",
+	"$government_Corporate;": "Corporate",
+	"$government_Democracy;": "Democracy",
+	"$government_Dictatorship;": "Dictatorship",
+	"$government_Engineer;": "Engineer",
+	"$government_Feudal;": "Feudal",
+	"$government_Imperial;": "Imperial",
+	"$government_None;": "None",
+	"$government_Patronage;": "Patronage",
+	"$government_PrisonColony;": "Prison Colony",
+	"$government_Theocracy;": "Theocracy",
+	"$government_Workshop;": "Workshop",
+};
 
 const sock = zmq.socket('sub');
 
@@ -35,140 +72,190 @@ console.log('Connected to EDDN port 9500');
 sock.subscribe('');
 
 sock.on('message', topic => {
-    try {
-        var inData = JSON.parse(zlib.inflateSync(topic));
+	try {
+		var inData = JSON.parse(zlib.inflateSync(topic));
 
-        if (inData["$schemaRef"] == "https://eddn.edcd.io/schemas/journal/1") {
-            parseJournal(inData);
-        }
-    }
-    catch (error) {
-        console.error(error);
-        // message.reply('there was an error trying to execute that command!');
-    }       
+		if (inData["$schemaRef"] == "https://eddn.edcd.io/schemas/journal/1") {
+			parseJournal(inData);
+		}
+	}
+	catch (error) {
+		console.error(error);
+		// message.reply('there was an error trying to execute that command!');
+	}       
 });
 
 function convertStates(eddnStates) {
-    var outStates = [];
+	var outStates = [];
 
-    for (var stateIndex in eddnStates) {
-        var stateObj = {};
-        if ('State' in eddnStates[stateIndex]) {
-            stateObj['state'] = eddnStates[stateIndex]['State'];
-        }
-        if ('Trend' in eddnStates[stateIndex]) {
-            stateObj['trend'] = eddnStates[stateIndex]['Trend'];
-        }
+	for (var stateIndex in eddnStates) {
+		var stateObj = {};
+		if ('State' in eddnStates[stateIndex]) {
+			stateObj['state'] = eddnStates[stateIndex]['State'];
+		}
+		if ('Trend' in eddnStates[stateIndex]) {
+			stateObj['trend'] = eddnStates[stateIndex]['Trend'];
+		}
 
-        outStates.push(stateObj);
-    }
+		outStates.push(stateObj);
+	}
 
-    return outStates;
+	return outStates;
 }
 
 function parseJournal(inData) {
-    const msgData = inData["message"];
-    const event = msgData['event'];
-    if ("Factions" in msgData && event == "FSDJump") {
-        parseFSDJump(msgData);
-    }
+	const msgData = inData["message"];
+	const event = msgData['event'];
+	if ("Factions" in msgData && event == "FSDJump") {
+		parseFSDJump(msgData);
+	}
 }
 
 function addFactionStatesAndInfluence(destObj, inFaction) {
-    if ('Influence' in inFaction) {
-        destObj['influence'] = inFaction['Influence'];
-    }
+	if ('Influence' in inFaction) {
+		destObj['influence'] = inFaction['Influence'];
+	}
 
-    if ('PendingStates' in inFaction && Array.isArray(inFaction['PendingStates']) && inFaction['PendingStates'].length > 0) {
-        destObj['pendingStates'] = convertStates(inFaction['PendingStates']);
-    }
+	if ('PendingStates' in inFaction && Array.isArray(inFaction['PendingStates']) && inFaction['PendingStates'].length > 0) {
+		destObj['pendingStates'] = convertStates(inFaction['PendingStates']);
+	}
 
-    if ('RecoveringStates' in inFaction && Array.isArray(inFaction['RecoveringStates']) && inFaction['RecoveringStates'].length > 0) {
-        destObj['recoveringStates'] = convertStates(inFaction['RecoveringStates']);
-    }
+	if ('RecoveringStates' in inFaction && Array.isArray(inFaction['RecoveringStates']) && inFaction['RecoveringStates'].length > 0) {
+		destObj['recoveringStates'] = convertStates(inFaction['RecoveringStates']);
+	}
 
-    if ('ActiveStates' in inFaction && Array.isArray(inFaction['ActiveStates']) && inFaction['ActiveStates'].length > 0) {
-        destObj['activeStates'] = convertStates(inFaction['ActiveStates']);
-    }
-    else if ('State' in inFaction && inFaction['State'] != 'None') {
-        destObj['activeStates'] = [ { 'state': inFaction['State']} ];
-    }
-
+	if ('ActiveStates' in inFaction && Array.isArray(inFaction['ActiveStates']) && inFaction['ActiveStates'].length > 0) {
+		destObj['activeStates'] = convertStates(inFaction['ActiveStates']);
+	}
+	else if ('State' in inFaction && inFaction['State'] != 'None') {
+		destObj['activeStates'] = [ { 'state': inFaction['State']} ];
+	}
 }
 
-function parseFSDJump(msgData) {
-    const systemName = msgData['StarSystem'];
-    const multi = data.getRedisClient().multi();
-    // console.log("Message for "+systemName + " with factions");
-    const inFactionsData = msgData["Factions"];
+function addSystemProperties(systemObj, msgData) {
+	if ('SystemFaction' in msgData) {
+		systemObj['controllingFaction'] = msgData['SystemFaction'];
+	}
 
-    var systemObj = {};
-    systemObj['name'] = systemName;
-    
-    var now = Date.now();
-    systemObj['lastUpdate'] = now;
+	if ('Population' in msgData) {
+		systemObj['population'] = parseInt(msgData['Population'], 10);
+	}
 
-    if ('SystemFaction' in msgData) {
-        systemObj['controllingFaction'] = msgData['SystemFaction'];
-    }
+	if ('SystemAllegiance' in msgData) {
+		systemObj['allegiance'] = msgData['SystemAllegiance'];
+	}
 
-    systemObj['factions'] = {};
-    for (var index in inFactionsData) {
-        const inFaction = inFactionsData[index];
-        const factionName = inFaction['Name'];
+	if ('SystemGovernment' in msgData) {
+		if (msgData['SystemGovernment'] in typeMap) {
+			systemObj['government'] = typeMap[msgData['SystemGovernment']];
+		} else {
+			console.error("Unknown government value '" + msgData['SystemGovernment'] + "'");
+		}
+	}
 
-        if (factionName == 'Pilots Federation Local Branch' && (!('Influence' in inFaction) || inFaction['Influence'] == 0)) {
-            continue;
-        }
+	if ('SystemEconomy' in msgData) {
+		systemObj['economies'] = [];
+		if (msgData['SystemEconomy'] in typeMap) {
+			systemObj['economies'].push(typeMap[msgData['SystemEconomy']]);
+		} else {
+			console.error("Unknown economy value '" + msgData['SystemEconomy'] + "'");
+		}
 
-        var factionObj = {
-            'name': factionName,
-            'lastUpdate': now
-        };
+		if ('SystemSecondEconomy' in msgData && msgData['SystemSecondEconomy'] != "$economy_None;") {
+			if (msgData['SystemSecondEconomy'] in typeMap) {
+				systemObj['economies'].push(typeMap[msgData['SystemSecondEconomy']]);
+			} else {
+				console.error("Unknown economy value '" + msgData['SystemSecondEconomy'] + "'");
+			}
+		}	
+	}
 
-        var factionSystemObj = {
-            'name': systemName,
-            'lastUpdate': now
-        };
+	if ('SystemSecurity' in msgData) {
+		if (msgData['SystemSecurity'] in typeMap) {
+			systemObj['security'] = typeMap[msgData['SystemSecurity']];
+		} else {
+			console.error("Unknown security value '" + msgData['SystemSecurity'] + "'");
+		}
+	}
+}
 
-        if ('Allegiance' in inFaction) {
-            factionObj['allegiance'] = inFaction['Allegiance'];
-        }
-        if ('Government' in inFaction) {
-            factionObj['government'] = inFaction['Government'];
-        }
+async function parseFSDJump(msgData) {
+	const multi = data.getRedisClient().multi();
 
-        addFactionStatesAndInfluence(factionObj, inFaction);
-        addFactionStatesAndInfluence(factionSystemObj, inFaction);
+	const systemName = msgData['StarSystem'];
+	const inFactionsData = msgData["Factions"];
+	var now = Date.now();
 
-        if (factionName == systemObj['controllingFaction']) {
-            factionSystemObj['controllingFaction'] = true;
-        }
+	var systemObj = {
+		'name': systemName,
+		'lastUpdate': now
+	};
 
-        const factionKeyName = tools.getKeyName(inFaction['Name']);
-        systemObj['factions'][factionKeyName] = factionObj;
+	systemObj['factions'] = {};
+	for (var factionIndex in inFactionsData) {
+		const inFaction = inFactionsData[factionIndex];
+		const factionName = inFaction['Name'];
 
-        data.storeFactionDetails(multi, factionName, factionObj['allegiance'], factionObj['government']);
-        data.storeFactionSystem(multi, factionName, systemName, factionSystemObj);
-    }
+		if (factionName == 'Pilots Federation Local Branch' && (!('Influence' in inFaction) || inFaction['Influence'] == 0)) {
+			continue;
+		}
 
-    data.storeSystem(multi, systemName, systemObj)
+		var factionObj = {
+			'name': factionName,
+			'lastUpdate': now
+		};
 
-    multi.exec(function (err, replies) {
-        if (err == null) {
-            var updates = 0;
-            var inserts = 0;
-            for (var index in replies) {
-                if (replies[index] == 1) {
-                    inserts++;
-                } else {
-                    updates++;
-                }
-            }
-            console.log(systemName + ": " + inserts + " inserts, " + updates + " updates");
-            eventsProcessedCounter.inc(1);
-        } else {
-            console.error(systemName + ": MULTI error: " + err);
-        }
-    });
+		var factionSystemObj = {
+			'name': systemName,
+			'lastUpdate': now
+		};
+
+		if ('Allegiance' in inFaction) {
+			factionObj['allegiance'] = inFaction['Allegiance'];
+		}
+		if ('Government' in inFaction) {
+			factionObj['government'] = inFaction['Government'];
+		}
+
+		addFactionStatesAndInfluence(factionObj, inFaction);
+		addFactionStatesAndInfluence(factionSystemObj, inFaction);
+
+		if (factionName == systemObj['controllingFaction']) {
+			factionSystemObj['controllingFaction'] = true;
+			if ('Allegiance' in inFaction) {
+				systemObj['allegiance'] = inFaction['Allegiance'];
+			}
+			if ('Government' in inFaction) {
+				systemObj['government'] = inFaction['Government'];
+			}
+		}
+
+		const factionKeyName = tools.getKeyName(inFaction['Name']);
+		systemObj['factions'][factionKeyName] = factionObj;
+
+		data.storeFactionDetails(multi, factionName, factionObj['allegiance'], factionObj['government']);
+		data.storeFactionSystem(multi, factionName, systemName, factionSystemObj);
+	}
+
+	addSystemProperties(systemObj, msgData);
+
+	data.storeSystem(multi, systemName, systemObj)
+
+	try {
+		const replies = await multi.execAsync();
+
+		var updates = 0;
+		var inserts = 0;
+		for (var replyIndex in replies) {
+			if (replies[replyIndex] == 1) {
+				inserts++;
+			} else {
+				updates++;
+			}
+		}
+		console.log(systemName + ": " + inserts + " inserts, " + updates + " updates");
+		eventsProcessedCounter.inc(1);
+	} catch (err) {
+		console.error(systemName + ": MULTI error: " + err);
+	}
 }
