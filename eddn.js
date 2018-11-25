@@ -1,17 +1,26 @@
 const io = require('@pm2/io')
 
 io.init({
-  metrics: {
-    network: {
-      ports: true
-    }
-  }
+	metrics: {
+		network: {
+			ports: true
+		}
+	}
 });
 
 const zlib = require('zlib');
 const zmq = require('zeromq');
 const tools = require('./modules/tools');
-const data = require('./modules/data');
+
+const redis = require("redis");
+const data = require("./modules/data");
+const bluebird = require('bluebird');
+bluebird.promisifyAll(redis);
+
+const redisClient = redis.createClient();
+data.setRedisClient(redisClient);
+
+// const publishClient = redisClient.duplicate();
 
 const eventsProcessedCounter = io.counter({
     name: 'Events processed',

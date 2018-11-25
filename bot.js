@@ -13,12 +13,16 @@ io.init({
 const fs = require('fs');
 const Discord = require('discord.js');
 const logger = require('winston');
-// var auth = require('./auth.json');
 const config = require('config');
-// const data = require('./data');
-// const eddn = require('./eddn');
 const tools = require('./modules/tools');
 const prefix = config.get('defaultPrefix');
+const redis = require("redis");
+const data = require("./modules/data");
+const bluebird = require('bluebird');
+bluebird.promisifyAll(redis);
+
+const redisClient = redis.createClient();
+data.setRedisClient(redisClient);
 
 const commandsProcessedCounter = io.counter({
     name: 'Commands processed',

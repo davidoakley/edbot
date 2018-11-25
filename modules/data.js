@@ -1,24 +1,29 @@
-var redis = require("redis");
+// var redis = require("redis");
 var config = require('config');
 var fs = require('fs');
 var flatten = require('flat')
-var bluebird = require('bluebird');
 var tools = require('./tools');
 // var request = require('request-promise');
 
-bluebird.promisifyAll(redis);
+// var bluebird = require('bluebird');
+// bluebird.promisifyAll(redis);
 
 var dataDir = config.get('dataDir');
-var redisClient = redis.createClient();
+var redisClient = undefined; // = redis.createClient();
 var unflatten = require('flat').unflatten
 
-redisClient.on("error", function (err) {
-    console.log("Error " + err);
-});
 
-redisClient.on('connect', function() {
-    console.log("Redis connected");
-});
+function setRedisClient(client) {
+    redisClient = client;
+
+    // redisClient.on("error", function (err) {
+    //     console.log("Error " + err);
+    // });
+    
+    // redisClient.on('connect', function() {
+    //     console.log("Redis connected");
+    // });    
+}
 
 function hsetPackedObject(multi, keyName, obj) {
     multi.del(keyName);
@@ -159,6 +164,7 @@ async function getFactionCount() {
 }
 
 module.exports = {
+    setRedisClient: setRedisClient,
     getRedisClient: function() {
         return redisClient;
     },
