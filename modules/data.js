@@ -1,6 +1,5 @@
 // var redis = require("redis");
-var config = require('config');
-var fs = require('fs');
+// var fs = require('fs');
 var flatten = require('flat')
 var tools = require('./tools');
 var dateFormat = require('dateformat');
@@ -9,21 +8,12 @@ var dateFormat = require('dateformat');
 // var bluebird = require('bluebird');
 // bluebird.promisifyAll(redis);
 
-var dataDir = config.get('dataDir');
 var redisClient = undefined; // = redis.createClient();
 var unflatten = require('flat').unflatten
 
 
 function setRedisClient(client) {
     redisClient = client;
-
-    // redisClient.on("error", function (err) {
-    //     console.log("Error " + err);
-    // });
-    
-    // redisClient.on('connect', function() {
-    //     console.log("Redis connected");
-    // });    
 }
 
 function hsetPackedObject(multi, keyName, obj) {
@@ -48,54 +38,102 @@ function unpackObject(flatData) {
     return unflatten(flatData);
 }
 
-function convertEDSMSystem(edsmObj) {
-    var systemObj = {};
-    const systemName = edsmObj['name'];
-
-    var now = Date.now();
-    systemObj['lastUpdate'] = now;
-
-    systemObj['name'] = systemName;
-    systemObj['controllingFaction'] = edsmObj['controllingFaction']['name'];
-    systemObj['factions'] = {};
-
-    for (var factionIndex in edsmObj['factions']) {
-        const edsmFaction = edsmObj['factions'][factionIndex];
-        const factionName = edsmFaction['name'];
-        var outFaction = {};
-
-        outFaction['name'] = factionName;
-        outFaction['allegiance'] = edsmFaction['allegiance'];
-        outFaction['government'] = edsmFaction['government'];
-        outFaction['influence'] = edsmFaction['influence'];
-
-        if ('pendingStates' in edsmFaction && edsmFaction['pendingStates'].length > 0) {
-            outFaction['pendingStates'] = edsmFaction['pendingStates'];
-        }
-
-        if ('recoveringStates' in edsmFaction && edsmFaction['recoveringStates'].length > 0) {
-            outFaction['recoveringStates'] = edsmFaction['recoveringStates'];
-        }
-
-        if ('activeStates' in edsmFaction && edsmFaction['activeStates'].length > 0) {
-            outFaction['activeStates'] = edsmFaction['activeStates'];
-        }
-        else if ('state' in edsmFaction && edsmFaction['state'] != 'None') {
-            outFaction['activeStates'] = [ { 'state': edsmFaction['state']} ];
-        }
-
-        systemObj['factions'][tools.getKeyName(factionName)] = outFaction;
+function getSystemChanges(oldSystemObj, newSystemObj) {
+    if (!('name' in oldSystemObj)) {
+        // New system
+        return {
+            property: "system",
+            oldValue: undefined,
+            newValue: newSystemObj
+        };
     }
 
-    return systemObj;
+    var changeList = [];
+
+    const basicPropertyList = [
+        'name',
+        'security',
+        'population',
+        'allegiance',
+        'government',
+        'controllingFaction'
+    ];
+
+    for (const property of basicPropertyList) {
+        if (property in oldSystemObj && oldSystemObj[property] != newSystemObj[property]) {
+            changeList.push({
+                property: property,
+                oldValue: oldSystemObj[property],
+                newValue: newSystemObj[property]
+            });
+        }
+    }
+
+    if ('economies' in oldSystemObj && JSON.stringify(oldSystemObj['economies']) != JSON.stringify(newSystemObj['economies'])) {
+        changeList.push({
+            property: 'economies',
+            oldValue: oldSystemObj['economies'],
+            newValue: newSystemObj['economies']
+        });
+    }
+
+    var factionList = Object.keys(oldSystemObj['factions']).concat(Object.keys(newSystemObj['factions']));
+    var uniqueFactionList = [ ...new Set(factionList) ];
+    for (const factionKey of uniqueFactionList) {
+        if (!(factionKey in oldSystemObj['factions'])) {
+            // Expanded faction
+            changeList.push({
+                property: 'faction:' + factionKey,
+                oldValue: undefined,
+                newValue: newSystemObj['factions'][factionKey]
+            });
+        } else if (!(factionKey in newSystemObj['factions'])) {
+            // Retreated faction
+            changeList.push({
+                property: 'faction:' + factionKey,
+                oldValue: newSystemObj['factions'][factionKey],
+                newValue: undefined
+            });
+        } else {
+            // Compare faction properties
+            const factionPropertyList = [
+                'name',
+                'security',
+                'population',
+                'allegiance',
+                'government',
+                'controllingFaction'
+            ];
+
+            for (const property of factionPropertyList) {
+                if (oldSystemObj['factions'][factionKey][property] != newSystemObj['factions'][factionKey][property]) {
+                    changeList.push({
+                        property: 'faction:' + factionKey,
+                        oldValue: oldSystemObj['factions'][factionKey][property],
+                        newValue: newSystemObj['factions'][factionKey][property]
+                    });
+                }
+            }        
+        }
+
+    }
+
+    return changeList;
 }
 
-function storeSystem(multi, systemName, systemObj) {
-    // var multi = redisClient.multi();
-    hsetPackedObject(multi, tools.getKeyName('system', systemName), systemObj);
-    // multi.exec(function (err, replies) {
-    //     console.log(systemName + ": MULTI got " + replies.length + " replies");
-    // });
+function storeSystem(multi, systemName, systemObj, oldSystemObj) {
+    const keyName = tools.getKeyName('system', systemName);
+
+    const changeList = getSystemChanges(oldSystemObj, systemObj);
+    if (changeList.length > 0) {
+        for (const change of changeList) {
+            console.log(systemName + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue);
+        }
+        hsetPackedObject(multi, keyName, systemObj);
+    } else {
+        // No changes - just update lastUpdate
+        multi.hset(keyName, 'lastUpdate', systemObj['lastUpdate']);
+    }
 }
 
 function storeFactionDetails(multi, factionName, factionAllegiance, factionGovernment) {
@@ -114,7 +152,7 @@ function storeFactionSystem(multi, factionName, systemName, factionSystemObj) {
     const keyName = tools.getKeyName('faction', factionName);
     const flatData = flatten(factionSystemObj);
     const attrPrefix = 'systems.' + tools.getKeyName(systemName) + '.';
-    for (var attr in flatData) {
+    for (const attr in flatData) {
         if (Array.isArray(flatData[attr])) {
             multi.hset(keyName, attrPrefix + attr, "∅");
         } else {
@@ -194,24 +232,6 @@ module.exports = {
     getFactionCount: getFactionCount,
 
     incrementVisitCounts: incrementVisitCounts,
-
-    loadFromFile: function () {
-        var edsmData = JSON.parse(fs.readFileSync(dataDir + '/edsm_systems.json', 'utf8'));
-        var multi = redisClient.multi();
-        for (var sn in edsmData) {
-            const edsmObj = edsmData[sn];
-            const systemObj = convertEDSMSystem(edsmObj);
-            hsetPackedObject(multi, tools.getKeyName('system', sn), systemObj);
-        }
-        multi.exec(function (err, replies) {
-            console.log("MULTI got " + replies.length + " replies");
-            // replies.forEach(function (reply, index) {
-            //     console.log("Reply " + index + ": " + reply.toString());
-            // });
-        });
-
-        return edsmData.keys().length;
-    },
 
     getSystem: function (systemName) {
         var systemKeyName = tools.getKeyName('system', systemName);
