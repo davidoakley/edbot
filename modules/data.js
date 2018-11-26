@@ -38,16 +38,13 @@ function unpackObject(flatData) {
     return unflatten(flatData);
 }
 
-function getSystemChanges(oldSystemObj, newSystemObj) {
-    if (!('name' in oldSystemObj)) {
-        // New system
-        return {
-            property: "system",
-            oldValue: undefined,
-            newValue: newSystemObj
-        };
-    }
+function getFactionStateChanges(oldFactionObj, newFactionObj) {
+    var changeList = [];
 
+    return changeList;
+}
+
+function getSystemChanges(oldSystemObj, newSystemObj) {
     var changeList = [];
 
     const basicPropertyList = [
@@ -62,6 +59,7 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
     for (const property of basicPropertyList) {
         if (property in oldSystemObj && oldSystemObj[property] != newSystemObj[property]) {
             changeList.push({
+                system: newSystemObj['name'],
                 property: property,
                 oldValue: oldSystemObj[property],
                 newValue: newSystemObj[property]
@@ -71,6 +69,7 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
 
     if ('economies' in oldSystemObj && JSON.stringify(oldSystemObj['economies']) != JSON.stringify(newSystemObj['economies'])) {
         changeList.push({
+            system: newSystemObj['name'],
             property: 'economies',
             oldValue: oldSystemObj['economies'],
             newValue: newSystemObj['economies']
@@ -83,6 +82,7 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
         if (!(factionKey in oldSystemObj['factions'])) {
             // Expanded faction
             changeList.push({
+                system: newSystemObj['name'],
                 property: 'faction:' + factionKey,
                 oldValue: undefined,
                 newValue: newSystemObj['factions'][factionKey]
@@ -90,8 +90,9 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
         } else if (!(factionKey in newSystemObj['factions'])) {
             // Retreated faction
             changeList.push({
+                system: newSystemObj['name'],
                 property: 'faction:' + factionKey,
-                oldValue: newSystemObj['factions'][factionKey],
+                oldValue: oldSystemObj['factions'][factionKey],
                 newValue: undefined
             });
         } else {
@@ -104,16 +105,34 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
                 'government',
                 'controllingFaction'
             ];
+            const oldFactionObj = oldSystemObj['factions'][factionKey];
+            const newFactionObj = newSystemObj['factions'][factionKey]
 
             for (const property of factionPropertyList) {
-                if (oldSystemObj['factions'][factionKey][property] != newSystemObj['factions'][factionKey][property]) {
+                if (oldFactionObj[property] != newSystemObj['factions'][factionKey][property]) {
                     changeList.push({
-                        property: 'faction:' + factionKey,
-                        oldValue: oldSystemObj['factions'][factionKey][property],
+                        system: newSystemObj['name'],
+                        faction: newFactionObj['name'],
+                        property: property,
+                        oldValue: oldFactionObj[property],
                         newValue: newSystemObj['factions'][factionKey][property]
                     });
                 }
-            }        
+            }
+
+            const oldInfluence = Number(oldFactionObj['influence'] * 100).toFixed(1);
+            const newInfluence = Number(newFactionObj['influence'] * 100).toFixed(1);
+            if (oldInfluence != newInfluence) {
+                changeList.push({
+                    system: newSystemObj['name'],
+                    faction: newFactionObj['name'],
+                    property: 'influence',
+                    oldValue: oldInfluence,
+                    newValue: newInfluence
+                });
+            }
+
+            changeList = changeList.concat(getFactionStateChanges(oldFactionObj, newFactionObj));
         }
 
     }
@@ -121,19 +140,35 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
     return changeList;
 }
 
-function storeSystem(multi, systemName, systemObj, oldSystemObj) {
+function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
     const keyName = tools.getKeyName('system', systemName);
 
-    const changeList = getSystemChanges(oldSystemObj, systemObj);
+    if (!('name' in oldSystemObj)) {
+        // New system: store in redis and return
+        hsetPackedObject(multi, keyName, newSystemObj);
+
+        return [
+            {
+                system: newSystemObj['name'],
+                property: "system",
+                oldValue: undefined,
+                newValue: newSystemObj
+            }
+        ];
+    }
+
+    const changeList = getSystemChanges(oldSystemObj, newSystemObj);
     if (changeList.length > 0) {
         for (const change of changeList) {
             console.log(systemName + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue);
         }
-        hsetPackedObject(multi, keyName, systemObj);
+        hsetPackedObject(multi, keyName, newSystemObj);
     } else {
         // No changes - just update lastUpdate
-        multi.hset(keyName, 'lastUpdate', systemObj['lastUpdate']);
+        multi.hset(keyName, 'lastUpdate', newSystemObj['lastUpdate']);
     }
+
+    return changeList;
 }
 
 function storeFactionDetails(multi, factionName, factionAllegiance, factionGovernment) {

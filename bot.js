@@ -11,7 +11,7 @@ io.init({
 // https://discordapp.com/oauth2/authorize?&client_id=512352639107858432&scope=bot&permissions=8
 // Nightstorm is user ID 78955103381360640
 const fs = require('fs');
-const Discord = require('discord.js');
+const discord = require('discord.js');
 const logger = require('winston');
 const config = require('config');
 const tools = require('./modules/tools');
@@ -37,8 +37,8 @@ logger.add(new logger.transports.Console, {
 logger.level = 'debug';
 
 // Initialize Discord Bot
-var client = new Discord.Client();
-client.commands = new Discord.Collection();
+const client = new discord.Client();
+client.commands = new discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {

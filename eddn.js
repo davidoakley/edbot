@@ -11,7 +11,8 @@ io.init({
 const zlib = require('zlib');
 const zmq = require('zeromq');
 const tools = require('./modules/tools');
-
+const discord = require('discord.js');
+const config = require('config');
 const redis = require("redis");
 const data = require("./modules/data");
 const bluebird = require('bluebird');
@@ -19,6 +20,16 @@ bluebird.promisifyAll(redis);
 
 const redisClient = redis.createClient();
 data.setRedisClient(redisClient);
+
+const discordClient = new discord.Client();
+var eventsChannel = undefined;
+
+discordClient.once('ready', () => {
+	console.log('Logged in as: ' + discordClient.user.username + ' - (' + discordClient.user.id + ')');
+	tools.setDiscordClient(discordClient);
+	eventsChannel = discordClient.channels.get("516559208976744448");
+});
+discordClient.login(config.get('botToken'));
 
 // const publishClient = redisClient.duplicate();
 
@@ -180,6 +191,38 @@ function addSystemProperties(systemObj, msgData) {
 	}
 }
 
+function sendChangeNotifications(changeList) {
+	if (eventsChannel == undefined) {
+		return;
+	}
+
+	var outList = [];
+	for (const change of changeList) {
+		if ('system' in change) {
+			if (change.property == 'system') {
+				outList.push(`Discovered a new system **${change.system}**`);
+			} else if (change.property.startsWith('faction:') && change.oldValue == undefined) {
+				outList.push(`Faction **${change.newValue.name}** has expanded into system **${change.system}**`);
+			} else if (change.property.startsWith('faction:') && change.newValue == undefined) {
+				outList.push(`Faction **${change.oldValue.name}** has retreated from system **${change.system}**`);
+			}
+			else if ('faction' in change) {
+				if (change.property != 'influence') {
+					outList.push(`System **${change.system}** Faction **${change.faction}**: ${change.property} changed from '${change.oldValue}' to '${change.newValue}'`);
+				}
+			}
+			else
+			{
+				outList.push("System **" + change.system + "**: " + change.property + " changed from '" + change.oldValue + "' to '" + change.newValue + "'");
+			}
+		}
+	}
+
+	if (outList.length > 0) {
+		eventsChannel.send(outList.join("\n"));
+	}
+}
+
 async function parseFSDJump(msgData) {
 	const systemName = msgData['StarSystem'];
 
@@ -243,7 +286,9 @@ async function parseFSDJump(msgData) {
 
 	addSystemProperties(systemObj, msgData);
 
-	data.storeSystem(multi, systemName, systemObj, oldSystemData);
+	const changeList = data.storeSystem(multi, systemName, systemObj, oldSystemData);
+	sendChangeNotifications(changeList);
+
 	data.incrementVisitCounts(multi, systemName);
 
 	try {
