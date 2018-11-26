@@ -181,9 +181,12 @@ function addSystemProperties(systemObj, msgData) {
 }
 
 async function parseFSDJump(msgData) {
+	const systemName = msgData['StarSystem'];
+
+	const oldSystemData = await data.getSystem(systemName);
+
 	const multi = data.getRedisClient().multi();
 
-	const systemName = msgData['StarSystem'];
 	const inFactionsData = msgData["Factions"];
 	var now = Date.now();
 
@@ -240,7 +243,7 @@ async function parseFSDJump(msgData) {
 
 	addSystemProperties(systemObj, msgData);
 
-	data.storeSystem(multi, systemName, systemObj);
+	data.storeSystem(multi, systemName, systemObj, oldSystemData);
 	data.incrementVisitCounts(multi, systemName);
 
 	try {
