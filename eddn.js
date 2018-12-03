@@ -165,7 +165,7 @@ function addSystemProperties(systemObj, msgData) {
 		}
 	}
 
-	if ('SystemEconomy' in msgData) {
+	if ('SystemEconomy' in msgData && msgData['SystemEconomy'] != "$economy_Undefined") {
 		systemObj['economies'] = [];
 		if (msgData['SystemEconomy'] in typeMap) {
 			systemObj['economies'].push(typeMap[msgData['SystemEconomy']]);
@@ -173,7 +173,7 @@ function addSystemProperties(systemObj, msgData) {
 			console.error("Unknown economy value '" + msgData['SystemEconomy'] + "'");
 		}
 
-		if ('SystemSecondEconomy' in msgData && msgData['SystemSecondEconomy'] != "$economy_None;") {
+		if ('SystemSecondEconomy' in msgData && msgData['SystemSecondEconomy'] != "$economy_None;" && msgData['SystemSecondEconomy'] != "$economy_Undefined;") {
 			if (msgData['SystemSecondEconomy'] in typeMap) {
 				systemObj['economies'].push(typeMap[msgData['SystemSecondEconomy']]);
 			} else {
