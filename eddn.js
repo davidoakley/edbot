@@ -85,7 +85,7 @@ sock.subscribe('');
 
 sock.on('message', topic => {
 	try {
-		var inData = JSON.parse(zlib.inflateSync(topic));
+		const inData = JSON.parse(zlib.inflateSync(topic));
 
 		if (inData["$schemaRef"] == "https://eddn.edcd.io/schemas/journal/1") {
 			parseJournal(inData);
@@ -118,7 +118,7 @@ function convertStates(eddnStates) {
 function parseJournal(inData) {
 	const msgData = inData["message"];
 	const event = msgData['event'];
-	if ("Factions" in msgData && event == "FSDJump") {
+	if ("Factions" in msgData && (event == "FSDJump" || event == "Location")) {
 		parseFSDJump(msgData);
 	}
 }
