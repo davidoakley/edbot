@@ -62,3 +62,4 @@ typings/
 data/output.json
 data/factions.jsonl
 data/systems_populated.jsonl
+config/local.json
