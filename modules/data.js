@@ -83,7 +83,8 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
             // Expanded faction
             changeList.push({
                 system: newSystemObj['name'],
-                property: 'faction:' + factionKey,
+                faction: factionKey,
+                property: 'faction',
                 oldValue: undefined,
                 newValue: newSystemObj['factions'][factionKey]
             });
@@ -91,7 +92,8 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
             // Retreated faction
             changeList.push({
                 system: newSystemObj['name'],
-                property: 'faction:' + factionKey,
+                faction: factionKey,
+                property: 'faction',
                 oldValue: oldSystemObj['factions'][factionKey],
                 newValue: undefined
             });
@@ -160,7 +162,11 @@ function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
     const changeList = getSystemChanges(oldSystemObj, newSystemObj);
     if (changeList.length > 0) {
         for (const change of changeList) {
-            console.log(systemName + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue);
+            if ("faction" in change) {
+                console.log(systemName + ": " + change.faction + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue);
+            } else {
+                console.log(systemName + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue);
+            }
         }
         hsetPackedObject(multi, keyName, newSystemObj);
     } else {
