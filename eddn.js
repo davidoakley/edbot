@@ -15,6 +15,7 @@ const discord = require('discord.js');
 const config = require('config');
 const redis = require("redis");
 const data = require("./modules/data");
+const typeMap = require('./modules/eddnTypeMap');
 const bluebird = require('bluebird');
 bluebird.promisifyAll(redis);
 
@@ -37,44 +38,6 @@ const eventsProcessedCounter = io.counter({
 	name: 'Events processed',
 	type: 'counter',
 });
-
-const typeMap = {
-	"$Faction_HappinessBand2;": "-",
-
-	"$GAlAXY_MAP_INFO_state_anarchy;": "Anarchy",
-	"$SYSTEM_SECURITY_low;": "Low",
-	"$SYSTEM_SECURITY_medium;": "Medium",
-	"$SYSTEM_SECURITY_high;": "High",
-
-	"$economy_Agri;": "Agriculture",
-	"$economy_Colony;": "Colony",
-	"$economy_Extraction;": "Extraction",
-	"$economy_HighTech;": "High Tech",
-	"$economy_Industrial;": "Industrial",
-	"$economy_Military;": "Military",
-	"$economy_None;": "None",
-	"$economy_Refinery;": "Refinery",
-	"$economy_Service;": "Service",
-	"$economy_Terraforming;": "Terraforming",
-	"$economy_Tourism;": "Tourism",
-
-	"$government_Anarchy;": "Anarchy",
-	"$government_Communism;": "Communism",
-	"$government_Confederacy;": "Confederacy",
-	"$government_Cooperative;": "Co-operative",
-	"$government_Corporate;": "Corporate",
-	"$government_Democracy;": "Democracy",
-	"$government_Dictatorship;": "Dictatorship",
-	"$government_Engineer;": "Engineer",
-	"$government_Feudal;": "Feudal",
-	"$government_Imperial;": "Imperial",
-	"$government_None;": "None",
-	"$government_Patronage;": "Patronage",
-	"$government_Prison;": "Prison",
-	"$government_PrisonColony;": "Prison Colony",
-	"$government_Theocracy;": "Theocracy",
-	"$government_Workshop;": "Workshop",
-};
 
 const sock = zmq.socket('sub');
 
