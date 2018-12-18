@@ -63,3 +63,4 @@ data/output.json
 data/factions.jsonl
 data/systems_populated.jsonl
 config/local.json
+eddn_data_log.txt

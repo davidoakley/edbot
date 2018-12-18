@@ -16,13 +16,18 @@ const config = require('config');
 const redis = require("redis");
 const data = require("./modules/data");
 const typeMap = require('./modules/eddnTypeMap');
+const commandRunner = require('./modules/discordCommandRunner');
+
 const bluebird = require('bluebird');
 bluebird.promisifyAll(redis);
 
 const redisClient = redis.createClient();
 data.setRedisClient(redisClient);
 
+global.logStream = null;
+
 const discordClient = new discord.Client();
+commandRunner.init(discordClient, './eddnCommands', "*");
 var eventsChannel = undefined;
 
 discordClient.once('ready', () => {
@@ -31,6 +36,40 @@ discordClient.once('ready', () => {
 	eventsChannel = discordClient.channels.get("516559208976744448");
 });
 discordClient.login(config.get('botToken'));
+
+discordClient.on('message', message => {
+	commandRunner.processMessage(message);
+	/*
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+	const args = message.content.slice(prefix.length).split(/ +/);
+	const commandName = args.shift().toLowerCase();
+	var command = undefined;
+
+	if (client.commands.has(commandName)) {
+		command = client.commands.get(commandName);
+	}
+
+	client.commands.forEach(function (value) {
+		if ("aliases" in value && value.aliases.indexOf(commandName) > -1) {
+			command = value;
+		}
+	});
+
+	if (command === undefined) {
+		return;
+	}
+
+	try {
+		command.execute(message, commandName, args);
+		commandsProcessedCounter.inc(1);
+	}
+	catch (error) {
+		console.error(error);
+		message.reply('there was an error trying to execute that command!');
+	}
+	*/
+});
 
 // const publishClient = redisClient.duplicate();
 
@@ -48,10 +87,15 @@ sock.subscribe('');
 
 sock.on('message', topic => {
 	try {
-		const inData = JSON.parse(zlib.inflateSync(topic));
+		const inString = zlib.inflateSync(topic);
+		const inData = JSON.parse(inString);
 
 		if (inData["$schemaRef"] == "https://eddn.edcd.io/schemas/journal/1") {
 			parseJournal(inData);
+		}
+
+		if (global.logStream != null) {
+			global.logStream.write(inString + "\n");
 		}
 	}
 	catch (error) {
