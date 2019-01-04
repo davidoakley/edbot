@@ -148,6 +148,8 @@ function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
             }
 
             logEntry += change.property + ": " + change.oldValue + " -> " + change.newValue;
+            
+            logEntry += " (" + oldSystemObj.updatedBy + " -> " + newSystemObj.updatedBy + ")";
 
             console.log(logEntry);
 

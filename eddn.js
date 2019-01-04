@@ -97,10 +97,12 @@ function convertStates(eddnStates) {
 }
 
 function parseJournal(inData) {
+	const headerData = inData["header"];
+	const software = headerData["softwareName"] + "/" + headerData["softwareVersion"];
 	const msgData = inData["message"];
 	const event = msgData['event'];
 	if ("Factions" in msgData && (event == "FSDJump" || event == "Location")) {
-		parseFSDJump(msgData);
+		parseFSDJump(msgData, software);
 	}
 }
 
@@ -204,7 +206,7 @@ function sendChangeNotifications(changeList) {
 	}
 }
 
-async function parseFSDJump(msgData) {
+async function parseFSDJump(msgData, software) {
 	const systemName = msgData['StarSystem'];
 
 	const oldSystemData = await data.getSystem(systemName);
@@ -216,7 +218,8 @@ async function parseFSDJump(msgData) {
 
 	var systemObj = {
 		'name': systemName,
-		'lastUpdate': now
+		'lastUpdate': now,
+		'updatedBy': software
 	};
 
 	systemObj['factions'] = {};
@@ -294,14 +297,17 @@ async function parseFSDJump(msgData) {
 
 		var updates = 0;
 		var inserts = 0;
+		var errors = 0;
 		for (var replyIndex in replies) {
-			if (replies[replyIndex] == 1) {
+			if (replies[replyIndex] instanceof redis.ReplyError) {
+				errors++;
+			} else if (replies[replyIndex] == 1) {
 				inserts++;
 			} else {
 				updates++;
 			}
 		}
-		console.log(systemName + ": " + inserts + " inserts, " + updates + " updates");
+		console.log(systemName + ": " + inserts + " inserts, " + updates + " updates " + errors + " errors (" + software + ")");
 		eventsProcessedCounter.inc(1);
 	} catch (err) {
 		console.error(systemName + ": MULTI error: " + err);
