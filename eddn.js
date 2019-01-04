@@ -39,36 +39,6 @@ discordClient.login(config.get('botToken'));
 
 discordClient.on('message', message => {
 	commandRunner.processMessage(message);
-	/*
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-	const args = message.content.slice(prefix.length).split(/ +/);
-	const commandName = args.shift().toLowerCase();
-	var command = undefined;
-
-	if (client.commands.has(commandName)) {
-		command = client.commands.get(commandName);
-	}
-
-	client.commands.forEach(function (value) {
-		if ("aliases" in value && value.aliases.indexOf(commandName) > -1) {
-			command = value;
-		}
-	});
-
-	if (command === undefined) {
-		return;
-	}
-
-	try {
-		command.execute(message, commandName, args);
-		commandsProcessedCounter.inc(1);
-	}
-	catch (error) {
-		console.error(error);
-		message.reply('there was an error trying to execute that command!');
-	}
-	*/
 });
 
 // const publishClient = redisClient.duplicate();
