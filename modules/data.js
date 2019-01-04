@@ -15,16 +15,12 @@ function setRedisClient(client) {
     redisClient = client;
 }
 
-function setJSONObject(multi, keyName, obj) {
-    multi.json_set(keyName, '.', JSON.stringify(obj));
-}
-
 function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
     const keyName = tools.getKeyName('system', systemName);
 
     if (!('name' in oldSystemObj)) {
         // New system: store in redis and return
-        setJSONObject(multi, keyName, newSystemObj);
+        multi.json_set(keyName, '.', JSON.stringify(newSystemObj));
 
         return [
             {
@@ -56,7 +52,7 @@ function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
             //     console.log(systemName + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue + " (" + newSystemObj.updatedBy + ")");
             // }
         }
-        setJSONObject(multi, keyName, newSystemObj);
+        multi.json_set(keyName, '.', JSON.stringify(newSystemObj));
     } else {
         // No changes - just update lastUpdate
         multi.json_set(keyName, 'lastUpdate', JSON.stringify(newSystemObj['lastUpdate']));
@@ -67,7 +63,7 @@ function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
 
 function storeFaction(multi, factionName, factionObj) {
     const keyName = tools.getKeyName('faction', factionName);
-    setJSONObject(multi, keyName, factionObj);
+    multi.json_set(keyName, '.', JSON.stringify(factionObj));
 }
 
 function updateFactionDetails(multi, factionName, factionAllegiance, factionGovernment) {
