@@ -10,7 +10,10 @@ io.init({
 
 const zlib = require('zlib');
 const zmq = require('zeromq');
+
 const tools = require('./modules/tools');
+const changeTracking = require('./modules/changeTracking');
+
 const discord = require('discord.js');
 const config = require('config');
 
@@ -37,7 +40,7 @@ var eventsChannel = undefined;
 discordClient.once('ready', () => {
 	console.log('Logged in as: ' + discordClient.user.username + ' - (' + discordClient.user.id + ')');
 	tools.setDiscordClient(discordClient);
-	eventsChannel = discordClient.channels.get("516559208976744448");
+	eventsChannel = discordClient.channels.get(config.get('eventChannel'));
 });
 discordClient.login(config.get('botToken'));
 
@@ -174,38 +177,6 @@ function addSystemProperties(systemObj, msgData) {
 	}
 }
 
-function sendChangeNotifications(changeList) {
-	if (eventsChannel == undefined) {
-		return;
-	}
-
-	var outList = [];
-	for (const change of changeList) {
-		if ('system' in change) {
-			if (change.property == 'system') {
-				outList.push(`Discovered a new system **${change.system}**`);
-			} else if (change.property.startsWith('faction:') && change.oldValue == undefined) {
-				outList.push(`Faction **${change.newValue.name}** has expanded into system **${change.system}**`);
-			} else if (change.property.startsWith('faction:') && change.newValue == undefined) {
-				outList.push(`Faction **${change.oldValue.name}** has retreated from system **${change.system}**`);
-			}
-			else if ('faction' in change) {
-				if (change.property != 'influence') {
-					outList.push(`System **${change.system}** Faction **${change.faction}**: ${change.property} changed from '${change.oldValue}' to '${change.newValue}'`);
-				}
-			}
-			else
-			{
-				outList.push("System **" + change.system + "**: " + change.property + " changed from '" + change.oldValue + "' to '" + change.newValue + "'");
-			}
-		}
-	}
-
-	if (outList.length > 0) {
-		eventsChannel.send(outList.join("\n"));
-	}
-}
-
 async function parseFSDJump(msgData, software) {
 	const systemName = msgData['StarSystem'];
 
@@ -221,6 +192,10 @@ async function parseFSDJump(msgData, software) {
 		'lastUpdate': now,
 		'updatedBy': software
 	};
+
+	if ("subscriptions" in oldSystemData) {
+		systemObj["subscriptions"] = oldSystemData["subscriptions"];
+	}
 
 	systemObj['factions'] = {};
 	var promiseArray = [];
@@ -288,7 +263,8 @@ async function parseFSDJump(msgData, software) {
 	addSystemProperties(systemObj, msgData);
 
 	const changeList = data.storeSystem(multi, systemName, systemObj, oldSystemData);
-	sendChangeNotifications(changeList);
+	// changeTracking.sendChangeNotifications(eventsChannel, changeList);
+	changeTracking.sendSystemChangeNotifications(systemObj, changeList, discordClient);
 
 	data.incrementVisitCounts(multi, systemName);
 

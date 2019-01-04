@@ -1,7 +1,8 @@
 // var redis = require("redis");
 // var fs = require('fs');
-var tools = require('./tools');
-var dateFormat = require('dateformat');
+const tools = require('./tools');
+const dateFormat = require('dateformat');
+const changeTracking = require('./changeTracking');
 // var request = require('request-promise');
 
 // var bluebird = require('bluebird');
@@ -16,110 +17,6 @@ function setRedisClient(client) {
 
 function setJSONObject(multi, keyName, obj) {
     multi.json_set(keyName, '.', JSON.stringify(obj));
-}
-
-function getFactionStateChanges(oldFactionObj, newFactionObj) {
-    var changeList = [];
-
-    return changeList;
-}
-
-function getSystemChanges(oldSystemObj, newSystemObj) {
-    var changeList = [];
-
-    const basicPropertyList = [
-        'name',
-        'security',
-        'population',
-        'allegiance',
-        'government',
-        'controllingFaction'
-    ];
-
-    for (const property of basicPropertyList) {
-        if (property in oldSystemObj && oldSystemObj[property] != newSystemObj[property]) {
-            changeList.push({
-                system: newSystemObj['name'],
-                property: property,
-                oldValue: oldSystemObj[property],
-                newValue: newSystemObj[property]
-            });
-        }
-    }
-
-    if ('economies' in oldSystemObj && JSON.stringify(oldSystemObj['economies']) != JSON.stringify(newSystemObj['economies'])) {
-        changeList.push({
-            system: newSystemObj['name'],
-            property: 'economies',
-            oldValue: oldSystemObj['economies'],
-            newValue: newSystemObj['economies']
-        });
-    }
-
-    var factionList = Object.keys(oldSystemObj['factions']).concat(Object.keys(newSystemObj['factions']));
-    var uniqueFactionList = [ ...new Set(factionList) ];
-    for (const factionKey of uniqueFactionList) {
-        if (!(factionKey in oldSystemObj['factions'])) {
-            // Expanded faction
-            changeList.push({
-                system: newSystemObj['name'],
-                faction: factionKey,
-                property: 'faction',
-                oldValue: undefined,
-                newValue: newSystemObj['factions'][factionKey]
-            });
-        } else if (!(factionKey in newSystemObj['factions'])) {
-            // Retreated faction
-            changeList.push({
-                system: newSystemObj['name'],
-                faction: factionKey,
-                property: 'faction',
-                oldValue: oldSystemObj['factions'][factionKey],
-                newValue: undefined
-            });
-        } else {
-            // Compare faction properties
-            const factionPropertyList = [
-                'name',
-                'security',
-                'population',
-                'allegiance',
-                'government',
-                'controllingFaction'
-            ];
-            const oldFactionObj = oldSystemObj['factions'][factionKey];
-            const newFactionObj = newSystemObj['factions'][factionKey]
-
-            for (const property of factionPropertyList) {
-                if (oldFactionObj[property] != newSystemObj['factions'][factionKey][property]) {
-                    changeList.push({
-                        system: newSystemObj['name'],
-                        faction: newFactionObj['name'],
-                        property: property,
-                        oldValue: oldFactionObj[property],
-                        newValue: newSystemObj['factions'][factionKey][property]
-                    });
-                }
-            }
-
-            const oldInfluence = Number(oldFactionObj['influence'] * 100).toFixed(1);
-            const newInfluence = Number(newFactionObj['influence'] * 100).toFixed(1);
-            if (oldInfluence != newInfluence) {
-                changeList.push({
-                    system: newSystemObj['name'],
-                    faction: newFactionObj['name'],
-                    property: 'influence',
-                    oldValue: oldInfluence,
-                    newValue: newInfluence
-                });
-            }
-
-            changeList = changeList.concat(getFactionStateChanges(oldFactionObj, newFactionObj));
-        }
-
-    }
-
-    return changeList;
 }
 
 function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
@@ -139,7 +36,7 @@ function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
         ];
     }
 
-    const changeList = getSystemChanges(oldSystemObj, newSystemObj);
+    const changeList = changeTracking.getSystemChanges(oldSystemObj, newSystemObj);
     if (changeList.length > 0) {
         for (const change of changeList) {
             var logEntry = systemName + ": ";
@@ -244,6 +141,63 @@ function incrementVisitCounts(multi, systemName) {
     multi.expire(dailyKeyName, 60*60*24*31); // Keep this value for 31 days
 }
 
+function getSystem(systemName) {
+    const systemKeyName = tools.getKeyName('system', systemName);
+    return new Promise(function (resolve, reject) {
+        redisClient.json_getAsync(systemKeyName).then(function (jsonData) {
+            if (jsonData != null) {
+                var systemObj = JSON.parse(jsonData);
+                resolve(systemObj);
+            } else {
+                resolve({});
+            }
+        }, function(err) {
+            reject(err); // Pass the error to our caller
+        });
+    });
+}
+
+function getFaction(factionName) {
+    const factionKeyName = tools.getKeyName('faction', factionName);
+    return new Promise(function (resolve, reject) {
+        redisClient.json_getAsync(factionKeyName).then(function (jsonData) {
+            if (jsonData != null) {
+                var factionObj = JSON.parse(jsonData);
+                resolve(factionObj);
+            } else {
+                resolve({});
+            }
+        }, function(err) {
+            reject(err); // Pass the error to our caller
+        });
+    });
+}
+
+async function addSystemSubscription(systemName, channelID) {
+    const systemKeyName = tools.getKeyName('system', systemName);
+
+    var jsonData = await redisClient.json_getAsync(systemKeyName);
+
+    if (jsonData != null) {
+        var systemData = JSON.parse(jsonData);
+
+        if ("subscriptions" in systemData === false) {
+            systemData["subscriptions"] = {};
+        }
+
+        if (channelID in systemData["subscriptions"]) {
+            return "alreadySubscribed";
+        }
+
+        systemData["subscriptions"][channelID] = {};
+
+        var result = await redisClient.json_setAsync(systemKeyName, 'subscriptions', JSON.stringify(systemData["subscriptions"]));
+
+        return (result == "OK") ? "OK" : "error";
+    } else {
+        return "unknownSystem";
+    }
+}
 
 module.exports = {
     setRedisClient: setRedisClient,
@@ -251,45 +205,18 @@ module.exports = {
         return redisClient;
     },
 
-    storeSystem: storeSystem,
-    storeFaction: storeFaction,
-    updateFactionDetails: updateFactionDetails,
-    updateFactionSystem: updateFactionSystem,
+    storeSystem,
+    storeFaction,
+    updateFactionDetails,
+    updateFactionSystem,
 
-    getSystemCount: getSystemCount,
-    getFactionCount: getFactionCount,
+    getSystemCount,
+    getFactionCount,
 
-    incrementVisitCounts: incrementVisitCounts,
+    incrementVisitCounts,
 
-    getSystem: function (systemName) {
-        var systemKeyName = tools.getKeyName('system', systemName);
-        return new Promise(function (resolve, reject) {
-            redisClient.json_getAsync(systemKeyName).then(function (jsonData) {
-                if (jsonData != null) {
-                    var systemObj = JSON.parse(jsonData);
-                    resolve(systemObj);
-                } else {
-                    resolve({});
-                }
-            }, function(err) {
-                reject(err); // Pass the error to our caller
-            });
-        });
-    },
+    getSystem,
+    getFaction,
 
-    getFaction: function (factionName) {
-        var factionKeyName = tools.getKeyName('faction', factionName);
-        return new Promise(function (resolve, reject) {
-            redisClient.json_getAsync(factionKeyName).then(function (jsonData) {
-                if (jsonData != null) {
-                    var factionObj = JSON.parse(jsonData);
-                    resolve(factionObj);
-                } else {
-                    resolve({});
-                }
-            }, function(err) {
-                reject(err); // Pass the error to our caller
-            });
-        });
-    }
+    addSystemSubscription
   };
