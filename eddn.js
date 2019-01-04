@@ -13,7 +13,11 @@ const zmq = require('zeromq');
 const tools = require('./modules/tools');
 const discord = require('discord.js');
 const config = require('config');
+
 const redis = require("redis");
+const rejson = require('redis-rejson');
+rejson(redis);
+
 const data = require("./modules/data");
 const typeMap = require('./modules/eddnTypeMap');
 const commandRunner = require('./modules/discordCommandRunner');
@@ -216,9 +220,19 @@ async function parseFSDJump(msgData) {
 	};
 
 	systemObj['factions'] = {};
-	for (var factionIndex in inFactionsData) {
+	var promiseArray = [];
+	for (const factionIndex in inFactionsData) {
 		const inFaction = inFactionsData[factionIndex];
 		const factionName = inFaction['Name'];
+		promiseArray.push(data.getFaction(factionName));
+	}
+
+	const oldFactionObjArray = await Promise.all(promiseArray);
+
+	for (const factionIndex in inFactionsData) {
+		const inFaction = inFactionsData[factionIndex];
+		const factionName = inFaction['Name'];
+		const oldFactionData = oldFactionObjArray[factionIndex];
 
 		if (factionName == 'Pilots Federation Local Branch' && (!('Influence' in inFaction) || inFaction['Influence'] == 0)) {
 			continue;
@@ -254,11 +268,18 @@ async function parseFSDJump(msgData) {
 			}
 		}
 
-		const factionKeyName = tools.getKeyName(inFaction['Name']);
+		const factionKeyName = tools.getKeyName(factionName);
 		systemObj['factions'][factionKeyName] = factionObj;
 
-		data.storeFactionDetails(multi, factionName, factionObj['allegiance'], factionObj['government']);
-		data.storeFactionSystem(multi, factionName, systemName, factionSystemObj);
+		if ('name' in oldFactionData) {
+			data.updateFactionDetails(multi, factionName, factionObj['allegiance'], factionObj['government']);
+			data.updateFactionSystem(multi, factionName, systemName, factionSystemObj);
+		} else {
+			factionObj['systems'] = {};
+			factionObj['systems'][tools.getKeyName(systemName)] = factionSystemObj;
+			data.storeFaction(multi, factionName, factionObj);
+			Reflect.deleteProperty(factionObj, 'systems');
+		}
 	}
 
 	addSystemProperties(systemObj, msgData);

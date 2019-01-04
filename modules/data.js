@@ -1,6 +1,5 @@
 // var redis = require("redis");
 // var fs = require('fs');
-var flatten = require('flat')
 var tools = require('./tools');
 var dateFormat = require('dateformat');
 // var request = require('request-promise');
@@ -9,33 +8,14 @@ var dateFormat = require('dateformat');
 // bluebird.promisifyAll(redis);
 
 var redisClient = undefined; // = redis.createClient();
-var unflatten = require('flat').unflatten
 
 
 function setRedisClient(client) {
     redisClient = client;
 }
 
-function hsetPackedObject(multi, keyName, obj) {
-    multi.del(keyName);
-    const flatData = flatten(obj);
-    for (var attr in flatData) {
-        if (Array.isArray(flatData[attr])) {
-            multi.hset(keyName, attr, "∅");
-        } else {
-            multi.hset(keyName, attr, flatData[attr]);
-        }
-    }
-}
-
-function unpackObject(flatData) {
-    for (var attr in flatData) {
-        if (flatData[attr] == '∅') {
-            flatData[attr] = []; // Create an empty array here
-        }
-    }
-
-    return unflatten(flatData);
+function setJSONObject(multi, keyName, obj) {
+    multi.json_set(keyName, '.', JSON.stringify(obj));
 }
 
 function getFactionStateChanges(oldFactionObj, newFactionObj) {
@@ -147,7 +127,7 @@ function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
 
     if (!('name' in oldSystemObj)) {
         // New system: store in redis and return
-        hsetPackedObject(multi, keyName, newSystemObj);
+        setJSONObject(multi, keyName, newSystemObj);
 
         return [
             {
@@ -162,45 +142,51 @@ function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
     const changeList = getSystemChanges(oldSystemObj, newSystemObj);
     if (changeList.length > 0) {
         for (const change of changeList) {
+            var logEntry = systemName + ": ";
             if ("faction" in change) {
-                console.log(systemName + ": " + change.faction + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue);
-            } else {
-                console.log(systemName + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue);
+                logEntry += change.faction + ": ";
             }
+
+            logEntry += change.property + ": " + change.oldValue + " -> " + change.newValue;
+
+            console.log(logEntry);
+
+            // if ("faction" in change) {
+            //     console.log(systemName + ": " + change.faction + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue + " (" + newSystemObj.updatedBy + ")");
+            // } else {
+            //     console.log(systemName + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue + " (" + newSystemObj.updatedBy + ")");
+            // }
         }
-        hsetPackedObject(multi, keyName, newSystemObj);
+        setJSONObject(multi, keyName, newSystemObj);
     } else {
         // No changes - just update lastUpdate
-        multi.hset(keyName, 'lastUpdate', newSystemObj['lastUpdate']);
+        multi.json_set(keyName, 'lastUpdate', JSON.stringify(newSystemObj['lastUpdate']));
     }
 
     return changeList;
 }
 
-function storeFactionDetails(multi, factionName, factionAllegiance, factionGovernment) {
+function storeFaction(multi, factionName, factionObj) {
     const keyName = tools.getKeyName('faction', factionName);
-    multi.hset(keyName, 'name', factionName);
-    multi.hset(keyName, 'lastUpdate', Date.now());
+    setJSONObject(multi, keyName, factionObj);
+}
+
+function updateFactionDetails(multi, factionName, factionAllegiance, factionGovernment) {
+    const keyName = tools.getKeyName('faction', factionName);
+    multi.json_set(keyName, 'name', JSON.stringify(factionName));
+    multi.json_set(keyName, 'lastUpdate', JSON.stringify(Date.now()));
     if (factionAllegiance !== undefined) {
-        multi.hset(keyName, 'allegiance', factionAllegiance);
+        multi.json_set(keyName, 'allegiance', JSON.stringify(factionAllegiance));
     }
     if (factionGovernment !== undefined) {
-        multi.hset(keyName, 'government', factionGovernment);
+        multi.json_set(keyName, 'government', JSON.stringify(factionGovernment));
     }
 }
 
-function storeFactionSystem(multi, factionName, systemName, factionSystemObj) {
+function updateFactionSystem(multi, factionName, systemName, factionSystemObj) {
     const keyName = tools.getKeyName('faction', factionName);
-    const flatData = flatten(factionSystemObj);
-    const attrPrefix = 'systems.' + tools.getKeyName(systemName) + '.';
-    for (const attr in flatData) {
-        if (Array.isArray(flatData[attr])) {
-            multi.hset(keyName, attrPrefix + attr, "∅");
-        } else {
-            multi.hset(keyName, attrPrefix + attr, flatData[attr]);
-        }
-    }
 
+    multi.json_set(keyName, 'systems["' + tools.getKeyName(systemName) + '"]', JSON.stringify(factionSystemObj));
 }
 
 async function getSystemCount() {
@@ -263,11 +249,10 @@ module.exports = {
         return redisClient;
     },
 
-    hsetPackedObject: hsetPackedObject,
-
     storeSystem: storeSystem,
-    storeFactionDetails: storeFactionDetails,
-    storeFactionSystem: storeFactionSystem,
+    storeFaction: storeFaction,
+    updateFactionDetails: updateFactionDetails,
+    updateFactionSystem: updateFactionSystem,
 
     getSystemCount: getSystemCount,
     getFactionCount: getFactionCount,
@@ -277,9 +262,9 @@ module.exports = {
     getSystem: function (systemName) {
         var systemKeyName = tools.getKeyName('system', systemName);
         return new Promise(function (resolve, reject) {
-            redisClient.hgetallAsync(systemKeyName).then(function (flatData) {
-                if (flatData != null) {
-                    var systemObj = unpackObject(flatData);
+            redisClient.json_getAsync(systemKeyName).then(function (jsonData) {
+                if (jsonData != null) {
+                    var systemObj = JSON.parse(jsonData);
                     resolve(systemObj);
                 } else {
                     resolve({});
@@ -293,9 +278,9 @@ module.exports = {
     getFaction: function (factionName) {
         var factionKeyName = tools.getKeyName('faction', factionName);
         return new Promise(function (resolve, reject) {
-            redisClient.hgetallAsync(factionKeyName).then(function (flatData) {
-                if (flatData != null) {
-                    var factionObj = unpackObject(flatData);
+            redisClient.json_getAsync(factionKeyName).then(function (jsonData) {
+                if (jsonData != null) {
+                    var factionObj = JSON.parse(jsonData);
                     resolve(factionObj);
                 } else {
                     resolve({});

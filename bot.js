@@ -15,7 +15,11 @@ const logger = require('winston');
 const config = require('config');
 const tools = require('./modules/tools');
 const prefix = config.get('defaultPrefix');
+
 const redis = require("redis");
+const rejson = require('redis-rejson');
+rejson(redis);
+
 const data = require("./modules/data");
 const commandRunner = require('./modules/discordCommandRunner');
 const bluebird = require('bluebird');

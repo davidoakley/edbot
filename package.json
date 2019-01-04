@@ -19,6 +19,7 @@
     "erlpack": "github:discordapp/erlpack",
     "flat": "^4.1.0",
     "redis": "^2.8.0",
+    "redis-rejson": "^1.0.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "uws": "^9.14.0",
