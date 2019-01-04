@@ -136,7 +136,7 @@ module.exports = {
 	description: 'Get minor faction information',
 	execute(message, command, args) {
 		if (args.length < 1) {
-			message.channel.send("The !system command needs to be followed by a system name, such as `edsystem shinrarta dezhra`");
+			message.channel.send("The !system command needs to be followed by a system name, such as `faction the dark wheel`");
 			return;
 		}
 

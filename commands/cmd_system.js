@@ -138,7 +138,7 @@ module.exports = {
 	description: 'Get faction influences within a system',
 	execute(message, command, args) {
 		if (args.length < 1) {
-			message.channel.send("The "+command+" command needs to be followed by a system name, such as `edsystem shinrarta dezhra`");
+			message.channel.send("The "+command+" command needs to be followed by a system name, such as `system shinrarta dezhra`");
 			return;
 		}
 
