@@ -1,3 +1,5 @@
+const config = require("config");
+
 function getFactionStateChanges(systemName, factionName, oldFactionObj, newFactionObj) {
     var changeList = [];
 
@@ -143,7 +145,7 @@ function sendSystemChangeNotifications(systemData, changeList, discordClient) {
 
         if (changeList.length > 0) {
             sendChangeNotifications(channel, changeList);
-        } else {
+        } else if (config.get("reportNoChanges")) {
             channel.send(`System **${systemData.name}**: no changes`);
         }
     }
