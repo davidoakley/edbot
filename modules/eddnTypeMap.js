@@ -17,6 +17,7 @@ module.exports = {
 	"$economy_Service;": "Service",
 	"$economy_Terraforming;": "Terraforming",
 	"$economy_Tourism;": "Tourism",
+	"$economy_UNKNOWN_VALUE": "Unknown",
 
 	"$government_Anarchy;": "Anarchy",
 	"$government_Communism;": "Communism",
