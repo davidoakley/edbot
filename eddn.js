@@ -41,12 +41,10 @@ global.logStream = null;
 
 const discordClient = new discord.Client();
 commandRunner.init(discordClient, './eddnCommands', "*");
-var eventsChannel = undefined;
 
 discordClient.once('ready', () => {
 	console.log('Logged in as: ' + discordClient.user.username + ' - (' + discordClient.user.id + ')');
 	tools.setDiscordClient(discordClient);
-	eventsChannel = discordClient.channels.get(config.get('eventChannel'));
 });
 discordClient.login(config.get('botToken'));
 
@@ -150,11 +148,11 @@ function addSystemProperties(systemObj, msgData) {
 		systemObj['population'] = parseInt(msgData['Population'], 10);
 	}
 
-	if ('SystemAllegiance' in msgData) {
+	if (('allegiance' in systemObj === false) && 'SystemAllegiance' in msgData) {
 		systemObj['allegiance'] = msgData['SystemAllegiance'];
 	}
 
-	if ('SystemGovernment' in msgData) {
+	if (('government' in systemObj === false) && 'SystemGovernment' in msgData) {
 		if (msgData['SystemGovernment'] in typeMap) {
 			systemObj['government'] = typeMap[msgData['SystemGovernment']];
 		} else {
@@ -272,6 +270,13 @@ async function parseFSDJump(msgData, software, inString) {
 	}
 
 	addSystemProperties(systemObj, msgData);
+
+	// const controllingFactionName = systemObj['controllingFaction'];
+	// const controllingFactionData = systemObj['factions'][tools.getKeyName(controllingFactionName)];
+	// if (controllingFactionData !== undefined && (controllingFactionData['allegiance'] != systemObj['allegiance'] || controllingFactionData['government'] != systemObj['government'])) {
+	// 	systemLogger.info(inString);
+	// 	console.log("Government/Allegience mismatch");
+	// }
 
 	const changeList = data.storeSystem(multi, systemName, systemObj, oldSystemData);
 	changeTracking.sendSystemChangeNotifications(systemObj, changeList, discordClient);
