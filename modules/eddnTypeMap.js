@@ -22,7 +22,7 @@ module.exports = {
 	"$government_Anarchy;": "Anarchy",
 	"$government_Communism;": "Communism",
 	"$government_Confederacy;": "Confederacy",
-	"$government_Cooperative;": "Co-operative",
+	"$government_Cooperative;": "Cooperative",
 	"$government_Corporate;": "Corporate",
 	"$government_Democracy;": "Democracy",
 	"$government_Dictatorship;": "Dictatorship",
