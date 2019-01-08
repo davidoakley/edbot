@@ -28,6 +28,12 @@ const commandRunner = require('./modules/discordCommandRunner');
 const bluebird = require('bluebird');
 bluebird.promisifyAll(redis);
 
+const winston = require('winston');
+const systemLogger = winston.createLogger({
+	format: winston.format.printf(info => `${info.message}`),
+	transports: [ new winston.transports.File({ filename: 'systems.log' }) ]
+  });
+
 const redisClient = redis.createClient();
 data.setRedisClient(redisClient);
 
@@ -64,11 +70,11 @@ sock.subscribe('');
 
 sock.on('message', topic => {
 	try {
-		const inString = zlib.inflateSync(topic);
+		const inString = zlib.inflateSync(topic).toString();
 		const inData = JSON.parse(inString);
 
 		if (inData["$schemaRef"] == "https://eddn.edcd.io/schemas/journal/1") {
-			parseJournal(inData);
+			parseJournal(inData, inString);
 		}
 
 		if (global.logStream != null) {
@@ -99,13 +105,18 @@ function convertStates(eddnStates) {
 	return outStates;
 }
 
-function parseJournal(inData) {
+function parseJournal(inData, inString) {
 	const headerData = inData["header"];
 	const software = headerData["softwareName"] + "/" + headerData["softwareVersion"];
 	const msgData = inData["message"];
 	const event = msgData['event'];
 	if ("Factions" in msgData && (event == "FSDJump" || event == "Location")) {
-		parseFSDJump(msgData, software);
+		parseFSDJump(msgData, software, inString);
+
+		const systemName = msgData['StarSystem'];
+		if (systemName in config.get("logSystems")) {
+			systemLogger.info(inString);
+		}
 	}
 }
 
@@ -177,7 +188,7 @@ function addSystemProperties(systemObj, msgData) {
 	}
 }
 
-async function parseFSDJump(msgData, software) {
+async function parseFSDJump(msgData, software, inString) {
 	const systemName = msgData['StarSystem'];
 
 	const oldSystemData = await data.getSystem(systemName);
@@ -263,7 +274,6 @@ async function parseFSDJump(msgData, software) {
 	addSystemProperties(systemObj, msgData);
 
 	const changeList = data.storeSystem(multi, systemName, systemObj, oldSystemData);
-	// changeTracking.sendChangeNotifications(eventsChannel, changeList);
 	changeTracking.sendSystemChangeNotifications(systemObj, changeList, discordClient);
 
 	data.incrementVisitCounts(multi, systemName);
