@@ -87,28 +87,37 @@ function addSystemProperties(systemObj, msgData, oldSystemObj) {
 	// 	}
 	// }
 
+	addSystemEconomies(msgData, systemObj);
+	addSystemSecurity(msgData, systemObj);
+}
+
+function addSystemSecurity(msgData, systemObj) {
+	if ('SystemSecurity' in msgData) {
+		if (msgData['SystemSecurity'] in typeMap) {
+			systemObj['security'] = typeMap[msgData['SystemSecurity']];
+		}
+		else {
+			console.error("Unknown security value '" + msgData['SystemSecurity'] + "'");
+		}
+	}
+}
+
+function addSystemEconomies(msgData, systemObj) {
 	if ('SystemEconomy' in msgData && msgData['SystemEconomy'] != "$economy_Undefined") {
 		systemObj['economies'] = [];
 		if (msgData['SystemEconomy'] in typeMap) {
 			systemObj['economies'].push(typeMap[msgData['SystemEconomy']]);
-		} else {
+		}
+		else {
 			console.error("Unknown economy value '" + msgData['SystemEconomy'] + "'");
 		}
-
 		if ('SystemSecondEconomy' in msgData && msgData['SystemSecondEconomy'] != "$economy_None;" && msgData['SystemSecondEconomy'] != "$economy_Undefined;") {
 			if (msgData['SystemSecondEconomy'] in typeMap) {
 				systemObj['economies'].push(typeMap[msgData['SystemSecondEconomy']]);
-			} else {
+			}
+			else {
 				console.error("Unknown economy value '" + msgData['SystemSecondEconomy'] + "'");
 			}
-		}	
-	}
-
-	if ('SystemSecurity' in msgData) {
-		if (msgData['SystemSecurity'] in typeMap) {
-			systemObj['security'] = typeMap[msgData['SystemSecurity']];
-		} else {
-			console.error("Unknown security value '" + msgData['SystemSecurity'] + "'");
 		}
 	}
 }
