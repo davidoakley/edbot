@@ -61,7 +61,10 @@ function addSystemProperties(systemObj, msgData, oldSystemObj) {
             const inFaction = inFactionsData[factionIndex];
             if (inFaction['Name'] == systemObj['controllingFaction']) {
                 systemObj['allegiance'] = inFaction['Allegiance'];
-                systemObj['government'] = inFaction['Government'];
+				systemObj['government'] = inFaction['Government'];
+				if (systemObj['allegiance'] == undefined || systemObj['allegiance'] == undefined) {
+					console.error(`Null allegiance or government for system '${systemObj['name']}'`);
+				}
             }
         }
     }
