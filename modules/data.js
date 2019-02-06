@@ -84,6 +84,11 @@ function updateFactionSystem(multi, factionName, systemName, factionSystemObj) {
     multi.json_set(keyName, 'systems["' + tools.getKeyName(systemName) + '"]', JSON.stringify(factionSystemObj));
 }
 
+function storeSystemFaction(multi, systemName, factionName, systemFactionObj) {
+    const keyName = tools.getKeyName('systemFaction', systemName, factionName);
+    multi.json_set(keyName, '.', JSON.stringify(systemFactionObj));
+}
+
 async function getSystemCount() {
     var cursor = 0;
     var systemCount = 0;
@@ -205,6 +210,7 @@ module.exports = {
     storeFaction,
     updateFactionDetails,
     updateFactionSystem,
+    storeSystemFaction,
 
     getSystemCount,
     getFactionCount,

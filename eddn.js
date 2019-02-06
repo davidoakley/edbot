@@ -172,6 +172,8 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 		const factionKeyName = tools.getKeyName(factionName);
 		systemObj['factions'][factionKeyName] = factionObj;
 
+		data.storeSystemFaction(multi, systemName, factionName, factionObj);
+
 		if ('name' in oldFactionData) {
 			data.updateFactionDetails(multi, factionName, factionObj['allegiance'], factionObj['government']);
 			data.updateFactionSystem(multi, factionName, systemName, factionSystemObj);
