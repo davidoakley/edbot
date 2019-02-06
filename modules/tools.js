@@ -19,9 +19,13 @@ function parseStates(inList) {
 	return outList;
 }
 
-function getKeyName(objType, objName) {
-    if (objName !== undefined) {
-        return objType + ':' + objName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+function getKeyName(objType, ...objNames) {
+    if (objNames.length > 0) {
+		var keyName = objType;
+		for (const objName of objNames) {
+			keyName += ':' + objName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+		}
+		return keyName;
     } else {
         return objType.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
     }
