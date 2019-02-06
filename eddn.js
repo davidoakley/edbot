@@ -195,7 +195,7 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 	// }
 
 	const changeList = data.storeSystem(multi, systemName, systemObj, oldSystemData);
-	changeTracking.sendSystemChangeNotifications(systemObj, changeList, discordClient);
+	changeTracking.sendSystemChangeNotifications(systemObj, changeList, discordClient, software);
 
 	data.incrementVisitCounts(multi, systemName);
 
