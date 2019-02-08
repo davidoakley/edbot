@@ -124,7 +124,7 @@ function sendChangeNotifications(eventsChannel, systemData, changeList, software
     // var content = `Received an update for the **[${systemName}](${systemURL})** system`; //, obtained from EDDN at ${niceDate}`;
 
     var embed = {
-        "description": "View on **[EDSM](${systemURL})**",
+        "description": "View on [EDSM](${systemURL})",
 		"fields": [],
 		timestamp: date.toISOString(),
 		footer: {
