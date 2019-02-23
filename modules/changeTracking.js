@@ -78,6 +78,7 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
 
     var factionList = Object.keys(oldSystemObj['factions']).concat(Object.keys(newSystemObj['factions']));
     var uniqueFactionList = [ ...new Set(factionList) ];
+    var influencesChanged = false;
     for (const factionKey of uniqueFactionList) {
         if (!(factionKey in oldSystemObj['factions'])) {
             // Expanded faction
@@ -102,6 +103,9 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
             const newFactionObj = newSystemObj['factions'][factionKey]
 
             changeList = changeList.concat(getFactionStateChanges(systemName, newFactionObj['name'], oldFactionObj, newFactionObj));
+            if (oldFactionObj['influence'] != newFactionObj['influence']) {
+                influencesChanged = true;
+            }
         }
 
     }
