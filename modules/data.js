@@ -142,13 +142,32 @@ function incrementVisitCounts(multi, systemName) {
     multi.expire(dailyKeyName, 60*60*24*31); // Keep this value for 31 days
 }
 
+async function addSystemFactions(systemObj) {
+    var mgetArgs = [];
+    for (let key in systemObj['factions']) {
+        mgetArgs.push(tools.getKeyName('systemFaction', systemObj['name'], key));
+    }
+    mgetArgs.push('.'); // Add JSON path to retrieve
+
+    const resultList = await redisClient.json_mgetAsync(...mgetArgs);
+
+    for (let i in resultList) {
+        //console.log(resultList[i]);
+        const systemFaction = JSON.parse(resultList[i]);
+        systemObj['factions'][tools.getKeyName(systemFaction['name'])] = systemFaction;
+    }
+
+    return systemObj;
+}
+
 function getSystem(systemName) {
     const systemKeyName = tools.getKeyName('system', systemName);
     return new Promise(function (resolve, reject) {
         redisClient.json_getAsync(systemKeyName).then(function (jsonData) {
             if (jsonData != null) {
                 var systemObj = JSON.parse(jsonData);
-                resolve(systemObj);
+
+                resolve(addSystemFactions(systemObj));
             } else {
                 resolve({});
             }
