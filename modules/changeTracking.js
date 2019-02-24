@@ -119,12 +119,16 @@ function sendChangeNotifications(eventsChannel, systemData, changeList, software
     }
     
     var systemName = systemData['name'];
+    var systemURL = 'https://www.edsm.net/en/system/id//name?systemName=' + encodeURIComponent(systemName);
+
 	var controllingFactionName = systemData['controllingFaction']
 	var date = new Date(parseInt(systemData['lastUpdate'], 10));
 
     var content = `Received an update for the **${systemName}** system`; //, obtained from EDDN at ${niceDate}`;
+    // var content = `Received an update for the **[${systemName}](${systemURL})** system`; //, obtained from EDDN at ${niceDate}`;
 
     var embed = {
+        "description": "View on [EDSM](${systemURL})",
 		"fields": [],
 		timestamp: date.toISOString(),
 		footer: {
