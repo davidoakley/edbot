@@ -172,27 +172,31 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 		const factionKeyName = tools.getKeyName(factionName);
 		systemObj['factions'][factionKeyName] = factionObj;
 
-		data.storeSystemFaction(multi, systemName, factionName, factionObj);
+		//data.storeSystemFaction(multi, systemName, factionName, factionObj);
 
 		if ('name' in oldFactionData) {
 			data.updateFactionDetails(multi, factionName, factionObj['allegiance'], factionObj['government']);
-			data.updateFactionSystem(multi, factionName, systemName, factionSystemObj);
+
+			if ('systems' in oldFactionData) {
+				// Need to 'upgrade' this faction to just list system names
+				factionObj['systemNames'] = data.getOldFactionSystemNames(oldFactionData);
+				data.storeFaction(multi, factionName, factionObj);
+				Reflect.deleteProperty(factionObj, 'systemNames');
+				console.log(`> Converted faction ${factionName}`);
+			} else if (!oldFactionData['systemNames'].includes(systemName)) {
+				console.log(`${systemName}: Adding to faction ${factionName}`);
+				var systemNames = oldFactionData['systemNames'].slice(0);
+				systemNames.push(systemName);
+				data.updateFactionSystemNames(multi, factionName, systemNames.sort());
+			}
 		} else {
-			factionObj['systems'] = {};
-			factionObj['systems'][tools.getKeyName(systemName)] = factionSystemObj;
+			factionObj['systemNames'] = [ systemName ];
 			data.storeFaction(multi, factionName, factionObj);
-			Reflect.deleteProperty(factionObj, 'systems');
+			Reflect.deleteProperty(factionObj, 'systemNames');
 		}
 	}
 
 	eddnParser.addSystemProperties(systemObj, msgData, oldSystemData);
-
-	// const controllingFactionName = systemObj['controllingFaction'];
-	// const controllingFactionData = systemObj['factions'][tools.getKeyName(controllingFactionName)];
-	// if (controllingFactionData !== undefined && (controllingFactionData['allegiance'] != systemObj['allegiance'] || controllingFactionData['government'] != systemObj['government'])) {
-	// 	systemLogger.info(inString);
-	// 	console.log("Government/Allegience mismatch");
-	// }
 
 	const changeList = data.storeSystem(multi, systemName, systemObj, oldSystemData);
 	changeTracking.sendSystemChangeNotifications(systemObj, changeList, discordClient, software);

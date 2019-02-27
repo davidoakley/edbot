@@ -75,7 +75,7 @@ function getSystemsText(systemsData) {
 	return systemsText;
 }
 
-function getFactionSummary(givenFactionName, factionObject) {
+async function getFactionSummary(givenFactionName, factionObject) {
 	var factionName = factionObject['name'];
 
 	if (factionName === undefined) {
@@ -94,7 +94,7 @@ function getFactionSummary(givenFactionName, factionObject) {
 	// https://leovoel.github.io/embed-visualizer/
 	//response += '```';
 	// var description = "";
-	var systemsData = factionObject['systems']; //tools.sortByInfluence(systemData['factions']);
+	var systemsData = await data.getFactionSystems(factionObject); //factionObject['systems']; //tools.sortByInfluence(systemData['factions']);
 	var systemsText = getSystemsText(systemsData);
 
 	var governanceList = [];
@@ -143,9 +143,9 @@ module.exports = {
 		var factionName = args.join(' ');
 
 		data.getFaction(factionName).then(function(factionObject) {
-			var response = getFactionSummary(factionName, factionObject);
-	
-			message.channel.send(response.content, { embed: response.embed });
+			getFactionSummary(factionName, factionObject).then(function(response) {
+				message.channel.send(response.content, { embed: response.embed });
+			});
 		}, function(err) {
 			console.log(err);
 		});

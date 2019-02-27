@@ -78,15 +78,18 @@ function updateFactionDetails(multi, factionName, factionAllegiance, factionGove
     }
 }
 
-function updateFactionSystem(multi, factionName, systemName, factionSystemObj) {
+function updateFactionSystemNames(multi, factionName, systemNames) {
     const keyName = tools.getKeyName('faction', factionName);
-
-    multi.json_set(keyName, 'systems["' + tools.getKeyName(systemName) + '"]', JSON.stringify(factionSystemObj));
+    multi.json_set(keyName, 'systemNames', JSON.stringify(systemNames));
 }
 
-function storeSystemFaction(multi, systemName, factionName, systemFactionObj) {
-    const keyName = tools.getKeyName('systemFaction', systemName, factionName);
-    multi.json_set(keyName, '.', JSON.stringify(systemFactionObj));
+function getOldFactionSystemNames(factionObj) {
+    var systemNames = [];
+    for (var key in factionObj['systems']) {
+        systemNames.push(factionObj['systems'][key]['name']);
+    }
+
+    return systemNames;
 }
 
 async function getSystemCount() {
@@ -142,24 +145,6 @@ function incrementVisitCounts(multi, systemName) {
     multi.expire(dailyKeyName, 60*60*24*31); // Keep this value for 31 days
 }
 
-async function addSystemFactions(systemObj) {
-    var mgetArgs = [];
-    for (let key in systemObj['factions']) {
-        mgetArgs.push(tools.getKeyName('systemFaction', systemObj['name'], key));
-    }
-    mgetArgs.push('.'); // Add JSON path to retrieve
-
-    const resultList = await redisClient.json_mgetAsync(...mgetArgs);
-
-    for (let i in resultList) {
-        //console.log(resultList[i]);
-        const systemFaction = JSON.parse(resultList[i]);
-        systemObj['factions'][tools.getKeyName(systemFaction['name'])] = systemFaction;
-    }
-
-    return systemObj;
-}
-
 function getSystem(systemName) {
     const systemKeyName = tools.getKeyName('system', systemName);
     return new Promise(function (resolve, reject) {
@@ -167,7 +152,8 @@ function getSystem(systemName) {
             if (jsonData != null) {
                 var systemObj = JSON.parse(jsonData);
 
-                resolve(addSystemFactions(systemObj));
+                // resolve(addSystemFactions(systemObj));
+                resolve(systemObj);
             } else {
                 resolve({});
             }
@@ -191,6 +177,35 @@ function getFaction(factionName) {
             reject(err); // Pass the error to our caller
         });
     });
+}
+
+async function getFactionSystems(factionObj) {
+    var mgetArgs = [];
+    for (let systemName of factionObj['systemNames']) {
+        mgetArgs.push(tools.getKeyName('system', systemName));
+    }
+
+    mgetArgs.push('.'); // Add JSON path to retrieve
+    
+    const resultList = await redisClient.json_mgetAsync(...mgetArgs);
+
+    var systems = {};
+    const factionKey = tools.getKeyName(factionObj.name);
+
+    for (let i in resultList) {
+        if (resultList[i] != null) {
+            const fetchedSystemObj = JSON.parse(resultList[i]);
+            const systemName = fetchedSystemObj['name'];
+            var systemObj = fetchedSystemObj['factions'][factionKey];
+            systemObj['name'] = fetchedSystemObj['name'];
+            systems[tools.getKeyName(systemName)] = systemObj;
+            // factionObj['systems'][tools.getKeyName(systemFaction['systemName'])] = systemFaction;
+        } else {
+            console.warn(`${factionObj['systemNames'][i]}: ${factionObj.name} system is null`);                
+        }
+    }
+
+    return systems;
 }
 
 async function addSystemSubscription(systemName, channelID) {
@@ -228,8 +243,8 @@ module.exports = {
     storeSystem,
     storeFaction,
     updateFactionDetails,
-    updateFactionSystem,
-    storeSystemFaction,
+    updateFactionSystemNames,
+    getOldFactionSystemNames,
 
     getSystemCount,
     getFactionCount,
@@ -238,6 +253,7 @@ module.exports = {
 
     getSystem,
     getFaction,
+    getFactionSystems,
 
     addSystemSubscription
   };
