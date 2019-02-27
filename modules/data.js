@@ -180,6 +180,10 @@ function getFaction(factionName) {
 }
 
 async function getFactionSystems(factionObj) {
+    if ('systems' in factionObj) {
+        return factionObj['systems'];
+    }
+    
     var mgetArgs = [];
     for (let systemName of factionObj['systemNames']) {
         mgetArgs.push(tools.getKeyName('system', systemName));
