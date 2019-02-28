@@ -94,7 +94,7 @@ module.exports = {
         "line-comment-position": "off",
         "linebreak-style": [
             "error",
-            "unix"
+            (process.env.OS == "Windows_NT" ? "windows" : "unix")
         ],
         "lines-around-comment": "off",
         "lines-around-directive": "error",
