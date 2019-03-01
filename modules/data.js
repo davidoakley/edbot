@@ -66,23 +66,6 @@ function storeFaction(multi, factionName, factionObj) {
     multi.json_set(keyName, '.', JSON.stringify(factionObj));
 }
 
-function updateFactionDetails(multi, factionName, factionAllegiance, factionGovernment) {
-    const keyName = tools.getKeyName('faction', factionName);
-    multi.json_set(keyName, 'name', JSON.stringify(factionName));
-    multi.json_set(keyName, 'lastUpdate', JSON.stringify(Date.now()));
-    if (factionAllegiance !== undefined) {
-        multi.json_set(keyName, 'allegiance', JSON.stringify(factionAllegiance));
-    }
-    if (factionGovernment !== undefined) {
-        multi.json_set(keyName, 'government', JSON.stringify(factionGovernment));
-    }
-}
-
-function updateFactionSystemNames(multi, factionName, systemNames) {
-    const keyName = tools.getKeyName('faction', factionName);
-    multi.json_set(keyName, 'systemNames', JSON.stringify(systemNames));
-}
-
 function getOldFactionSystemNames(factionObj) {
     var systemNames = [];
     for (var key in factionObj['systems']) {
@@ -246,8 +229,6 @@ module.exports = {
 
     storeSystem,
     storeFaction,
-    updateFactionDetails,
-    updateFactionSystemNames,
     getOldFactionSystemNames,
 
     getSystemCount,

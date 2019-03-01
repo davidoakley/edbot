@@ -41,7 +41,55 @@ function getFactionStateChanges(systemName, factionName, oldFactionObj, newFacti
     return changeList;
 }
 
+function hasStateListChanged(oldStates, newStates) {
+    if (oldStates == undefined && newStates == undefined) {
+        return false;
+    }
 
+    if (oldStates == undefined || newStates == undefined || oldStates.length != newStates.length) {
+        return true;
+    }
+
+    oldStates.sort();
+    newStates.sort();
+
+    for (var i = 0; i < oldStates.length; ++i) {
+        if (oldStates[i].state !== newStates[i].state) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function hasFactionChanged(oldFactionObj, newFactionObj) {
+    const factionPropertyList = [
+        'name',
+        'allegiance',
+        'government',
+        'controllingFaction'
+    ];
+
+    for (const property of factionPropertyList) {
+        if (oldFactionObj[property] != newFactionObj[property]) {
+            return true;
+        }
+    }
+
+    const oldInfluence = Number(oldFactionObj['influence'] * 100).toFixed(1);
+    const newInfluence = Number(newFactionObj['influence'] * 100).toFixed(1);
+    if (oldInfluence != newInfluence) {
+        return true;
+    }
+
+    if (hasStateListChanged(oldFactionObj['pendingStates'], newFactionObj['pendingStates']) ||
+        hasStateListChanged(oldFactionObj['activeStates'], newFactionObj['activeStates']) ||
+        hasStateListChanged(oldFactionObj['recoveringStates'], newFactionObj['recoveringStates'])) {
+        return true;
+    }
+
+    return false;
+}
 function getSystemChanges(oldSystemObj, newSystemObj) {
     var changeList = [];
 
@@ -232,6 +280,7 @@ function sendSystemChangeNotifications(systemData, changeList, discordClient, so
 
 module.exports = {
     getFactionStateChanges,
+    hasFactionChanged,
     getSystemChanges,
     sendChangeNotifications,
     sendSystemChangeNotifications

@@ -140,8 +140,7 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 		}
 
 		var factionObj = {
-			'name': factionName,
-			'lastUpdate': now
+			'name': factionName
 		};
 
 		var factionSystemObj = {
@@ -170,29 +169,27 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 		}
 
 		const factionKeyName = tools.getKeyName(factionName);
-		systemObj['factions'][factionKeyName] = factionObj;
+		systemObj['factions'][factionKeyName] = { ...factionObj };
 
-		//data.storeSystemFaction(multi, systemName, factionName, factionObj);
-
-		if ('name' in oldFactionData) {
-			data.updateFactionDetails(multi, factionName, factionObj['allegiance'], factionObj['government']);
-
-			if ('systems' in oldFactionData) {
-				// Need to 'upgrade' this faction to just list system names
-				factionObj['systemNames'] = data.getOldFactionSystemNames(oldFactionData);
-				data.storeFaction(multi, factionName, factionObj);
-				Reflect.deleteProperty(factionObj, 'systemNames');
-				console.log(`> Converted faction ${factionName}`);
-			} else if (!oldFactionData['systemNames'].includes(systemName)) {
-				console.log(`${systemName}: Adding to faction ${factionName}`);
-				var systemNames = oldFactionData['systemNames'].slice(0);
-				systemNames.push(systemName);
-				data.updateFactionSystemNames(multi, factionName, systemNames.sort());
-			}
+		if ('systemNames' in oldFactionData) {
+			factionObj['systemNames'] = oldFactionData['systemNames'];
+		} else if ('systems' in oldFactionData) {
+			// Need to 'upgrade' this faction to just list system names
+			factionObj['systemNames'] = data.getOldFactionSystemNames(oldFactionData);
+			console.log(`> Converted faction ${factionName}`);
 		} else {
-			factionObj['systemNames'] = [ systemName ];
+			factionObj['systemNames'] = [];
+		}
+		
+		if (!factionObj['systemNames'].includes(systemName)) {
+			factionObj['systemNames'].push(systemName);
+			factionObj['systemNames'].sort();			
+		}
+		
+		if (changeTracking.hasFactionChanged(oldFactionData, factionObj)) {
 			data.storeFaction(multi, factionName, factionObj);
-			Reflect.deleteProperty(factionObj, 'systemNames');
+		} else {
+			console.log(`${systemName}: ${factionName}: no changes`);
 		}
 	}
 
@@ -207,18 +204,18 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 		const replies = await multi.execAsync();
 
 		var updates = 0;
-		var inserts = 0;
+		//var inserts = 0;
 		var errors = 0;
 		for (var replyIndex in replies) {
 			if (replies[replyIndex] instanceof redis.ReplyError) {
 				errors++;
-			} else if (replies[replyIndex] == 1) {
-				inserts++;
+			//} else if (replies[replyIndex] == 1) {
+			//	inserts++;
 			} else {
 				updates++;
 			}
 		}
-		console.log(systemName + ": " + inserts + " inserts, " + updates + " updates " + errors + " errors (" + software + ")");
+		console.log(systemName + ": " + updates + " changes, " + errors + " errors (" + software + ")");
 		eventsProcessedCounter.inc(1);
 	} catch (err) {
 		console.error(systemName + ": MULTI error: " + err);
