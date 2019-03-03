@@ -135,6 +135,7 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 		const inFaction = inFactionsData[factionIndex];
 		const factionName = inFaction['Name'];
 		const oldFactionObj = oldFactionObjArray[factionIndex];
+		const factionKeyName = tools.getKeyName(factionName);
 
 		if (factionName == 'Pilots Federation Local Branch' && (!('Influence' in inFaction) || inFaction['Influence'] == 0)) {
 			continue;
@@ -156,7 +157,10 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 			factionObj['government'] = inFaction['Government'];
 		}
 
-		eddnParser.addFactionStatesAndInfluence(factionObj, inFaction, oldFactionObj, oldSystemObj ? oldSystemObj.lastUpdate : undefined);
+		var oldSystemFactionObj = (oldSystemObj != null) && ('factions' in oldSystemObj) && (factionKeyName in oldSystemObj['factions']) ? oldSystemObj['factions'][factionKeyName] : undefined;
+
+		var systemFactionObj = { ...factionObj };
+		eddnParser.addFactionStatesAndInfluence(systemFactionObj, inFaction, oldFactionObj, oldSystemFactionObj, oldSystemObj ? oldSystemObj.lastUpdate : undefined);
 		// eddnParser.addFactionStatesAndInfluence(factionSystemObj, inFaction);
 
 		if (factionName == systemObj['controllingFaction']) {
@@ -169,8 +173,7 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 			}
 		}
 
-		const factionKeyName = tools.getKeyName(factionName);
-		systemObj['factions'][factionKeyName] = { ...factionObj };
+		systemObj['factions'][factionKeyName] = systemFactionObj;
 
 		if ('systemNames' in oldFactionObj) {
 			factionObj['systemNames'] = oldFactionObj['systemNames'];
@@ -186,6 +189,9 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 			factionObj['systemNames'].push(systemName);
 			factionObj['systemNames'].sort();			
 		}
+
+		delete factionObj['influence'];
+		delete factionObj['influenceHistory'];
 		
 		if (changeTracking.hasFactionChanged(oldFactionObj, factionObj)) {
 			data.storeFaction(multi, factionName, factionObj);

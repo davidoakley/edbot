@@ -21,22 +21,28 @@ function convertStates(eddnStates) {
 }
 
 function getUpdatedInfluenceHistory(newInfluence, oldFactionObj, lastUpdate) {
-	var history = []; //(oldFactionObj != undefined && ('influenceHistory' in oldFactionObj)) ? oldFactionObj['influenceHistory'] : [];
+	var history = (oldFactionObj != undefined && ('influenceHistory' in oldFactionObj)) ? oldFactionObj['influenceHistory'] : [];
 
-	// if (oldFactionObj != undefined && oldFactionObj['influence'] != newInfluence) {
-	// 	history.unshift({
-	// 		'influence': oldFactionObj['influence'],
-	// 		'update': lastUpdate
-	// 	});
-	// }
+	// Ditch history before fix date (1551628820473)
+	history = history.filter(entry => entry['update'] > 1551628820473);
+
+	if (oldFactionObj != undefined && oldFactionObj['influence'] != newInfluence) {
+		history.unshift({
+			'influence': oldFactionObj['influence'],
+			'update': lastUpdate
+		});
+	}
 
 	return history;
 }
 
-function addFactionStatesAndInfluence(destObj, inFaction, oldFactionObj, lastUpdate) {
+function addFactionStatesAndInfluence(destObj, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate) {
+	// const lastUpdate = oldSystemObj ? oldSystemObj.lastUpdate : undefined;
+	// const oldSystemFactionObj = (oldSystemObj != null) && ('systems' in oldSystemObj) && ()
+
 	if ('Influence' in inFaction) {
 		destObj['influence'] = inFaction['Influence'];
-		destObj['influenceHistory'] = getUpdatedInfluenceHistory(destObj['influence'], oldFactionObj, lastUpdate);
+		destObj['influenceHistory'] = getUpdatedInfluenceHistory(destObj['influence'], oldSystemFactionObj, lastUpdate);
 	}
 
 	if ('PendingStates' in inFaction && Array.isArray(inFaction['PendingStates']) && inFaction['PendingStates'].length > 0) {
