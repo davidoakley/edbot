@@ -20,9 +20,23 @@ function convertStates(eddnStates) {
 	return outStates;
 }
 
-function addFactionStatesAndInfluence(destObj, inFaction) {
+function getUpdatedInfluenceHistory(newInfluence, oldFactionObj, lastUpdate) {
+	var history = (oldFactionObj != undefined && ('influenceHistory' in oldFactionObj)) ? oldFactionObj['influenceHistory'] : [];
+
+	if (oldFactionObj != undefined && oldFactionObj['influence'] != newInfluence) {
+		history.unshift({
+			'influence': oldFactionObj['influence'],
+			'update': lastUpdate
+		});
+	}
+
+	return history;
+}
+
+function addFactionStatesAndInfluence(destObj, inFaction, oldFactionObj, lastUpdate) {
 	if ('Influence' in inFaction) {
 		destObj['influence'] = inFaction['Influence'];
+		destObj['influenceHistory'] = getUpdatedInfluenceHistory(destObj['influence'], oldFactionObj, lastUpdate);
 	}
 
 	if ('PendingStates' in inFaction && Array.isArray(inFaction['PendingStates']) && inFaction['PendingStates'].length > 0) {
