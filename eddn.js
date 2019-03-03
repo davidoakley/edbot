@@ -111,11 +111,11 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 	const inFactionsData = msgData["Factions"];
 	var now = Date.now();
 
-	var systemObj = {
-		'name': systemName,
-		'lastUpdate': now,
-		'updatedBy': software
-	};
+	var systemObj = new System(systemName, software); //{
+	// 	'name': systemName,
+	// 	'lastUpdate': now,
+	// 	'updatedBy': software
+	// };
 
 	if ("subscriptions" in oldSystemObj) {
 		systemObj["subscriptions"] = oldSystemObj["subscriptions"];

@@ -5,6 +5,7 @@
 const tools = require('./tools');
 const dateFormat = require('dateformat');
 const changeTracking = require('./changeTracking');
+const System = require('./system');
 // var request = require('request-promise');
 
 // var bluebird = require('bluebird');
@@ -47,12 +48,6 @@ function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
             logEntry += " (" + oldSystemObj.updatedBy + " -> " + newSystemObj.updatedBy + ")";
 
             console.log(logEntry);
-
-            // if ("faction" in change) {
-            //     console.log(systemName + ": " + change.faction + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue + " (" + newSystemObj.updatedBy + ")");
-            // } else {
-            //     console.log(systemName + ": " + change.property + ": " + change.oldValue + " -> " + change.newValue + " (" + newSystemObj.updatedBy + ")");
-            // }
         }
         multi.json_set(keyName, '.', JSON.stringify(newSystemObj));
     } else {
@@ -135,7 +130,7 @@ function getSystem(systemName) {
     return new Promise(function (resolve, reject) {
         redisClient.json_getAsync(systemKeyName).then(function (jsonData) {
             if (jsonData != null) {
-                var systemObj = JSON.parse(jsonData);
+                var systemObj = Object.assign(new System(), JSON.parse(jsonData));
 
                 // resolve(addSystemFactions(systemObj));
                 resolve(systemObj);
