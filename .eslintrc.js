@@ -265,7 +265,7 @@ module.exports = {
         "spaced-comment": "off",
         "strict": [
             "error",
-            "never"
+            "global"
         ],
         "switch-colon-spacing": "error",
         "symbol-description": "error",
