@@ -1,3 +1,5 @@
+"use strict";
+
 const data = require('../modules/data');
 const tools = require('../modules/tools');
 

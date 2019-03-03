@@ -23,7 +23,8 @@ rejson(redis);
 
 const data = require("./modules/data");
 const commandRunner = require('./modules/discordCommandRunner');
-const eddnParser = require('./modules/eddnParser.js')
+const eddnParser = require('./modules/eddnParser')
+const System = require('./modules/system');
 
 const bluebird = require('bluebird');
 bluebird.promisifyAll(redis);
@@ -103,7 +104,7 @@ function parseJournal(inData, inString) {
 async function parseFSDJump(msgData, software /*, inString*/) {
 	const systemName = msgData['StarSystem'];
 
-	const oldSystemData = await data.getSystem(systemName);
+	const oldSystemObj = await data.getSystem(systemName);
 
 	const multi = data.getRedisClient().multi();
 
@@ -116,8 +117,8 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 		'updatedBy': software
 	};
 
-	if ("subscriptions" in oldSystemData) {
-		systemObj["subscriptions"] = oldSystemData["subscriptions"];
+	if ("subscriptions" in oldSystemObj) {
+		systemObj["subscriptions"] = oldSystemObj["subscriptions"];
 	}
 
 	systemObj['factions'] = {};
@@ -133,7 +134,7 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 	for (const factionIndex in inFactionsData) {
 		const inFaction = inFactionsData[factionIndex];
 		const factionName = inFaction['Name'];
-		const oldFactionData = oldFactionObjArray[factionIndex];
+		const oldFactionObj = oldFactionObjArray[factionIndex];
 
 		if (factionName == 'Pilots Federation Local Branch' && (!('Influence' in inFaction) || inFaction['Influence'] == 0)) {
 			continue;
@@ -143,10 +144,10 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 			'name': factionName
 		};
 
-		var factionSystemObj = {
-			'name': systemName,
-			'lastUpdate': now
-		};
+		// var factionSystemObj = {
+		// 	'name': systemName,
+		// 	'lastUpdate': now
+		// };
 
 		if ('Allegiance' in inFaction) {
 			factionObj['allegiance'] = inFaction['Allegiance'];
@@ -155,11 +156,11 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 			factionObj['government'] = inFaction['Government'];
 		}
 
-		eddnParser.addFactionStatesAndInfluence(factionObj, inFaction);
-		eddnParser.addFactionStatesAndInfluence(factionSystemObj, inFaction);
+		eddnParser.addFactionStatesAndInfluence(factionObj, inFaction, oldFactionObj, oldSystemObj ? oldSystemObj.lastUpdate : undefined);
+		// eddnParser.addFactionStatesAndInfluence(factionSystemObj, inFaction);
 
 		if (factionName == systemObj['controllingFaction']) {
-			factionSystemObj['controllingFaction'] = true;
+			// factionSystemObj['controllingFaction'] = true;
 			if ('Allegiance' in inFaction) {
 				systemObj['allegiance'] = inFaction['Allegiance'];
 			}
@@ -171,11 +172,11 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 		const factionKeyName = tools.getKeyName(factionName);
 		systemObj['factions'][factionKeyName] = { ...factionObj };
 
-		if ('systemNames' in oldFactionData) {
-			factionObj['systemNames'] = oldFactionData['systemNames'];
-		} else if ('systems' in oldFactionData) {
+		if ('systemNames' in oldFactionObj) {
+			factionObj['systemNames'] = oldFactionObj['systemNames'];
+		} else if ('systems' in oldFactionObj) {
 			// Need to 'upgrade' this faction to just list system names
-			factionObj['systemNames'] = data.getOldFactionSystemNames(oldFactionData);
+			factionObj['systemNames'] = data.getOldFactionSystemNames(oldFactionObj);
 			console.log(`> Converted faction ${factionName}`);
 		} else {
 			factionObj['systemNames'] = [];
@@ -186,16 +187,16 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 			factionObj['systemNames'].sort();			
 		}
 		
-		if (changeTracking.hasFactionChanged(oldFactionData, factionObj)) {
+		if (changeTracking.hasFactionChanged(oldFactionObj, factionObj)) {
 			data.storeFaction(multi, factionName, factionObj);
 		} else {
 			console.log(`${systemName}: ${factionName}: no changes`);
 		}
 	}
 
-	eddnParser.addSystemProperties(systemObj, msgData, oldSystemData);
+	eddnParser.addSystemProperties(systemObj, msgData, oldSystemObj);
 
-	const changeList = data.storeSystem(multi, systemName, systemObj, oldSystemData);
+	const changeList = data.storeSystem(multi, systemName, systemObj, oldSystemObj);
 	changeTracking.sendSystemChangeNotifications(systemObj, changeList, discordClient, software);
 
 	data.incrementVisitCounts(multi, systemName);

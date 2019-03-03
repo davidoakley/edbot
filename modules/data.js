@@ -1,3 +1,5 @@
+"use strict";
+
 // var redis = require("redis");
 // var fs = require('fs');
 const tools = require('./tools');

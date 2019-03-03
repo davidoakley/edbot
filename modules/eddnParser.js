@@ -1,3 +1,5 @@
+"use strict";
+
 const typeMap = require('./eddnTypeMap');
 
 function convertStates(eddnStates) {
