@@ -21,14 +21,14 @@ function convertStates(eddnStates) {
 }
 
 function getUpdatedInfluenceHistory(newInfluence, oldFactionObj, lastUpdate) {
-	var history = (oldFactionObj != undefined && ('influenceHistory' in oldFactionObj)) ? oldFactionObj['influenceHistory'] : [];
+	var history = []; //(oldFactionObj != undefined && ('influenceHistory' in oldFactionObj)) ? oldFactionObj['influenceHistory'] : [];
 
-	if (oldFactionObj != undefined && oldFactionObj['influence'] != newInfluence) {
-		history.unshift({
-			'influence': oldFactionObj['influence'],
-			'update': lastUpdate
-		});
-	}
+	// if (oldFactionObj != undefined && oldFactionObj['influence'] != newInfluence) {
+	// 	history.unshift({
+	// 		'influence': oldFactionObj['influence'],
+	// 		'update': lastUpdate
+	// 	});
+	// }
 
 	return history;
 }
