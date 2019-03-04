@@ -49,10 +49,11 @@ function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
 
             console.log(logEntry);
         }
+
         multi.json_set(keyName, '.', JSON.stringify(newSystemObj));
     } else {
-        // No changes - just update lastUpdate
-        multi.json_set(keyName, 'lastUpdate', JSON.stringify(newSystemObj['lastUpdate']));
+        // No changes - just update lastSeen
+        multi.json_set(keyName, 'lastSeen', JSON.stringify(newSystemObj['lastSeen']));
     }
 
     return changeList;
