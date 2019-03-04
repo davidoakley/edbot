@@ -24,7 +24,7 @@ function getUpdatedInfluenceHistory(newInfluence, oldFactionObj, lastUpdate) {
 	var history = (oldFactionObj != undefined && ('influenceHistory' in oldFactionObj)) ? oldFactionObj['influenceHistory'] : [];
 
 	// Ditch history before fix date (1551628820473)
-	history = history.filter(entry => entry['update'] > 1551628820473);
+	//history = history.filter(entry => entry['update'] > 1551628820473);
 
 	if (oldFactionObj != undefined && oldFactionObj['influence'] != newInfluence) {
 		history.unshift({
