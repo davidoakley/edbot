@@ -187,6 +187,10 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 			factionObj['systemNames'] = [];
 		}
 		
+		if ('isPlayer' in oldFactionObj) {
+			factionObj['isPlayer'] = oldFactionObj['isPlayer'];
+		}
+		
 		if (!factionObj['systemNames'].includes(systemName)) {
 			factionObj['systemNames'].push(systemName);
 			factionObj['systemNames'].sort();			
