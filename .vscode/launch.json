@@ -36,6 +36,14 @@
             "program": "${workspaceFolder}/extras/removeInfluenceHistories.js",
             "outputCapture": "std",
             "env": {"NODE_ENV":"development"}
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch updatePlayerFactions",
+            "program": "${workspaceFolder}/extras/updatePlayerFactions.js",
+            "outputCapture": "std",
+            "env": {"NODE_ENV":"development"}
         }
     ]
 }

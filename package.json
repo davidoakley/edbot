@@ -18,6 +18,7 @@
     "discord.js": "^11.4.2",
     "erlpack": "github:discordapp/erlpack",
     "flat": "^4.1.0",
+    "node-fetch": "^2.3.0",
     "redis": "^2.8.0",
     "redis-rejson": "^1.0.0",
     "request": "^2.88.0",
