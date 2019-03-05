@@ -1,3 +1,5 @@
+"use strict";
+
 const bluebird = require('bluebird');
 const redis = require("redis");
 const argv = require('yargs').argv; // https://github.com/yargs/yargs/blob/master/docs/examples.md
