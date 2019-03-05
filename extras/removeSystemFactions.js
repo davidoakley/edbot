@@ -1,3 +1,5 @@
+"use strict";
+
 const redis = require("redis");
 const rejson = require('redis-rejson');
 rejson(redis);

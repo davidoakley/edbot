@@ -1,3 +1,5 @@
+"use strict";
+
 const discord = require('discord.js');
 const fs = require('fs');
 const io = require('@pm2/io')
