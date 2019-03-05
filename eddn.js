@@ -111,7 +111,7 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 	const multi = data.getRedisClient().multi();
 
 	const inFactionsData = msgData["Factions"];
-	var now = Date.now();
+	// var now = Date.now();
 
 	var systemObj = new System(systemName, software); //{
 	// 	'name': systemName,
