@@ -186,7 +186,7 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 		} else {
 			factionObj['systemNames'] = [];
 		}
-		
+
 		if ('isPlayer' in oldFactionObj) {
 			factionObj['isPlayer'] = oldFactionObj['isPlayer'];
 		}
@@ -213,24 +213,29 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 
 	data.incrementVisitCounts(multi, systemName);
 
+	await executeRedisMulti(multi, systemName, software);
+}
+async function executeRedisMulti(multi, systemName, software) {
 	try {
 		const replies = await multi.execAsync();
-
 		var updates = 0;
 		//var inserts = 0;
 		var errors = 0;
 		for (var replyIndex in replies) {
 			if (replies[replyIndex] instanceof redis.ReplyError) {
 				errors++;
-			//} else if (replies[replyIndex] == 1) {
-			//	inserts++;
-			} else {
+				//} else if (replies[replyIndex] == 1) {
+				//	inserts++;
+			}
+			else {
 				updates++;
 			}
 		}
 		console.log(systemName + ": " + updates + " changes, " + errors + " errors (" + software + ")");
 		eventsProcessedCounter.inc(1);
-	} catch (err) {
+	}
+	catch (err) {
 		console.error(systemName + ": MULTI error: " + err);
 	}
 }
+
