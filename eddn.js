@@ -132,38 +132,21 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 	}
 
 	const oldFactionObjArray = await Promise.all(promiseArray);
+	const lastUpdate = oldSystemObj ? oldSystemObj.lastUpdate : undefined;
 
 	for (const factionIndex in inFactionsData) {
 		const inFaction = inFactionsData[factionIndex];
-		const factionName = inFaction['Name'];
 		const oldFactionObj = oldFactionObjArray[factionIndex];
-		const factionKeyName = tools.getKeyName(factionName);
-
-		if (factionName == 'Pilots Federation Local Branch' && (!('Influence' in inFaction) || inFaction['Influence'] == 0)) {
-			continue;
-		}
-
-		var factionObj = {
-			'name': factionName
-		};
-
-		// var factionSystemObj = {
-		// 	'name': systemName,
-		// 	'lastUpdate': now
-		// };
-
-		if ('Allegiance' in inFaction) {
-			factionObj['allegiance'] = inFaction['Allegiance'];
-		}
-		if ('Government' in inFaction) {
-			factionObj['government'] = inFaction['Government'];
-		}
-
+		const factionName = inFaction['Name'];
+		const factionKeyName = tools.getKeyName(factionName);	
 		var oldSystemFactionObj = (oldSystemObj != null) && ('factions' in oldSystemObj) && (factionKeyName in oldSystemObj['factions']) ? oldSystemObj['factions'][factionKeyName] : undefined;
 
-		var systemFactionObj = { ...factionObj };
-		eddnParser.addFactionStatesAndInfluence(systemFactionObj, inFaction, oldFactionObj, oldSystemFactionObj, oldSystemObj ? oldSystemObj.lastUpdate : undefined);
-		// eddnParser.addFactionStatesAndInfluence(factionSystemObj, inFaction);
+		const systemFactionObj = parseSystemFaction(multi, systemName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate);
+
+		
+		if (systemFactionObj != undefined) {
+			systemObj['factions'][factionKeyName] = systemFactionObj;
+		}
 
 		if (factionName == systemObj['controllingFaction']) {
 			// factionSystemObj['controllingFaction'] = true;
@@ -173,36 +156,6 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 			if ('Government' in inFaction) {
 				systemObj['government'] = inFaction['Government'];
 			}
-		}
-
-		systemObj['factions'][factionKeyName] = systemFactionObj;
-
-		if ('systemNames' in oldFactionObj) {
-			factionObj['systemNames'] = oldFactionObj['systemNames'];
-		} else if ('systems' in oldFactionObj) {
-			// Need to 'upgrade' this faction to just list system names
-			factionObj['systemNames'] = data.getOldFactionSystemNames(oldFactionObj);
-			console.log(`> Converted faction ${factionName}`);
-		} else {
-			factionObj['systemNames'] = [];
-		}
-
-		if ('isPlayer' in oldFactionObj) {
-			factionObj['isPlayer'] = oldFactionObj['isPlayer'];
-		}
-		
-		if (!factionObj['systemNames'].includes(systemName)) {
-			factionObj['systemNames'].push(systemName);
-			factionObj['systemNames'].sort();			
-		}
-
-		delete factionObj['influence'];
-		delete factionObj['influenceHistory'];
-		
-		if (changeTracking.hasFactionChanged(oldFactionObj, factionObj)) {
-			data.storeFaction(multi, factionName, factionObj);
-		} else {
-			console.log(`${systemName}: ${factionName}: no changes`);
 		}
 	}
 
@@ -215,6 +168,61 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 
 	await executeRedisMulti(multi, systemName, software);
 }
+
+function parseSystemFaction(multi, systemName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate) {
+	const factionName = inFaction['Name'];
+	// const factionKeyName = tools.getKeyName(factionName);
+
+	if (factionName == 'Pilots Federation Local Branch' && (!('Influence' in inFaction) || inFaction['Influence'] == 0)) {
+		return undefined;
+	}
+
+	var factionObj = {
+		'name': factionName
+	};
+
+	if ('Allegiance' in inFaction) {
+		factionObj['allegiance'] = inFaction['Allegiance'];
+	}
+	if ('Government' in inFaction) {
+		factionObj['government'] = inFaction['Government'];
+	}
+
+	var systemFactionObj = { ...factionObj };
+	eddnParser.addFactionStatesAndInfluence(systemFactionObj, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate);
+	// eddnParser.addFactionStatesAndInfluence(factionSystemObj, inFaction);
+
+	if ('systemNames' in oldFactionObj) {
+		factionObj['systemNames'] = oldFactionObj['systemNames'];
+	} else if ('systems' in oldFactionObj) {
+		// Need to 'upgrade' this faction to just list system names
+		factionObj['systemNames'] = data.getOldFactionSystemNames(oldFactionObj);
+		console.log(`> Converted faction ${factionName}`);
+	} else {
+		factionObj['systemNames'] = [];
+	}
+
+	if ('isPlayer' in oldFactionObj) {
+		factionObj['isPlayer'] = oldFactionObj['isPlayer'];
+	}
+	
+	if (!factionObj['systemNames'].includes(systemName)) {
+		factionObj['systemNames'].push(systemName);
+		factionObj['systemNames'].sort();			
+	}
+
+	delete factionObj['influence'];
+	delete factionObj['influenceHistory'];
+	
+	if (changeTracking.hasFactionChanged(oldFactionObj, factionObj)) {
+		data.storeFaction(multi, factionName, factionObj);
+	} else {
+		console.log(`${systemName}: ${factionName}: no changes`);
+	}
+
+	return systemFactionObj;
+}
+
 async function executeRedisMulti(multi, systemName, software) {
 	try {
 		const replies = await multi.execAsync();
