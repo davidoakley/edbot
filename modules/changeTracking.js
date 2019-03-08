@@ -126,6 +126,15 @@ function getSystemChanges(oldSystemObj, newSystemObj) {
         });
     }
 
+    if (JSON.stringify(oldSystemObj['starPos']) != JSON.stringify(newSystemObj['starPos'])) {
+        changeList.push({
+            system: systemName,
+            property: 'starPos',
+            oldValue: oldSystemObj['starPos'],
+            newValue: newSystemObj['starPos']
+        });      
+    }
+
     var factionList = Object.keys(oldSystemObj['factions']).concat(Object.keys(newSystemObj['factions']));
     var uniqueFactionList = [ ...new Set(factionList) ];
     var influencesChanged = false;
