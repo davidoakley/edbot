@@ -95,19 +95,11 @@ function addSystemProperties(systemObj, msgData, oldSystemObj) {
 		systemObj['population'] = parseInt(msgData['Population'], 10);
 	} else if ('population' in oldSystemObj) {
         systemObj['population'] = oldSystemObj['population'];
-    }
-
-	// if (('allegiance' in systemObj === false) && 'SystemAllegiance' in msgData) {
-	// 	systemObj['allegiance'] = msgData['SystemAllegiance'];
-	// }
-
-	// if (('government' in systemObj === false) && 'SystemGovernment' in msgData) {
-	// 	if (msgData['SystemGovernment'] in typeMap) {
-	// 		systemObj['government'] = typeMap[msgData['SystemGovernment']];
-	// 	} else {
-	// 		console.error("Unknown government value '" + msgData['SystemGovernment'] + "'");
-	// 	}
-	// }
+	}
+	
+	if ('StarPos' in msgData) {
+		systemObj['starPos'] = msgData['StarPos'];
+	}
 
 	addSystemEconomies(msgData, systemObj);
 	addSystemSecurity(msgData, systemObj);
