@@ -216,8 +216,8 @@ function parseSystemFaction(multi, systemName, inFaction, oldFactionObj, oldSyst
 	
 	if (changeTracking.hasFactionChanged(oldFactionObj, factionObj)) {
 		data.storeFaction(multi, factionName, factionObj);
-	} else {
-		console.log(`${systemName}: ${factionName}: no changes`);
+	// } else {
+		// console.log(`${systemName}: ${factionName}: no changes`);
 	}
 
 	return systemFactionObj;
