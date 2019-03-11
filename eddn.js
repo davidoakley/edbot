@@ -142,7 +142,6 @@ async function parseFSDJump(msgData, software /*, inString*/) {
 		var oldSystemFactionObj = (oldSystemObj != null) && ('factions' in oldSystemObj) && (factionKeyName in oldSystemObj['factions']) ? oldSystemObj['factions'][factionKeyName] : undefined;
 
 		const systemFactionObj = parseSystemFaction(multi, systemName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate);
-
 		
 		if (systemFactionObj != undefined) {
 			systemObj['factions'][factionKeyName] = systemFactionObj;
@@ -208,7 +207,8 @@ function parseSystemFaction(multi, systemName, inFaction, oldFactionObj, oldSyst
 	
 	if (!factionObj['systemNames'].includes(systemName)) {
 		factionObj['systemNames'].push(systemName);
-		factionObj['systemNames'].sort();			
+		factionObj['systemNames'].sort();
+		console.log(`> Faction ${factionName} -> ${systemName} system`);
 	}
 
 	delete factionObj['influence'];
