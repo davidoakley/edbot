@@ -192,7 +192,7 @@ function parseSystemFaction(multi, systemName, inFaction, oldFactionObj, oldSyst
 	// eddnParser.addFactionStatesAndInfluence(factionSystemObj, inFaction);
 
 	if ('systemNames' in oldFactionObj) {
-		factionObj['systemNames'] = oldFactionObj['systemNames'];
+		factionObj['systemNames'] = [ ...oldFactionObj['systemNames'] ];
 	} else if ('systems' in oldFactionObj) {
 		// Need to 'upgrade' this faction to just list system names
 		factionObj['systemNames'] = data.getOldFactionSystemNames(oldFactionObj);
