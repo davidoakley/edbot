@@ -90,6 +90,10 @@ function hasFactionChanged(oldFactionObj, newFactionObj) {
         return true;
     }
 
+    if ((('systemNames' in oldInfluence) === false) || oldFactionObj['systemNames'].length != newFactionObj['systemNames'].length) {
+        return true;
+    }
+
     return false;
 }
 function getSystemChanges(oldSystemObj, newSystemObj) {
