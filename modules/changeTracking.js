@@ -65,6 +65,10 @@ function hasStateListChanged(oldStates, newStates) {
 }
 
 function hasFactionChanged(oldFactionObj, newFactionObj) {
+    if (oldFactionObj == undefined) {
+        return true;
+    }
+
     const factionPropertyList = [
         'name',
         'allegiance',
