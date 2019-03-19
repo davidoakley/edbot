@@ -92,12 +92,16 @@ function parseJournal(inData, inString) {
 	const msgData = inData["message"];
 	const event = msgData['event'];
 	if ("Factions" in msgData && (event == "FSDJump" || event == "Location")) {
-		parseFSDJump(inData);
+		try {
+			parseFSDJump(inData);
 
-		const systemName = msgData['StarSystem'];
-		if (systemName in config.get("logSystems")) {
-			systemLogger.info(inString);
-		}
+			const systemName = msgData['StarSystem'];
+			if (systemName in config.get("logSystems")) {
+				systemLogger.info(inString);
+			}
+		} catch (error) {
+			console.error(error);
+		} 
 	}
 }
 
