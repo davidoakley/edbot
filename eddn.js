@@ -114,6 +114,14 @@ async function parseFSDJump(inData) {
 
 	const oldSystemObj = await data.getSystem(systemName);
 
+	const lastUpdate = oldSystemObj ? oldSystemObj.lastUpdate : new Date(0);
+	const thisUpdate = Date.parse(msgData['timestamp']);
+
+	if (thisUpdate <= lastUpdate) {
+		console.warn(`${systemName}: ignoring - new data timestamp ${new Date(thisUpdate).toISOString()} is older than previous timestamp ${new Date(lastUpdate).toISOString()} (${software})`);
+		return;
+	}
+
 	const multi = data.getRedisClient().multi();
 
 	const inFactionsData = msgData["Factions"];
@@ -132,11 +140,7 @@ async function parseFSDJump(inData) {
 
     const factionList = [ ...factionSet ];
 
-	var systemObj = new System(systemName, software); //{
-	// 	'name': systemName,
-	// 	'lastUpdate': now,
-	// 	'updatedBy': software
-	// };
+	var systemObj = new System(systemName, thisUpdate, software);
 
 	if ("subscriptions" in oldSystemObj) {
 		systemObj["subscriptions"] = oldSystemObj["subscriptions"];
@@ -151,14 +155,6 @@ async function parseFSDJump(inData) {
 	}
 
 	const oldFactionObjArray = await Promise.all(promiseArray);
-	const lastUpdate = oldSystemObj ? oldSystemObj.lastUpdate : undefined;
-
-	const thisUpdate = Date.parse(msgData['timestamp']);
-
-	if (thisUpdate <= lastUpdate) {
-		console.warn(`${systemName}: ignoring - new data timestamp(${new Date(thisUpdate).toISOString()}) older than previous timestamp(${new Date(lastUpdate).toISOString()})`);
-		return;
-	}
 
 	for (const factionName of factionList) {
 		const factionKeyName = tools.getKeyName(factionName);	
