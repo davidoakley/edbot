@@ -89,12 +89,10 @@ sock.on('message', topic => {
 });
 
 function parseJournal(inData, inString) {
-	const headerData = inData["header"];
-	const software = headerData["softwareName"] + "/" + headerData["softwareVersion"];
 	const msgData = inData["message"];
 	const event = msgData['event'];
 	if ("Factions" in msgData && (event == "FSDJump" || event == "Location")) {
-		parseFSDJump(msgData, software, inString);
+		parseFSDJump(inData);
 
 		const systemName = msgData['StarSystem'];
 		if (systemName in config.get("logSystems")) {
@@ -103,7 +101,11 @@ function parseJournal(inData, inString) {
 	}
 }
 
-async function parseFSDJump(msgData, software /*, inString*/) {
+async function parseFSDJump(inData) {
+	const headerData = inData["header"];
+	const software = headerData["softwareName"] + "/" + headerData["softwareVersion"];
+	const msgData = inData["message"];
+
 	const systemName = msgData['StarSystem'];
 
 	const oldSystemObj = await data.getSystem(systemName);
