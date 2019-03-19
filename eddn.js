@@ -118,7 +118,7 @@ async function parseFSDJump(inData) {
 	const thisUpdate = Date.parse(msgData['timestamp']);
 
 	if (thisUpdate <= lastUpdate) {
-		console.warn(`${systemName}: ignoring - new data timestamp ${new Date(thisUpdate).toISOString()} is older than previous timestamp ${new Date(lastUpdate).toISOString()} (${software})`);
+		console.log(`${systemName}: ignoring - new data timestamp ${new Date(thisUpdate).toISOString()} is older than previous timestamp ${new Date(lastUpdate).toISOString()} (${software})`);
 		return;
 	}
 
