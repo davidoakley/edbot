@@ -231,14 +231,16 @@ function parseSystemFaction(multi, systemName, factionName, inFaction, oldFactio
 	eddnParser.addFactionStatesAndInfluence(systemFactionObj, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate);
 	// eddnParser.addFactionStatesAndInfluence(factionSystemObj, inFaction);
 
-	if ('systemNames' in oldFactionObj) {
-		factionObj['systemNames'] = [ ...oldFactionObj['systemNames'] ];
-	} else if ('systems' in oldFactionObj) {
-		// Need to 'upgrade' this faction to just list system names
-		factionObj['systemNames'] = data.getOldFactionSystemNames(oldFactionObj);
-		console.log(`> Converted faction ${factionName}`);
-	} else {
-		factionObj['systemNames'] = [];
+	factionObj['systemNames'] = [];
+
+	if (oldFactionObj != undefined) {
+		if ('systemNames' in oldFactionObj) {
+			factionObj['systemNames'] = [ ...oldFactionObj['systemNames'] ];
+		} else if ('systems' in oldFactionObj) {
+			// Need to 'upgrade' this faction to just list system names
+			factionObj['systemNames'] = data.getOldFactionSystemNames(oldFactionObj);
+			console.log(`> Converted faction ${factionName}`);
+		}
 	}
 	
 	if (!factionObj['systemNames'].includes(systemName)) {
