@@ -115,6 +115,19 @@ async function parseFSDJump(inData) {
 	const inFactionsData = msgData["Factions"];
 	// var now = Date.now();
 
+	var factionSet = new Set();
+	for (const factionIndex in inFactionsData) {
+		const inFaction = inFactionsData[factionIndex];
+		factionSet.add(inFaction['Name']);
+	}
+
+	for (const factionKey in oldSystemObj['factions']) {
+		const oldFaction = oldSystemObj['factions'][factionKey];
+		factionSet.add(oldFaction['name']);
+	}
+
+    const factionList = [ ...factionSet ];
+
 	var systemObj = new System(systemName, software); //{
 	// 	'name': systemName,
 	// 	'lastUpdate': now,
@@ -127,23 +140,32 @@ async function parseFSDJump(inData) {
 
 	systemObj['factions'] = {};
 	var promiseArray = [];
-	for (const factionIndex in inFactionsData) {
-		const inFaction = inFactionsData[factionIndex];
-		const factionName = inFaction['Name'];
+	for (const factionName of factionList) {
+		// const inFaction = inFactionsData[factionIndex];
+		// const factionName = inFaction['Name'];
 		promiseArray.push(data.getFaction(factionName));
 	}
 
 	const oldFactionObjArray = await Promise.all(promiseArray);
 	const lastUpdate = oldSystemObj ? oldSystemObj.lastUpdate : undefined;
 
-	for (const factionIndex in inFactionsData) {
-		const inFaction = inFactionsData[factionIndex];
-		const oldFactionObj = oldFactionObjArray[factionIndex];
-		const factionName = inFaction['Name'];
+	const thisUpdate = Date.parse(msgData['timestamp']);
+
+	if (thisUpdate <= lastUpdate) {
+		console.warn(`${systemName}: ignoring - new data timestamp(${new Date(thisUpdate).toISOString()}) older than previous timestamp(${new Date(lastUpdate).toISOString()})`);
+		return;
+	}
+
+	for (const factionName of factionList) {
 		const factionKeyName = tools.getKeyName(factionName);	
+
+		const inFaction = inFactionsData.find(f => (f.Name == factionName)); //inFactionsData[factionIndex];
+		const oldFactionObj = oldFactionObjArray.find(f => (f.name == factionName)); //[factionIndex];
+
+		// const factionName = inFaction['Name'];
 		var oldSystemFactionObj = (oldSystemObj != null) && ('factions' in oldSystemObj) && (factionKeyName in oldSystemObj['factions']) ? oldSystemObj['factions'][factionKeyName] : undefined;
 
-		const systemFactionObj = parseSystemFaction(multi, systemName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate);
+		const systemFactionObj = parseSystemFaction(multi, systemName, factionName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate);
 		
 		if (systemFactionObj != undefined) {
 			systemObj['factions'][factionKeyName] = systemFactionObj;
@@ -170,9 +192,7 @@ async function parseFSDJump(inData) {
 	await executeRedisMulti(multi, systemName, software);
 }
 
-function parseSystemFaction(multi, systemName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate) {
-	const factionName = inFaction['Name'];
-	// const factionKeyName = tools.getKeyName(factionName);
+function parseSystemFaction(multi, systemName, factionName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate) {
 
 	if (factionName == 'Pilots Federation Local Branch' && (!('Influence' in inFaction) || inFaction['Influence'] == 0)) {
 		return undefined;
@@ -182,11 +202,29 @@ function parseSystemFaction(multi, systemName, inFaction, oldFactionObj, oldSyst
 		'name': factionName
 	};
 
-	if ('Allegiance' in inFaction) {
-		factionObj['allegiance'] = inFaction['Allegiance'];
+	if (oldFactionObj != undefined) {
+		if ('allegiance' in oldFactionObj) {
+			factionObj['allegiance'] = oldFactionObj['allegiance'];
+		}
+
+		if ('government' in oldFactionObj) {
+			factionObj['government'] = oldFactionObj['government'];
+		}
+
+		if ('isPlayer' in oldFactionObj) {
+			factionObj['isPlayer'] = oldFactionObj['isPlayer'];
+		}
 	}
-	if ('Government' in inFaction) {
-		factionObj['government'] = inFaction['Government'];
+
+	if (inFaction != undefined) {
+		if ('Allegiance' in inFaction) {
+			factionObj['allegiance'] = inFaction['Allegiance'];
+		}
+		if ('Government' in inFaction) {
+			factionObj['government'] = inFaction['Government'];
+		}
+	} else {
+		console.log(`${systemName}: ${factionName} now missing from this system`);
 	}
 
 	var systemFactionObj = { ...factionObj };
@@ -201,10 +239,6 @@ function parseSystemFaction(multi, systemName, inFaction, oldFactionObj, oldSyst
 		console.log(`> Converted faction ${factionName}`);
 	} else {
 		factionObj['systemNames'] = [];
-	}
-
-	if ('isPlayer' in oldFactionObj) {
-		factionObj['isPlayer'] = oldFactionObj['isPlayer'];
 	}
 	
 	if (!factionObj['systemNames'].includes(systemName)) {
