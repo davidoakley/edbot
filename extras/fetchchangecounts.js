@@ -40,6 +40,8 @@ async function updatePlayerFactions() {
         return 0;
     }
 
+    changeKeys.sort();
+
     const resultList = await redisClient.mgetAsync(...changeKeys);
 
     for (const i in resultList) {
