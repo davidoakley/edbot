@@ -128,7 +128,7 @@ function incrementVisitCounts(multi, systemName) {
 
 function incrementChangeCount(multi) {
     // const hourlyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd_HH");
-    const msPerQuarterHour = 1000*60*60;
+    const msPerQuarterHour = 1000*60*15;
     var thisHour = Math.floor(Date.now() / msPerQuarterHour) * msPerQuarterHour;
 
     const keyName = 'changeCount:' + thisHour;
