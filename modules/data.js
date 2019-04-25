@@ -51,6 +51,7 @@ function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
         }
 
         multi.json_set(keyName, '.', JSON.stringify(newSystemObj));
+        incrementChangeCount(multi);
     } else {
         // No changes - just update lastSeen
         multi.json_set(keyName, 'lastSeen', JSON.stringify(newSystemObj['lastSeen']));
@@ -114,7 +115,6 @@ async function getFactionCount() {
 }
 
 function incrementVisitCounts(multi, systemName) {
-
     const baseKeyName = tools.getKeyName('visitCount', systemName);
 
     const hourlyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd_HH");
@@ -124,6 +124,16 @@ function incrementVisitCounts(multi, systemName) {
     const dailyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd");
 	multi.incr(dailyKeyName);
     multi.expire(dailyKeyName, 60*60*24*31); // Keep this value for 31 days
+}
+
+function incrementChangeCount(multi) {
+    // const hourlyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd_HH");
+    const msPerQuarterHour = 1000*60*60;
+    var thisHour = Math.floor(Date.now() / msPerQuarterHour) * msPerQuarterHour;
+
+    const keyName = 'changeCount:' + thisHour;
+    multi.incr(keyName);
+    multi.expire(keyName, 60*60*24*7); // Keep this value for 7 days
 }
 
 function getSystem(systemName) {
