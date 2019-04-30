@@ -40,6 +40,12 @@ function addFactionStatesAndInfluence(destObj, inFaction, oldFactionObj, oldSyst
 	// const lastUpdate = oldSystemObj ? oldSystemObj.lastUpdate : undefined;
 	// const oldSystemFactionObj = (oldSystemObj != null) && ('systems' in oldSystemObj) && ()
 
+	if (inFaction == undefined) { // Faction has retreated from this system
+		destObj['influence'] = 0.0;
+		destObj['influenceHistory'] = getUpdatedInfluenceHistory(destObj['influence'], oldSystemFactionObj, lastUpdate);
+		return;
+	}
+
 	if ('Influence' in inFaction) {
 		destObj['influence'] = inFaction['Influence'];
 		destObj['influenceHistory'] = getUpdatedInfluenceHistory(destObj['influence'], oldSystemFactionObj, lastUpdate);
