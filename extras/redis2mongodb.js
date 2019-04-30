@@ -2,6 +2,8 @@
 
  /* eslint-disable no-await-in-loop */
 
+const config = require("config");
+
 const redis = require("redis");
 const rejson = require('redis-rejson');
 rejson(redis);
@@ -14,7 +16,7 @@ const redisClient = redis.createClient();
 var mongoClient = require('mongodb').MongoClient;
 // var assert = require('assert');
 
-var url = 'mongodb://localhost:27017/edbot';
+var url = config.get("mongoUrl");
 
 run();
 
