@@ -14,9 +14,14 @@ bluebird.promisifyAll(redis);
 const redisClient = redis.createClient();
 
 var mongoClient = require('mongodb').MongoClient;
-// var assert = require('assert');
-
 var url = config.get("mongoUrl");
+
+if (config.has('wakeOnLan')) {
+    const wol = require('wol'); 
+    wol.wake(config.get('wakeOnLan'), function(err, res){
+        console.log("Wake on LAN: " + res);
+    });
+}
 
 run();
 
@@ -24,12 +29,22 @@ async function run() {
     const db = await mongoClient.connect(url);
 
     await copy(db, 'systems', 'system');
+    console.log("Creating systems indexes");
+    await db.collection('systems').createIndex({ 'lcName': 1 }, { unique: true });
+
     await copy(db, 'factions', 'faction');
+    console.log("Creating factions indexes");
+    await db.collection('factions').createIndex({ 'lcName': 1 }, { unique: true });
 
-    console.log("Creating indexes");
-    await db.collection('systems').createIndex({ 'name': 1 }, { unique: true });
-    await db.collection('factions').createIndex({ 'name': 1 }, { unique: true });
+    try {
+        await db.dropCollection('changeCounts');
+    } catch (error) {
+        console.log(error);
+    }
 
+    //     collection.createIndex( { [keyName]: "text" } )
+
+    console.log("Done.");
     db.close();
     process.exit();
 }
@@ -57,9 +72,10 @@ async function copy(db, collectionName, keyName) {
 
             for (const keyName of keyList) {
                 const jsonData = await redisClient.json_getAsync(keyName);
-                const systemObj = JSON.parse(jsonData);
+                var obj = JSON.parse(jsonData);
+                obj['lcName'] = obj['name'].toLowerCase();
 
-                insertList.push(systemObj);
+                insertList.push(obj);
             }
 
             const dbResult = await collection.insertMany(insertList);
