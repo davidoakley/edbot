@@ -135,7 +135,7 @@ async function parseFSDJump(inData) {
 
 	const systemName = msgData['StarSystem'];
 
-	const oldSystemObj = await data.getSystem(systemName);
+	const oldSystemObj = await data.getSystem(systemName) || {};
 
 	const lastUpdate = oldSystemObj ? oldSystemObj.lastUpdate : new Date(0);
 	const thisUpdate = Date.parse(msgData['timestamp']);
