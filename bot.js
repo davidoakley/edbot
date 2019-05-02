@@ -14,19 +14,21 @@ const discord = require('discord.js');
 const logger = require('winston');
 const config = require('config');
 const tools = require('./modules/tools');
+const mongoClient = require('mongodb').MongoClient;
+
 const prefix = config.get('defaultPrefix');
 
-const redis = require("redis");
-const rejson = require('redis-rejson');
-rejson(redis);
+//const redis = require("redis");
+//const rejson = require('redis-rejson');
+//rejson(redis);
 
 const data = require("./modules/data");
 const commandRunner = require('./modules/discordCommandRunner');
-const bluebird = require('bluebird');
-bluebird.promisifyAll(redis);
+//const bluebird = require('bluebird');
+//bluebird.promisifyAll(redis);
 
-const redisClient = redis.createClient();
-data.setRedisClient(redisClient);
+//const redisClient = redis.createClient();
+//data.setRedisClient(redisClient);
 
 // Configure logger settings
 logger.remove(logger.transports.Console);
@@ -35,22 +37,42 @@ logger.add(new logger.transports.Console, {
 });
 logger.level = 'debug';
 
-// Initialize Discord Bot
-const client = new discord.Client();
-commandRunner.init(client, './commands', prefix);
+run();
 
-client.once('ready', () => {
-	logger.info('Logged in as: ' + client.user.username + ' - (' + client.user.id + ')');
-	tools.setDiscordClient(client);
-});
+async function run() {
+	if (config.has('wakeOnLan')) {
+		const wol = require('wol'); 
+		wol.wake(config.get('wakeOnLan'), function(err, res){
+			console.log("Wake on LAN: " + res);
+		});
+	}
 
-client.on('message', message => {
-	commandRunner.processMessage(message);
-});
+	logger.info('Connecting to MongoDB...');
+	const db = await mongoClient.connect(config.get("mongoUrl"));
+	data.setMongoDB(db);
+	logger.info('Connected to MongoDB');
 
-client.login(config.get('botToken'));
+	// Initialize Discord Bot
+	const client = new discord.Client();
+	commandRunner.init(client, './commands', prefix);
 
-process.on('SIGTERM', () => {
-	console.info('SIGTERM signal received.');
-	process.exit(0);
-});
+	client.once('ready', () => {
+		logger.info('Logged in as: ' + client.user.username + ' - (' + client.user.id + ')');
+		tools.setDiscordClient(client);
+	});
+
+	client.on('message', message => {
+		commandRunner.processMessage(message);
+	});
+
+	client.login(config.get('botToken'));
+
+	process.on('SIGTERM', () => {
+		console.info('SIGTERM signal received.');
+		process.exit(0);
+	});
+
+//    db.close();
+//    process.exit();
+}
+
