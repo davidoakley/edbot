@@ -1,5 +1,6 @@
 "use strict";
 
+require('console-stamp')(console, { pattern: 'yyyy-mm-hh HH:MM:ss' });
 const io = require('@pm2/io')
 
 io.init({
