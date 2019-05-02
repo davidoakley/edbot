@@ -76,16 +76,16 @@ function getSystemsText(systemsData) {
 }
 
 async function getFactionSummary(givenFactionName, factionObject) {
-	var factionName = factionObject['name'];
-
-	if (factionName === undefined) {
+	if (factionObject === null) {
 		return {
 			content: "Sorry, I don't know about the *" + givenFactionName + "* faction 😕",
 			embed: embed
 		};
 	}
 
-	var date = new Date(parseInt(factionObject['lastUpdate'], 10));
+	const factionName = factionObject['name'];
+
+//	var date = new Date(parseInt(factionObject['lastUpdate'], 10));
 	// var niceDate = tools.getEliteDate(date);
 
 	// var controllingFactionName = systemData['controllingFaction']
@@ -117,7 +117,7 @@ async function getFactionSummary(givenFactionName, factionObject) {
 				value: systemsText
 			}
 		],
-		timestamp: date.toISOString(),
+//		timestamp: date.toISOString(),
 		footer: {
 			"icon_url": "https://cdn.discordapp.com/avatars/" + tools.getMyUserId() + "/" + tools.getMyAvatar() + ".png",
 			text: "Data obtained by edbot from EDDN"

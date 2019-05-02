@@ -13,32 +13,36 @@ io.init({
 const zlib = require('zlib');
 const zmq = require('zeromq');
 
+const discord = require('discord.js');
+const config = require('config');
+const mongoClient = require('mongodb').MongoClient;
+
+const winston = require('winston');
+
 const tools = require('./modules/tools');
 const changeTracking = require('./modules/changeTracking');
 
-const discord = require('discord.js');
-const config = require('config');
-
-const redis = require("redis");
-const rejson = require('redis-rejson');
-rejson(redis);
-
+// const redis = require("redis");
+// const rejson = require('redis-rejson');
+// rejson(redis);
 const data = require("./modules/data");
 const commandRunner = require('./modules/discordCommandRunner');
 const eddnParser = require('./modules/eddnParser')
 const System = require('./modules/system');
 
-const bluebird = require('bluebird');
-bluebird.promisifyAll(redis);
+var AsyncLock = require('async-lock');
+var lock = new AsyncLock();
 
-const winston = require('winston');
+// const bluebird = require('bluebird');
+// bluebird.promisifyAll(redis);
+
 const systemLogger = winston.createLogger({
 	format: winston.format.printf(info => `${info.message}`),
 	transports: [ new winston.transports.File({ filename: 'systems.log' }) ]
   });
 
-const redisClient = redis.createClient();
-data.setRedisClient(redisClient);
+// const redisClient = redis.createClient();
+// data.setRedisClient(redisClient);
 
 global.logStream = null;
 
@@ -64,31 +68,49 @@ const eventsProcessedCounter = io.counter({
 
 const sock = zmq.socket('sub');
 
-sock.connect('tcp://eddn.edcd.io:9500');
-console.log('Connected to EDDN port 9500');
+run();
 
-sock.subscribe('');
-
-sock.on('message', topic => {
-	try {
-		const inString = zlib.inflateSync(topic).toString();
-		const inData = JSON.parse(inString);
-
-		if (inData["$schemaRef"] == "https://eddn.edcd.io/schemas/journal/1") {
-			parseJournal(inData, inString);
-		}
-
-		if (global.logStream != null) {
-			global.logStream.write(inString + "\n");
-		}
+async function run() {
+	if (config.has('wakeOnLan')) {
+		const wol = require('wol'); 
+		wol.wake(config.get('wakeOnLan'), function(err, res){
+			console.log("Wake on LAN: " + res);
+		});
 	}
-	catch (error) {
-		console.error(error);
-		// message.reply('there was an error trying to execute that command!');
-	}       
-});
 
-function parseJournal(inData, inString) {
+	console.log('Connecting to MongoDB...');
+	const db = await mongoClient.connect(config.get("mongoUrl"));
+	data.setMongoDB(db);
+	console.log('Connected to MongoDB');
+
+	sock.connect('tcp://eddn.edcd.io:9500');
+	console.log('Connected to EDDN port 9500');
+
+	sock.subscribe('');
+
+	sock.on('message', async topic => {
+		lock.acquire('message', async function() {
+			try {
+				const inString = zlib.inflateSync(topic).toString();
+				const inData = JSON.parse(inString);
+	
+				if (inData["$schemaRef"] == "https://eddn.edcd.io/schemas/journal/1") {
+					await parseJournal(inData, inString);
+				}
+	
+				if (global.logStream != null) {
+					global.logStream.write(inString + "\n");
+				}
+			}
+			catch (error) {
+				console.error(error);
+				// message.reply('there was an error trying to execute that command!');
+			}       
+			});
+	});
+}
+
+async function parseJournal(inData, inString) {
 	const msgData = inData["message"];
 	const event = msgData['event'];
 	if ("Factions" in msgData && (event == "FSDJump" || event == "Location")) {
@@ -122,7 +144,7 @@ async function parseFSDJump(inData) {
 		return;
 	}
 
-	const multi = data.getRedisClient().multi();
+	// const multi = data.getRedisClient().multi();
 
 	const inFactionsData = msgData["Factions"];
 	// var now = Date.now();
@@ -165,8 +187,15 @@ async function parseFSDJump(inData) {
 		// const factionName = inFaction['Name'];
 		var oldSystemFactionObj = (oldSystemObj != null) && ('factions' in oldSystemObj) && (factionKeyName in oldSystemObj['factions']) ? oldSystemObj['factions'][factionKeyName] : undefined;
 
-		const systemFactionObj = parseSystemFaction(multi, systemName, factionName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate);
+		const [factionObj, systemFactionObj] = parseSystemFaction(/*multi,*/ systemName, factionName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate);
 		
+		if (changeTracking.hasFactionChanged(oldFactionObj, factionObj)) {
+			await data.storeFaction(factionName, factionObj);
+		// } else {
+			// console.log(`${systemName}: ${factionName}: no changes`);
+		}
+	
+	
 		if (systemFactionObj != undefined) {
 			systemObj['factions'][factionKeyName] = systemFactionObj;
 		}
@@ -184,15 +213,15 @@ async function parseFSDJump(inData) {
 
 	eddnParser.addSystemProperties(systemObj, msgData, oldSystemObj);
 
-	const changeList = data.storeSystem(multi, systemName, systemObj, oldSystemObj);
+	const changeList = data.storeSystem(/*multi,*/ systemName, systemObj, oldSystemObj);
 	changeTracking.sendSystemChangeNotifications(systemObj, changeList, discordClient, software);
 
-	data.incrementVisitCounts(multi, systemName);
+	data.incrementVisitCounts(/*multi,*/ systemName);
 
-	await executeRedisMulti(multi, systemName, software);
+	// await executeRedisMulti(multi, systemName, software);
 }
 
-function parseSystemFaction(multi, systemName, factionName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate) {
+function parseSystemFaction(/*multi,*/ systemName, factionName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate) {
 
 	if (factionName == 'Pilots Federation Local Branch' && (!('Influence' in inFaction) || inFaction['Influence'] == 0)) {
 		return undefined;
@@ -252,15 +281,10 @@ function parseSystemFaction(multi, systemName, factionName, inFaction, oldFactio
 	delete factionObj['influence'];
 	delete factionObj['influenceHistory'];
 	
-	if (changeTracking.hasFactionChanged(oldFactionObj, factionObj)) {
-		data.storeFaction(multi, factionName, factionObj);
-	// } else {
-		// console.log(`${systemName}: ${factionName}: no changes`);
-	}
-
-	return systemFactionObj;
+	return [factionObj, systemFactionObj];
 }
 
+/*
 async function executeRedisMulti(multi, systemName, software) {
 	try {
 		const replies = await multi.execAsync();
@@ -284,4 +308,4 @@ async function executeRedisMulti(multi, systemName, software) {
 		console.error(systemName + ": MULTI error: " + err);
 	}
 }
-
+*/

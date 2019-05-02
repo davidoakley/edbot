@@ -11,58 +11,81 @@ const System = require('./system');
 // var bluebird = require('bluebird');
 // bluebird.promisifyAll(redis);
 
-var redisClient = undefined; // = redis.createClient();
+//var redisClient = undefined; // = redis.createClient();
+var db = undefined;
 
-
-function setRedisClient(client) {
-    redisClient = client;
+function setMongoDB(_db) {
+    db = _db;
 }
 
-function storeSystem(multi, systemName, newSystemObj, oldSystemObj) {
-    const keyName = tools.getKeyName('system', systemName);
+async function storeSystem(/*multi,*/ systemName, newSystemObj, oldSystemObj) {
+    //const keyName = tools.getKeyName('system', systemName);
+    try {
+        const collection = db.collection('systems');
 
-    if (!('name' in oldSystemObj)) {
-        // New system: store in redis and return
-        multi.json_set(keyName, '.', JSON.stringify(newSystemObj));
+        newSystemObj['lcName'] = newSystemObj['name'].toLowerCase();
 
-        return [
-            {
-                system: newSystemObj['name'],
-                property: "system",
-                oldValue: undefined,
-                newValue: newSystemObj
-            }
-        ];
-    }
+        if (!('name' in oldSystemObj)) {
+            // New system: store in redis and return
+            // multi.json_set(keyName, '.', JSON.stringify(newSystemObj));
+            console.log("Inserting system " + systemName);
+            await collection.insertOne(newSystemObj);
 
-    const changeList = changeTracking.getSystemChanges(oldSystemObj, newSystemObj);
-    if (changeList.length > 0) {
-        for (const change of changeList) {
-            var logEntry = systemName + ": ";
-            if ("faction" in change) {
-                logEntry += change.faction + ": ";
-            }
-
-            logEntry += change.property + ": " + change.oldValue + " -> " + change.newValue;
-            
-            logEntry += " (" + oldSystemObj.updatedBy + " -> " + newSystemObj.updatedBy + ")";
-
-            console.log(logEntry);
+            return [
+                {
+                    system: newSystemObj['name'],
+                    property: "system",
+                    oldValue: undefined,
+                    newValue: newSystemObj
+                }
+            ];
         }
 
-        multi.json_set(keyName, '.', JSON.stringify(newSystemObj));
-        incrementChangeCount(multi);
-    } else {
-        // No changes - just update lastSeen
-        multi.json_set(keyName, 'lastSeen', JSON.stringify(newSystemObj['lastSeen']));
-    }
+        const changeList = changeTracking.getSystemChanges(oldSystemObj, newSystemObj);
+        if (changeList.length > 0) {
+            for (const change of changeList) {
+                var logEntry = systemName + ": ";
+                if ("faction" in change) {
+                    logEntry += change.faction + ": ";
+                }
 
-    return changeList;
+                logEntry += change.property + ": " + change.oldValue + " -> " + change.newValue;
+                
+                logEntry += " (" + oldSystemObj.updatedBy + " -> " + newSystemObj.updatedBy + ")";
+
+                console.log(logEntry);
+            }
+
+            // await collection.insertOne(newSystemObj);
+            await collection.updateOne({lcName: systemName.toLowerCase()}, {$set: newSystemObj});
+            await incrementChangeCount();
+        } else {
+            // No changes - just update lastSeen
+            // multi.json_set(keyName, 'lastSeen', JSON.stringify(newSystemObj['lastSeen']));
+            await collection.updateOne({lcName: systemName.toLowerCase()}, {$set: {lastSeen: newSystemObj['lastSeen']}});
+        }
+
+        return changeList;
+    } catch (error) {
+        console.error(`storeSystem error: ${error}`);
+    }
 }
 
-function storeFaction(multi, factionName, factionObj) {
-    const keyName = tools.getKeyName('faction', factionName);
-    multi.json_set(keyName, '.', JSON.stringify(factionObj));
+async function storeFaction(/*multi,*/ factionName, factionObj) {
+    //const keyName = tools.getKeyName('faction', factionName);
+    //multi.json_set(keyName, '.', JSON.stringify(factionObj));
+    factionObj['lcName'] = factionObj['name'].toLowerCase();
+
+    try {
+        const collection = db.collection('factions');
+        const updateResult = await collection.updateOne({lcName: factionObj['lcName']}, {$set: factionObj} /*, {upsert: true}*/);
+        if (updateResult.matchedCount < 1) {
+            const insertResult = await collection.insertOne(factionObj);
+            console.log(`Insert: ${insertResult}`);
+        }
+    } catch (error) {
+        console.error(`storeFaction error: ${error}`);
+    }
 }
 
 function getOldFactionSystemNames(factionObj) {
@@ -114,7 +137,8 @@ async function getFactionCount() {
     }
 }
 
-function incrementVisitCounts(multi, systemName) {
+async function incrementVisitCounts(/*multi,*/ systemName) {
+    /*
     const baseKeyName = tools.getKeyName('visitCount', systemName);
 
     const hourlyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd_HH");
@@ -124,72 +148,65 @@ function incrementVisitCounts(multi, systemName) {
     const dailyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd");
 	multi.incr(dailyKeyName);
     multi.expire(dailyKeyName, 60*60*24*31); // Keep this value for 31 days
+    */
 }
 
-function incrementChangeCount(multi) {
-    // const hourlyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd_HH");
-    const msPerQuarterHour = 1000*60*15;
-    var thisQuarterHour = Math.floor(Date.now() / msPerQuarterHour) * msPerQuarterHour;
+async function incrementChangeCount(/*multi*/) {
+    try {
+        var collection = db.collection('changeCounts');
+        // const hourlyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd_HH");
+        const msPerQuarterHour = 1000*60*15;
+        var thisQuarterHour = Math.floor(Date.now() / msPerQuarterHour) * msPerQuarterHour;
 
-    const keyName = 'changeCount:' + thisQuarterHour;
-    multi.incr(keyName);
-    multi.expire(keyName, 60*60*24*2); // Keep this value for 2 days
+        await collection.updateOne({date: thisQuarterHour}, {$inc: {count: 1}}, {upsert: true});
+        // const keyName = 'changeCount:' + thisQuarterHour;
+        // multi.incr(keyName);
+        // multi.expire(keyName, 60*60*24*2); // Keep this value for 2 days
+    } catch (error) {
+        console.error(`incrementChangeCount error: ${error}`);
+    }
 }
 
-function getSystem(systemName) {
-    const systemKeyName = tools.getKeyName('system', systemName);
-    return new Promise(function (resolve, reject) {
-        redisClient.json_getAsync(systemKeyName).then(function (jsonData) {
-            if (jsonData != null) {
-                var systemObj = Object.assign(new System(), JSON.parse(jsonData));
+async function getSystem(systemName) {
+    var cursor = db.collection('systems').find({ lcName: systemName.toLowerCase() });
 
-                // resolve(addSystemFactions(systemObj));
-                resolve(systemObj);
-            } else {
-                resolve({});
-            }
-        }, function(err) {
-            reject(err); // Pass the error to our caller
-        });
-    });
+    try {
+        const system = await cursor.limit(1).next();
+        return system;
+    } catch (error) {
+        console.error(`getSystem error: ${error}`);
+        return null;
+    }
 }
 
-function getFaction(factionName) {
-    const factionKeyName = tools.getKeyName('faction', factionName);
-    return new Promise(function (resolve, reject) {
-        redisClient.json_getAsync(factionKeyName).then(function (jsonData) {
-            if (jsonData != null) {
-                var factionObj = JSON.parse(jsonData);
-                resolve(factionObj);
-            } else {
-                resolve({});
-            }
-        }, function(err) {
-            reject(err); // Pass the error to our caller
-        });
-    });
+async function getFaction(factionName) {
+    var cursor = db.collection('factions').find({ lcName: factionName.toLowerCase() });
+
+    try {
+        const faction = await cursor.limit(1).next();
+        return faction;
+    } catch (error) {
+        console.error(`getFaction error: ${error}`);
+        return null;
+    }
 }
 
 async function getFactionSystems(factionObj) {
-    if ('systems' in factionObj) {
-        return factionObj['systems'];
-    }
-    
-    var mgetArgs = [];
+    var lcSysNames = [];
     for (let systemName of factionObj['systemNames']) {
-        mgetArgs.push(tools.getKeyName('system', systemName));
+        lcSysNames.push(systemName.toLowerCase());
     }
 
-    mgetArgs.push('.'); // Add JSON path to retrieve
-    
-    const resultList = await redisClient.json_mgetAsync(...mgetArgs);
+    var cursor = db.collection('systems').find({ lcName: { $in: lcSysNames } });
+
+    var resultList = await cursor.toArray();
 
     var systems = {};
     const factionKey = tools.getKeyName(factionObj.name);
 
     for (let i in resultList) {
         if (resultList[i] != null) {
-            const fetchedSystemObj = JSON.parse(resultList[i]);
+            const fetchedSystemObj = resultList[i];
             const systemName = fetchedSystemObj['name'];
             var systemObj = fetchedSystemObj['factions'][factionKey];
             systemObj['name'] = fetchedSystemObj['name'];
@@ -230,9 +247,9 @@ async function addSystemSubscription(systemName, channelID) {
 }
 
 module.exports = {
-    setRedisClient: setRedisClient,
-    getRedisClient: function() {
-        return redisClient;
+    setMongoDB,
+    getMongoDB: function() {
+        return db;
     },
 
     storeSystem,
