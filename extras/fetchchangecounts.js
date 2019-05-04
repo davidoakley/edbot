@@ -23,10 +23,10 @@ updatePlayerFactions().then(function() {
 })
 
 async function updatePlayerFactions() {
-
+    var changeKeys = [];
+/*
     var cursor = 0;
     // var changeMap = {};
-    var changeKeys = [];
     try {
         do {
             const result = await redisClient.scanAsync(cursor, 'COUNT', 1000, 'MATCH', 'changeCount:*'); // eslint-disable-line no-await-in-loop
@@ -41,6 +41,14 @@ async function updatePlayerFactions() {
     }
 
     changeKeys.sort();
+    */
+    const msPerQuarterHour = 1000*60*15;
+    var thisQuarterHour = Math.floor(Date.now() / msPerQuarterHour) * msPerQuarterHour;
+    var startQuarterHour = thisQuarterHour - 1000*60*60*36;
+
+    for (let i = startQuarterHour; i <= thisQuarterHour; i += msPerQuarterHour) {
+        changeKeys.push('changeCount:' + i);
+    }
 
     const resultList = await redisClient.mgetAsync(...changeKeys);
 
@@ -49,7 +57,7 @@ async function updatePlayerFactions() {
         const dateString = dateFormat(timestamp, "UTC:HH:MM");
         const count = resultList[i];
 
-        console.log(dateString + ": " + count);
+        console.log(dateString + "\t" + count);
     }
 
     // console.log(result);
