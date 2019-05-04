@@ -129,11 +129,11 @@ function incrementVisitCounts(multi, systemName) {
 function incrementChangeCount(multi) {
     // const hourlyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd_HH");
     const msPerQuarterHour = 1000*60*15;
-    var thisHour = Math.floor(Date.now() / msPerQuarterHour) * msPerQuarterHour;
+    var thisQuarterHour = Math.floor(Date.now() / msPerQuarterHour) * msPerQuarterHour;
 
-    const keyName = 'changeCount:' + thisHour;
+    const keyName = 'changeCount:' + thisQuarterHour;
     multi.incr(keyName);
-    multi.expire(keyName, 60*60*24*7); // Keep this value for 7 days
+    multi.expire(keyName, 60*60*24*2); // Keep this value for 2 days
 }
 
 function getSystem(systemName) {
