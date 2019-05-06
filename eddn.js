@@ -216,10 +216,6 @@ async function parseFSDJump(inData) {
 
 	const changeList = data.storeSystem(/*multi,*/ systemName, systemObj, oldSystemObj);
 	changeTracking.sendSystemChangeNotifications(systemObj, changeList, discordClient, software);
-
-	data.incrementVisitCounts(/*multi,*/ systemName);
-
-	// await executeRedisMulti(multi, systemName, software);
 }
 
 function parseSystemFaction(/*multi,*/ systemName, factionName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate) {
