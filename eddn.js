@@ -122,7 +122,7 @@ async function parseJournal(inData, inString) {
 	
 	if (event != 'Scan' && 'StarSystem' in inData.message && 'timestamp' in inData.message) {
 		const thisUpdate = Date.parse(msgData['timestamp']);
-		data.logVisitCount(inData.header.uploaderID, inData.message.StarSystem, thisUpdate);
+		data.logVisitCount(inData.header.uploaderID, inData.message.StarSystem, event, thisUpdate);
 	} else {
 		//console.log(`Ignoring event ${event}`);
 	}

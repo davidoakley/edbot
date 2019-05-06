@@ -153,10 +153,10 @@ async function incrementChangeCount(/*multi*/) {
     }
 }
 
-async function logVisitCount(uploaderID, systemName, thisUpdate) {
+async function logVisitCount(uploaderID, systemName, event, thisUpdate) {
     try {
         var collection = db.collection('visitCounts');
-        await collection.insertOne({systemName: systemName, uploaderID: uploaderID, date: new Date(thisUpdate)});
+        await collection.insertOne({systemName: systemName, uploaderID: uploaderID, event: event, date: new Date(thisUpdate)});
     } catch (error) {
         console.error(`incrementVisitCount error: ${error}`);
     }  
