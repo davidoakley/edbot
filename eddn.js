@@ -1,6 +1,6 @@
 "use strict";
 
-require('console-stamp')(console, { pattern: 'yyyy-mm-hh HH:MM:ss' });
+// require('console-stamp')(console, { pattern: 'yyyy-mm-hh HH:MM:ss' });
 const io = require('@pm2/io')
 
 io.init({
@@ -72,13 +72,6 @@ const sock = zmq.socket('sub');
 run();
 
 async function run() {
-	if (config.has('wakeOnLan')) {
-		const wol = require('wol'); 
-		wol.wake(config.get('wakeOnLan'), function(err, res){
-			console.log("Wake on LAN: " + res);
-		});
-	}
-
 	console.log('Connecting to MongoDB...');
 	const db = await mongoClient.connect(config.get("mongoUrl"));
 	data.setMongoDB(db);
@@ -124,7 +117,11 @@ async function parseJournal(inData, inString) {
 			}
 		} catch (error) {
 			console.error(error);
-		} 
+		}
+	// } else if (event == "Docked") {
+	// 	console.log(msgData);
+	// } else {
+	// 	console.log(`Ignoring event ${event}`);
 	}
 }
 
