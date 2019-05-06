@@ -137,20 +137,6 @@ async function getFactionCount() {
     }
 }
 
-async function incrementVisitCounts(/*multi,*/ systemName) {
-    /*
-    const baseKeyName = tools.getKeyName('visitCount', systemName);
-
-    const hourlyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd_HH");
-    multi.incr(hourlyKeyName);
-    multi.expire(hourlyKeyName, 60*60*24*7); // Keep this value for 7 days
-
-    const dailyKeyName = baseKeyName + ":" + dateFormat("yyyy-mm-dd");
-	multi.incr(dailyKeyName);
-    multi.expire(dailyKeyName, 60*60*24*31); // Keep this value for 31 days
-    */
-}
-
 async function incrementChangeCount(/*multi*/) {
     try {
         var collection = db.collection('changeCounts');
@@ -165,6 +151,15 @@ async function incrementChangeCount(/*multi*/) {
     } catch (error) {
         console.error(`incrementChangeCount error: ${error}`);
     }
+}
+
+async function logVisitCount(uploaderID, systemName, thisUpdate) {
+    try {
+        var collection = db.collection('visitCounts');
+        await collection.insertOne({systemName: systemName, uploaderID: uploaderID, date: new Date(thisUpdate)});
+    } catch (error) {
+        console.error(`incrementVisitCount error: ${error}`);
+    }  
 }
 
 async function getSystem(systemName) {
@@ -259,7 +254,7 @@ module.exports = {
     getSystemCount,
     getFactionCount,
 
-    incrementVisitCounts,
+    logVisitCount,
 
     getSystem,
     getFaction,

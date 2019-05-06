@@ -118,10 +118,13 @@ async function parseJournal(inData, inString) {
 		} catch (error) {
 			console.error(error);
 		}
-	// } else if (event == "Docked") {
-	// 	console.log(msgData);
-	// } else {
-	// 	console.log(`Ignoring event ${event}`);
+	}
+	
+	if (event != 'Scan' && 'StarSystem' in inData.message && 'timestamp' in inData.message) {
+		const thisUpdate = Date.parse(msgData['timestamp']);
+		data.logVisitCount(inData.header.uploaderID, inData.message.StarSystem, thisUpdate);
+	} else {
+		//console.log(`Ignoring event ${event}`);
 	}
 }
 
