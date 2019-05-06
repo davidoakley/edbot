@@ -2,20 +2,18 @@
  
 /* eslint-disable no-await-in-loop */
 
-// const tools = require('../modules/tools');
-
-// const fetch = require("node-fetch");
-
 var dateFormat = require('dateformat');
+const config = require('config');
+const mongoClient = require('mongodb').MongoClient;
 
-const redis = require("redis");
-const rejson = require('redis-rejson');
-rejson(redis);
+// const redis = require("redis");
+// const rejson = require('redis-rejson');
+// rejson(redis);
 
-const bluebird = require('bluebird');
-bluebird.promisifyAll(redis);
+// const bluebird = require('bluebird');
+// bluebird.promisifyAll(redis);
 
-const redisClient = redis.createClient();
+// const redisClient = redis.createClient();
 
 updatePlayerFactions().then(function() {
     console.log("Finished");
@@ -24,6 +22,11 @@ updatePlayerFactions().then(function() {
 
 async function updatePlayerFactions() {
     var changeKeys = [];
+
+    console.log('Connecting to MongoDB...');
+	const db = await mongoClient.connect(config.get("mongoUrl"));
+	console.log('Connected to MongoDB');
+
 /*
     var cursor = 0;
     // var changeMap = {};
@@ -47,15 +50,17 @@ async function updatePlayerFactions() {
     var startQuarterHour = thisQuarterHour - 1000*60*60*36;
 
     for (let i = startQuarterHour; i <= thisQuarterHour; i += msPerQuarterHour) {
-        changeKeys.push('changeCount:' + i);
+        changeKeys.push(i);
     }
 
-    const resultList = await redisClient.mgetAsync(...changeKeys);
+    var cursor = db.collection('changeCounts').find({ date: { $in: changeKeys } });
+
+    var resultList = await cursor.toArray();
 
     for (const i in resultList) {
-        const timestamp = new Date(parseInt(changeKeys[i].substr(12), 10));
+        const timestamp = new Date(resultList[i].date);
         const dateString = dateFormat(timestamp, "UTC:HH:MM");
-        const count = resultList[i];
+        const count = resultList[i].count;
 
         console.log(dateString + "\t" + count);
     }
