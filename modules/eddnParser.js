@@ -142,7 +142,46 @@ function addSystemEconomies(msgData, systemObj) {
 	}
 }
 
+function getStationEconomies(msgData) {
+	const economies = [];
+	if ('StationEconomies' in msgData && msgData['StationEconomies'].length > 0) {
+
+		for (const e of msgData['StationEconomies']) {
+			const name = e['Name'];
+			const prop = e['Proportion'];
+
+			if (name in typeMap) {
+				economies.push({
+					name: typeMap[name],
+					proportion: prop
+				});
+			} else {
+				console.error("Unknown economy value '" + name + "'");
+			}
+		}
+		/*
+		if (msgData['SystemEconomy'] in typeMap) {
+			systemObj['economies'].push(typeMap[msgData['SystemEconomy']]);
+		}
+		else {
+			console.error("Unknown economy value '" + msgData['SystemEconomy'] + "'");
+		}
+		if ('SystemSecondEconomy' in msgData && msgData['SystemSecondEconomy'] != "$economy_None;" && msgData['SystemSecondEconomy'] != "$economy_Undefined;") {
+			if (msgData['SystemSecondEconomy'] in typeMap) {
+				systemObj['economies'].push(typeMap[msgData['SystemSecondEconomy']]);
+			}
+			else {
+				console.error("Unknown economy value '" + msgData['SystemSecondEconomy'] + "'");
+			}
+		}
+		*/
+	}
+
+	return economies;
+}
+
 module.exports = {
     addFactionStatesAndInfluence,
-    addSystemProperties
+	addSystemProperties,
+	getStationEconomies
 }

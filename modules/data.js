@@ -71,6 +71,20 @@ async function storeSystem(/*multi,*/ systemName, newSystemObj, oldSystemObj) {
     }
 }
 
+async function storeSystemStation(systemName, newSystemObj) {
+    //const keyName = tools.getKeyName('system', systemName);
+    try {
+        const collection = db.collection('systems');
+
+        newSystemObj['lcName'] = newSystemObj['name'].toLowerCase();
+
+        await collection.updateOne({lcName: systemName.toLowerCase()}, {$set: newSystemObj});
+
+        return;
+    } catch (error) {
+        console.error(`storeSystemStation error: ${error}`);
+    }
+}
 async function storeFaction(/*multi,*/ factionName, factionObj) {
     //const keyName = tools.getKeyName('faction', factionName);
     //multi.json_set(keyName, '.', JSON.stringify(factionObj));
@@ -248,6 +262,7 @@ module.exports = {
     },
 
     storeSystem,
+    storeSystemStation,
     storeFaction,
     getOldFactionSystemNames,
 

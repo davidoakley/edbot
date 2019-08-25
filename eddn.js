@@ -118,6 +118,12 @@ async function parseJournal(inData, inString) {
 		} catch (error) {
 			console.error(error);
 		}
+	} else if (event == "Docked") {
+		try {
+			await parseDocked(inData);
+		} catch (error) {
+			console.error(error);
+		}
 	}
 	
 	if (event != 'Scan' && 'StarSystem' in inData.message && 'timestamp' in inData.message) {
@@ -282,6 +288,49 @@ function parseSystemFaction(/*multi,*/ systemName, factionName, inFaction, oldFa
 		factionObj,
 		systemFactionObj
 	];
+}
+
+async function parseDocked(inData) {
+	// const headerData = inData["header"];
+	// const software = headerData["softwareName"] + "/" + headerData["softwareVersion"];
+	const msgData = inData["message"];
+
+	const systemName = msgData['StarSystem'];
+
+	const stationName = msgData['StationName'];
+	const stationKeyName = tools.getKeyName(stationName);	
+
+	const systemObj = await data.getSystem(systemName) || {};
+
+	if (!("stations" in systemObj)) {
+		// systemObj["stations"] = {};
+		// Not a known system - don't create a new one
+		return;
+	}
+
+	// if (stationKeyName in systemObj["stations"]) {
+	// 	// Station already listed, exit now
+	// 	return;
+	// }
+
+	const stationObj = {
+		'name': stationName,
+		'type': msgData['StationType'],
+		'distance': msgData['DistFromStarLS'],
+		'services': msgData['StationServices'],
+		'economies': eddnParser.getStationEconomies(msgData)
+	};
+
+	if ("StationFaction" in msgData) {
+		stationObj['faction'] = msgData['StationFaction']['Name'];
+	}
+
+	systemObj['stations'][stationKeyName] = stationObj;
+
+	// await collection.updateOne({lcName: systemName.toLowerCase()}, {$set: newSystemObj});
+	await data.storeSystemStation(systemName, systemObj);
+
+	console.log(`${systemName}: STATION ${stationName}`);
 }
 
 /*
