@@ -183,7 +183,7 @@ async function parseFSDJump(inData) {
 		const factionKeyName = tools.getKeyName(factionName);	
 
 		const inFaction = inFactionsData.find(f => (f.Name == factionName)); //inFactionsData[factionIndex];
-		const oldFactionObj = oldFactionObjArray.find(f => (f.name == factionName)); //[factionIndex];
+		const oldFactionObj = oldFactionObjArray.find(f => (f != null && f.name == factionName)); //[factionIndex];
 
 		// const factionName = inFaction['Name'];
 		var oldSystemFactionObj = (oldSystemObj != null) && ('factions' in oldSystemObj) && (factionKeyName in oldSystemObj['factions']) ? oldSystemObj['factions'][factionKeyName] : undefined;
