@@ -62,10 +62,10 @@ discordClient.on('message', message => {
 
 // const publishClient = redisClient.duplicate();
 
-const eventsProcessedCounter = io.counter({
-	name: 'Events processed',
-	type: 'counter',
-});
+// const eventsProcessedCounter = io.counter({
+// 	name: 'Events processed',
+// 	type: 'counter',
+// });
 
 const sock = zmq.socket('sub');
 
@@ -83,7 +83,7 @@ async function run() {
 	sock.subscribe('');
 
 	sock.on('message', async topic => {
-		lock.acquire('message', async function() {
+		await lock.acquire('message', async function() {
 			try {
 				const inString = zlib.inflateSync(topic).toString();
 				const inData = JSON.parse(inString);
@@ -109,7 +109,7 @@ async function parseJournal(inData, inString) {
 	const event = msgData['event'];
 	if ("Factions" in msgData && (event == "FSDJump" || event == "Location")) {
 		try {
-			parseFSDJump(inData);
+			await parseFSDJump(inData);
 
 			const systemName = msgData['StarSystem'];
 			if (systemName in config.get("logSystems")) {
