@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	"$Faction_HappinessBand2;": "-",
 
@@ -17,6 +19,8 @@ module.exports = {
 	"$economy_Service;": "Service",
 	"$economy_Terraforming;": "Terraforming",
 	"$economy_Tourism;": "Tourism",
+	"$economy_Repair;": "Repair",
+	"$economy_Prison;": "Prison",
 	"$economy_UNKNOWN_VALUE": "Unknown",
 
 	"$government_Anarchy;": "Anarchy",
