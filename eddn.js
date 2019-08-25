@@ -300,12 +300,16 @@ async function parseDocked(inData) {
 	const stationName = msgData['StationName'];
 	const stationKeyName = tools.getKeyName(stationName);	
 
-	const systemObj = await data.getSystem(systemName) || {};
+	const systemObj = await data.getSystem(systemName);
 
-	if (!("stations" in systemObj)) {
-		// systemObj["stations"] = {};
+	if (systemObj == null)
+	{
 		// Not a known system - don't create a new one
 		return;
+	}
+
+	if (!("stations" in systemObj)) {
+		systemObj["stations"] = {};
 	}
 
 	// if (stationKeyName in systemObj["stations"]) {
