@@ -278,7 +278,10 @@ function parseSystemFaction(/*multi,*/ systemName, factionName, inFaction, oldFa
 	delete factionObj['influence'];
 	delete factionObj['influenceHistory'];
 	
-	return [factionObj, systemFactionObj];
+	return [
+		factionObj,
+		systemFactionObj
+	];
 }
 
 /*
