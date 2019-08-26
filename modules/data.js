@@ -3,9 +3,9 @@
 // var redis = require("redis");
 // var fs = require('fs');
 const tools = require('./tools');
-const dateFormat = require('dateformat');
+// const dateFormat = require('dateformat');
 const changeTracking = require('./changeTracking');
-const System = require('./system');
+// const System = require('./system');
 // var request = require('request-promise');
 
 // var bluebird = require('bluebird');
@@ -170,7 +170,12 @@ async function incrementChangeCount(/*multi*/) {
 async function logVisitCount(uploaderID, systemName, event, thisUpdate) {
     try {
         var collection = db.collection('visitCounts');
-        await collection.insertOne({systemName: systemName, uploaderID: uploaderID, event: event, date: new Date(thisUpdate)});
+        await collection.insertOne({
+            systemName: systemName,
+            uploaderID: uploaderID,
+            event: event,
+            date: new Date(thisUpdate)
+        });
     } catch (error) {
         console.error(`incrementVisitCount error: ${error}`);
     }  
@@ -202,7 +207,7 @@ async function getFaction(factionName) {
 
 async function getFactionSystems(factionObj) {
     var lcSysNames = [];
-    for (let systemName of factionObj['systemNames']) {
+    for (const systemName of factionObj['systemNames']) {
         lcSysNames.push(systemName.toLowerCase());
     }
 
