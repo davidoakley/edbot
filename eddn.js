@@ -185,6 +185,7 @@ async function parseFSDJump(inData) {
 
 	const oldFactionObjArray = await Promise.all(promiseArray);
 
+	promiseArray = [];
 	for (const factionName of factionList) {
 		const factionKeyName = tools.getKeyName(factionName);	
 
@@ -194,14 +195,15 @@ async function parseFSDJump(inData) {
 		// const factionName = inFaction['Name'];
 		var oldSystemFactionObj = (oldSystemObj != null) && ('factions' in oldSystemObj) && (factionKeyName in oldSystemObj['factions']) ? oldSystemObj['factions'][factionKeyName] : undefined;
 
-		const [factionObj, systemFactionObj] = parseSystemFaction(/*multi,*/ systemName, factionName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate);
+		const [
+			factionObj,
+			systemFactionObj
+			] = parseSystemFaction(/*multi,*/ systemName, factionName, inFaction, oldFactionObj, oldSystemFactionObj, lastUpdate);
 		
 		if (changeTracking.hasFactionChanged(oldFactionObj, factionObj)) {
-			await data.storeFaction(factionName, factionObj);
-		// } else {
-			// console.log(`${systemName}: ${factionName}: no changes`);
+			//await data.storeFaction(factionName, factionObj);
+			promiseArray.push(data.storeFaction(factionName, factionObj));
 		}
-	
 	
 		if (systemFactionObj != undefined) {
 			systemObj['factions'][factionKeyName] = systemFactionObj;
@@ -217,6 +219,7 @@ async function parseFSDJump(inData) {
 			}
 		}
 	}
+	await Promise.all(promiseArray);
 
 	eddnParser.addSystemProperties(systemObj, msgData, oldSystemObj);
 
