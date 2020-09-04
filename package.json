@@ -22,7 +22,7 @@
     "erlpack": "github:discordapp/erlpack",
     "flat": "^4.1.0",
     "kerberos": "^1.1.2",
-    "mongodb": "^2.2.36",
+    "mongodb": "^3.1.13",
     "node-fetch": "^2.6.0",
     "redis": "^2.8.0",
     "redis-rejson": "^1.0.0",
