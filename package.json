@@ -24,7 +24,7 @@
     "kerberos": "^1.1.2",
     "mongodb": "^2.2.36",
     "node-fetch": "^2.6.0",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "redis-rejson": "^1.0.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
